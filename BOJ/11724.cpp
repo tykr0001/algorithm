@@ -2,45 +2,71 @@
 
 using namespace std;
 
-vector<list<int>> v;
+vector<vector<bool>> graph;
 vector<bool> is_visited;
 queue<int> search_queue;
+stack<int> search_stack;
+int N, M;
 int answer = 0;
 
-void BFS(int i) {
-    if (!is_visited[i]) {
+void BFS(int init) {
+    if (!is_visited[init]) {
         answer++;
-        is_visited[i] = true;
-        search_queue.push(i);
+        is_visited[init] = true;
+        search_queue.push(init);
         while (!search_queue.empty()) {
             int front = search_queue.front();
             search_queue.pop();
-            for (list<int>::iterator iter = v[front].begin(); iter != v[front].end(); iter++) {
-                if (!is_visited[*iter]) {
-                    is_visited[*iter] = true;
-                    search_queue.push(*iter);
+            for (int i = 0; i <= N; i++) {
+                if (graph[front][i] && !is_visited[i]) {
+                    is_visited[i] = true;
+                    search_queue.push(i);
                 }
             }
         }
     }
 }
 
+void DFS(int init) {
+    if (!is_visited[init]) {
+        answer++;
+        is_visited[init] = true;
+        search_stack.push(init);
+        while (!search_stack.empty()) {
+            int top = search_stack.top();
+            search_stack.pop();
+            for (int i = 0; i <= N; i++) {
+                if (graph[top][i] && !is_visited[i]) {
+                    is_visited[i] = true;
+                    search_stack.push(top);
+                    search_stack.push(i);
+                }
+            }
+        }
+    }
+}
+
+
+
 int main(void) {
-    int N, M;
+    ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
     cin >> N >> M;
-    v.resize(N + 1);
+    graph.resize(N + 1, vector<bool>(N + 1, false));
     is_visited.resize(N, false);
     for (int i = 0; i < M; i++) {
         int src, dst;
         cin >> src >> dst;
-        v[src].push_back(dst);
-        v[dst].push_back(src);
+        graph[src][dst] = true;
+        graph[dst][src] = true;
     }
     for (int i = 1; i <= N; i++) {
-        BFS(i);
+        //BFS(i);
+        DFS(i);
     }
 
-    cout << answer << endl;
-    
+    cout << answer;
+
     return 0;
 }
