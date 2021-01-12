@@ -2,7 +2,7 @@
 #define INF 1e9
 using namespace std;
 
-// failure function vector used in KMP
+// failure function vector used in KMP 
 // @param p : pattern string
 // @return  : longest length up to each index when prefix & suffix are the same
 vector<int> GetPi(const string& p) {
@@ -19,7 +19,7 @@ vector<int> GetPi(const string& p) {
     return pi;
 }
 
-// KMP(Knuth-Morris-Pratt)
+// KMP(Knuth-Morris-Pratt) 
 // @param s : origin string
 // @param p : pattern string
 // @return  : vector that stores the initial indexs where the pattern appears in the origin
@@ -44,7 +44,7 @@ vector<int> KMP(const string& s, const string& p) {
     return ret;
 }
 
-// Bellman-Ford(벨만-포드)
+// Bellman-Ford(벨만-포드) 
 // @param graph : graph[src] is a vector of {dst,cost}
 // @param V     : the number of vertex
 // @param init  : initial node to search
@@ -72,7 +72,6 @@ bool BellmanFord(const vector<vector<pair<int, int>>>& graph, int V, int init) {
     return true;
 }
 
-
 vector<int> dist;
 class Compare {
 public:
@@ -80,14 +79,13 @@ public:
         return dist[a] > dist[b];
     }
 };
-
-// Dijkstra(다익스트라)
-// this function require belows
-// global variable dist (vector<int> type) and
+// Dijkstra(다익스트라) 
+// this function require 
+// global variable dist (vector<int> type) and 
 // Compare class which is used as functor of priority queue
-// @oaram gragh : graph[src] is a vector of {dst,cost}
-// @oaram V     : the number of vertex
-// @oaram init  : initial node to search
+// @param gragh : graph[src] is a vector of {dst,cost}
+// @param V     : the number of vertex
+// @param init  : initial node to search
 // @return      : void
 void Dijkstra(const vector<vector<pair<int, int>>>& graph, int V, int init) {
     dist.resize(V + 1, INF);
