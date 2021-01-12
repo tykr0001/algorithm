@@ -44,7 +44,7 @@ vector<int> KMP(const string& s, const string& p) {
     return ret;
 }
 
-// Bellman-Ford(벨만-포드) 
+// Bellman-Ford(벨만포드) 
 // @param graph : graph[src] is a vector of {dst,cost}
 // @param V     : the number of vertex
 // @param init  : initial node to search
@@ -104,4 +104,68 @@ void Dijkstra(const vector<vector<pair<int, int>>>& graph, int V, int init) {
             }
         }
     }
+}
+
+// DFS(Depth-First-Search, 깊이우선탐색) 
+// find a heaviest node
+// @param gragh : graph[src] is a vector of {dst,cost}
+// @param V     : the number of vertex
+// @param init  : initial node to search
+// @return      : pair of index and cost about the heaviest node
+pair<int,int> DFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
+    int max_idx = 0;
+    int max_len = 0;
+    vector<bool> visited(V+1, false);
+    stack<pair<int,int>> search_stack;
+    search_stack.emplace(init, 0);
+    visited[init] = true;
+    while(!search_stack.empty()){
+        int src, length;
+        tie(src, length) = search_stack.top();
+        if(max_len < length){
+            max_idx = src;
+            max_len = length;
+        }
+        search_stack.pop();
+        for(auto child : graph[src]){
+            if(!visited[child.first]){
+                visited[child.first] = true;
+                search_stack.emplace(src, length);
+                search_stack.emplace(child.first, length + child.second);
+                break;
+            }
+        }
+    }
+    return {max_idx, max_len};
+}
+
+// BFS(Breadth-First-Search, 너비우선탐색) 
+// find a heaviest node
+// @param gragh : graph[src] is a vector of {dst,cost}
+// @param V     : the number of vertex
+// @param init  : initial node to search
+// @return      : pair of index and cost about the heaviest node
+pair<int,int> BFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
+    int max_idx = 0;
+    int max_len = 0;
+    vector<bool> visited(V+1, false);
+    queue<pair<int,int>> search_queue;
+    search_queue.emplace(init, 0);
+    visited[init] = true;
+    while(!search_queue.empty()){
+        int src, length;
+        tie(src, length) = search_queue.front();
+        if(max_len < length){
+            max_idx = src;
+            max_len = length;
+        }
+        search_queue.pop();
+        for(auto child : graph[src]){
+            if(!visited[child.first]){
+                visited[child.first] = true;
+                search_queue.emplace(child.first, length + child.second);
+            }
+        }
+    }
+    return {max_idx, max_len};
 }
