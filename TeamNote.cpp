@@ -44,6 +44,20 @@ vector<int> KMP(const string& s, const string& p) {
     return ret;
 }
 
+// Floyd-Warshall(플로이드와샬) 
+// @param graph : graph[src][dst] is a weight of the edge which connects src to dst
+// @param size  : graph size or number of vertex
+// @return      : if graph doesn't have minus cycle, return true
+void FloydWarshall(vector<vector<int>> graph, int size) {
+    for (int k = 1; k <= size; k++) { // 중간
+        for (int i = 1; i <= size; i++) { // 시작
+            for (int j = 1; j <= size; j++) { // 끝
+                graph[j][i] = graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j]);
+            }
+        }
+    }
+}
+
 // Bellman-Ford(벨만포드) 
 // @param graph : graph[src] is a vector of {dst,cost}
 // @param V     : the number of vertex
@@ -168,4 +182,70 @@ pair<int,int> BFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
         }
     }
     return {max_idx, max_len};
+}
+
+// Pre-order(전위순회) 
+// print node value in char type
+// @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
+// @param node : must be [0:25]
+// @return     : void
+void PreOrder(const vector<vector<pair<int, int>>>& tree, int node){
+    cout << char(node+'A');
+    if(tree[node][0].second != INF){
+        PreOrder(tree, tree[node][0].first);
+    }
+    if(tree[node][1].second != INF){
+        PreOrder(tree, tree[node][1].first);
+    }
+}
+
+// In-order(중위순회) 
+// print node value in char type
+// @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
+// @param node : must be [0:25]
+// @return     : void
+void InOrder(const vector<vector<pair<int, int>>>& tree, int node){
+    if(tree[node][0].second != INF){
+        InOrder(tree, tree[node][0].first);
+    }
+    cout << char(node+'A');
+    if(tree[node][1].second != INF){
+        InOrder(tree, tree[node][1].first);
+    }
+}
+
+// Post-order(후위순회) 
+// print node value in char type
+// @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
+// @param node : must be [0:25]
+// @return     : void
+void PostOrder(const vector<vector<pair<int, int>>>& tree, int node){
+    if(tree[node][0].second != INF){
+        PostOrder(tree, tree[node][0].first);
+    }
+    if(tree[node][1].second != INF){
+        PostOrder(tree, tree[node][1].first);
+    }
+    cout << char(node+'A');
+}
+
+int cache[1001][1001];
+// LCS(Longest-Common-Subsequence, 최장공통부분수열) 
+// this function require global variable cache(2-dimension vector) to memoization 
+// and do not use cache[0][0:b.length()] and cache[0:a.length()][0] (initialized in 0). 
+// cache[a.length()][b.length()] is the longest length of LCS
+// @param a : string a
+// @param b : string b
+// @return   : void
+void LongestCommonSubsequence(const string& a, const string& b) {
+    for (int i = 0; i < a.length(); i++) {
+        for (int j = 0; j < b.length(); j++) {
+            if (a[i] == b[j]) {
+                cache[i + 1][j + 1] = cache[i][j] + 1;
+            }
+            else {
+                cache[i + 1][j + 1] = max(cache[i + 1][j], cache[i][j + 1]);
+            }
+        }
+    }
 }
