@@ -285,7 +285,7 @@ void TwoPointer(const vector<int>& cache, int target) {
     }
     int lo = 0, hi = 0;
     int sum = cache[lo];
-    while (lo <= hi && hi < cache.size() && cache[hi] <= N) {
+    while (lo <= hi && hi < cache.size() && cache[hi] <= target) {
         if (sum < target) {
             sum += cache[++hi];
         }
