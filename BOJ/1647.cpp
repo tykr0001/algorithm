@@ -28,51 +28,19 @@ using namespace std;
 #define Deb(x) cout<<#x<<"="<<x<<end;
 /*************************************************/
 
-int n, m;
-vector<int> parent;
+int V, E;
 
-int Find(int idx) {
-	if (parent[idx] == idx) {
-		return idx;
-	}
-	else {
-		return parent[idx] = Find(parent[idx]);
-	}
+void Solve(void){
+
 }
 
-void Union(int src, int dst) {
-	parent[Find(src)] = Find(dst);
+void Init(void){
+    cin >> V >> E;
+
 }
 
-void Solve(void) {
-	while (m--) {
-		int op, src, dst;
-		cin >> op >> src >> dst;
-		if (op == 0) {
-			Union(src, dst);
-		}
-		else {
-			if (Find(src) == Find(dst)) {
-				cout << "YES" << endl;
-			}
-			else {
-				cout << "NO" << endl;
-			}
-		}
-	}
-}
-
-void Init(void) {
-	Boost;
-	cin >> n >> m;
-	parent.resize(n + 1);
-	for (int i = 1; i <= n; i++) {
-		parent[i] = i;
-	}
-}
-
-int main(void) {
-	Init();
-	Solve();
-	return 0;
+int main (void) {
+    Init();
+    Solve();    
+    return 0;
 }

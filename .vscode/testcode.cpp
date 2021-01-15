@@ -1,59 +1,64 @@
 #include<iostream>
-#include<stack>
 #include<vector>
-#include<memory.h>
-int main() {
-   std::cin.tie(NULL);
-   std::ios_base::sync_with_stdio(false);
+using namespace std;
 
-   int dot_n, line_n;
-   int a, b;
-   std::cin >> dot_n >> line_n;
-   std::vector<int>* graph = new std::vector<int>[dot_n + 1];
-   
-   for (int i = 0; i < line_n; i++) {
-      std::cin >> a >> b;
-      graph[a].push_back(b);
-      graph[b].push_back(a);
-   }
+struct input
+{
+    int is_same_parent;
+    int a;
+    int b;
+};
 
-   bool* check_list = new bool[dot_n + 1];
-   memset(check_list, false, dot_n + 1);
+int getParent(int parent[], int x)
+{
+    if(parent[x] = x) return x;
+    return parent[x] = getParent(parent, parent[x]);
+}
 
-   std::stack<std::pair<int,int>> stack;
-   int count = 0;
+void unionParent(int parent[], int a, int b)
+{
+    a = getParent(parent, a);
+    b = getParent(parent, b);
+    if (a < b) parent[b] = a;
+    else parent[a] = b;
+}
 
-   bool judge = false;
-   for (int i = 1; i < dot_n + 1; i++) {
-      if (check_list[i] == false) {
-         check_list[i] = true;
-         std::pair<int, int> j = std::make_pair(i, 0);
-         while (true) {
-                if(graph[j.first].size()==0)
-                    break;
-            for (int k = j.second; k < graph[j.first].size(); k++) {
-               if (check_list[graph[j.first][k]] == false) {
-                  check_list[graph[j.first][k]] = true;
-                  stack.push(std::make_pair(j.first, 0));
-                  j = std::make_pair(graph[j.first][k], 0);
-                  judge = false;
-                  break;
-               }
-               if (k == graph[j.first].size() - 1)
-                  judge = true;
-            }
-            if (judge)
-               if (stack.empty())
-                  break;
-               else {
-                  j = stack.top();
-                  stack.pop();
-               }
-         }
-         count++;
-      }
+void Parent_Same(int parent[], int a, int b)
+{
+    a = getParent(parent, a);
+    b = getParent(parent, b);
 
-      
-   }
-   std::cout << count;
+    if(a == b)
+        cout << "YES" << "\n";
+    else
+        cout << "NO" << "\n";
+}
+
+int main(void)
+{
+    int n, m, i, j;
+    cin>> n;
+    cin>> m;
+
+    int parent[n];
+    vector<input> input_var(m);
+
+    for(i = 0; i < n; i++)
+    {
+        parent[i] = i;
+    }
+
+    for(i = 0; i < m; i++)
+    {
+        cin>> input_var[i].is_same_parent >> input_var[i].a >> input_var[i].b;
+    }
+
+    for(i = 0; i < m; i++)
+    {
+        if(input_var[i].is_same_parent == 0)
+            unionParent(parent, input_var[i].a, input_var[i].b);
+        else if(input_var[i].is_same_parent == 1)
+            Parent_Same(parent, input_var[i].a, input_var[i].b);
+    }
+
 }

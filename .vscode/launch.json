@@ -1,11 +1,11 @@
 {
-    // IntelliSenseë¥¼ ì‚¬ìš©í•˜ì—¬ ê°€ëŠ¥í•œ íŠ¹ì„±ì— ëŒ€í•´ ì•Œì•„ë³´ì„¸ìš”.
-    // ê¸°ì¡´ íŠ¹ì„±ì— ëŒ€í•œ ì„¤ëª…ì„ ë³´ë ¤ë©´ ê°€ë¦¬í‚µë‹ˆë‹¤.
-    // ìì„¸í•œ ë‚´ìš©ì„ ë³´ë ¤ë©´ https://go.microsoft.com/fwlink/?linkid=830387ì„(ë¥¼) ë°©ë¬¸í•˜ì„¸ìš”.
+    // IntelliSense¸¦ »ç¿ëÇÏ¿© °¡´ÉÇÑ Æ¯¼º¿¡ ´ëÇØ ¾Ë¾Æº¸¼¼¿ä.
+    // ±âÁ¸ Æ¯¼º¿¡ ´ëÇÑ ¼³¸íÀ» º¸·Á¸é °¡¸®Åµ´Ï´Ù.
+    // ÀÚ¼¼ÇÑ ³»¿ëÀ» º¸·Á¸é https://go.microsoft.com/fwlink/?linkid=830387À»(¸¦) ¹æ¹®ÇÏ¼¼¿ä.
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "g++.exe - í™œì„± íŒŒì¼ ë¹Œë“œ ë° ë””ë²„ê·¸",
+            "name": "g++.exe - È°¼º ÆÄÀÏ ºôµå ¹× µğ¹ö±×",
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
@@ -18,7 +18,7 @@
             "miDebuggerPath": "C:\\mingw64\\bin\\gdb.exe",
             "setupCommands": [
                 {
-                    "description": "gdbì— ìë™ ì„œì‹ ì§€ì • ì‚¬ìš©",
+                    "description": "gdb¿¡ ÀÚµ¿ ¼­½Ä ÁöÁ¤ »ç¿ë",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }

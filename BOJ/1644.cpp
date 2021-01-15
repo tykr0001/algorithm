@@ -28,51 +28,54 @@ using namespace std;
 #define Deb(x) cout<<#x<<"="<<x<<end;
 /*************************************************/
 
-int n, m;
-vector<int> parent;
+int N;
+int answer;
+vector<bool> cache;
+vector<int> prime;
 
-int Find(int idx) {
-	if (parent[idx] == idx) {
-		return idx;
-	}
-	else {
-		return parent[idx] = Find(parent[idx]);
-	}
+void TwoPointer(void) {
+    if (prime.empty()) {
+        cout << 0 << endl;
+        return;
+    }
+    int lo = 0, hi = 0;
+    int sum = prime[lo];
+    while (lo <= hi && hi < prime.size() && prime[hi] <= N) {
+        if (sum < N) {
+            sum += prime[++hi];
+        }
+        else if (sum > N) {
+            sum -= prime[lo++];
+        }
+        else {
+            sum += prime[++hi];
+            sum -= prime[lo++];
+            answer++;
+        }
+    }
+    cout << answer << endl;
+    return;
 }
 
-void Union(int src, int dst) {
-	parent[Find(src)] = Find(dst);
-}
-
-void Solve(void) {
-	while (m--) {
-		int op, src, dst;
-		cin >> op >> src >> dst;
-		if (op == 0) {
-			Union(src, dst);
-		}
-		else {
-			if (Find(src) == Find(dst)) {
-				cout << "YES" << endl;
-			}
-			else {
-				cout << "NO" << endl;
-			}
-		}
-	}
+void Eratos(void) {
+    cache.resize(N + 1, true);
+    for (int i = 2; i <= N; i++) {
+        if (cache[i]) {
+            prime.eb(i);
+            for (int j = i * 2; j <= N; j += i) {
+                cache[j] = false;
+            }
+        }
+    }
 }
 
 void Init(void) {
-	Boost;
-	cin >> n >> m;
-	parent.resize(n + 1);
-	for (int i = 1; i <= n; i++) {
-		parent[i] = i;
-	}
+    cin >> N;
+    Eratos();
 }
 
 int main(void) {
-	Init();
-	Solve();
-	return 0;
+    Init();
+    TwoPointer();
+    return 0;
 }

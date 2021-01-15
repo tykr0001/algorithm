@@ -47,8 +47,8 @@ vector<int> KMP(const string& s, const string& p) {
 // Floyd-Warshall(플로이드와샬) 
 // @param graph : graph[src][dst] is a weight of the edge which connects src to dst
 // @param size  : graph size or number of vertex
-// @return      : if graph doesn't have minus cycle, return true
-void FloydWarshall(vector<vector<int>> graph, int size) {
+// @return      : void
+void FloydWarshall(vector<vector<int>>& graph, int size) {
     for (int k = 1; k <= size; k++) { // 중간
         for (int i = 1; i <= size; i++) { // 시작
             for (int j = 1; j <= size; j++) { // 끝
@@ -94,7 +94,7 @@ public:
     }
 };
 // Dijkstra(다익스트라) 
-// this function require 
+// @brief : this function require 
 // global variable dist (vector<int> type) and 
 // Compare class which is used as functor of priority queue
 // @param gragh : graph[src] is a vector of {dst,cost}
@@ -121,7 +121,7 @@ void Dijkstra(const vector<vector<pair<int, int>>>& graph, int V, int init) {
 }
 
 // DFS(Depth-First-Search, 깊이우선탐색) 
-// find a heaviest node
+// @brief : find a heaviest node
 // @param gragh : graph[src] is a vector of {dst,cost}
 // @param V     : the number of vertex
 // @param init  : initial node to search
@@ -154,7 +154,7 @@ pair<int,int> DFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
 }
 
 // BFS(Breadth-First-Search, 너비우선탐색) 
-// find a heaviest node
+// @brief : find a heaviest node
 // @param gragh : graph[src] is a vector of {dst,cost}
 // @param V     : the number of vertex
 // @param init  : initial node to search
@@ -185,7 +185,7 @@ pair<int,int> BFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
 }
 
 // Pre-order(전위순회) 
-// print node value in char type
+// @brief : print node value in char type
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
 // @return     : void
@@ -200,7 +200,7 @@ void PreOrder(const vector<vector<pair<int, int>>>& tree, int node){
 }
 
 // In-order(중위순회) 
-// print node value in char type
+// @brief : print node value in char type
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
 // @return     : void
@@ -215,7 +215,7 @@ void InOrder(const vector<vector<pair<int, int>>>& tree, int node){
 }
 
 // Post-order(후위순회) 
-// print node value in char type
+// @brief : print node value in char type
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
 // @return     : void
@@ -229,15 +229,13 @@ void PostOrder(const vector<vector<pair<int, int>>>& tree, int node){
     cout << char(node+'A');
 }
 
-int cache[1001][1001];
 // LCS(Longest-Common-Subsequence, 최장공통부분수열) 
-// this function require global variable cache(2-dimension vector) to memoization 
-// and do not use cache[0][0:b.length()] and cache[0:a.length()][0] (initialized in 0). 
-// cache[a.length()][b.length()] is the longest length of LCS
+// @brief : find a longest length of LCS which will be stored int cache[a.length()][b.length()]
 // @param a : string a
 // @param b : string b
 // @return   : void
 void LongestCommonSubsequence(const string& a, const string& b) {
+    vector<vector<int>> cache(1001,vector<int>(1001,0));
     for (int i = 0; i < a.length(); i++) {
         for (int j = 0; j < b.length(); j++) {
             if (a[i] == b[j]) {
@@ -248,4 +246,58 @@ void LongestCommonSubsequence(const string& a, const string& b) {
             }
         }
     }
+}
+
+// 0-1 Knapsack(0-1 배낭문제) 
+// @brief : input each item's weight and value and 
+// print a maximum value which will be stored in cache[K]
+// @param N : the number of items
+// @param K : maximum weight
+// @return  : void
+void Knapsack(int N, int K) {
+    vector<int> cache(K + 1, 0); // cache[i] is max weight up to index i
+    vector<vector<int>> item(N + 1, vector<int>(2, 0)); // {weight, value}
+    for (int i = 1; i <= N; i++) {
+        cin >> item[i][0] >> item[i][1];
+    }
+
+    for (int i = 1; i <= N; i++) {
+        for (int j = K; j >= 1; j--) {
+            if (item[i][0] <= j) {
+                cache[j] = max(cache[j], cache[j - item[i][0]] + item[i][1]);
+            }
+        }
+    }
+    cout << cache[K] << '\n';
+    return;
+}
+
+// 2-pointer (투포인터) 
+// @brief : print the count when the sum of the cache's subequence is same to the target
+// @param cache  : must be a ascending vector
+// @param target : what you think
+// @return       : void
+void TwoPointer(const vector<int>& cache, int target) {
+    int answer = 0;
+    if (cache.empty()) {
+        cout << answer << endl;
+        return;
+    }
+    int lo = 0, hi = 0;
+    int sum = cache[lo];
+    while (lo <= hi && hi < cache.size() && cache[hi] <= N) {
+        if (sum < target) {
+            sum += cache[++hi];
+        }
+        else if (sum > target) {
+            sum -= cache[lo++];
+        }
+        else {
+            sum += cache[++hi];
+            sum -= cache[lo++];
+            answer++;
+        }
+    }
+    cout << answer << endl;
+    return;
 }
