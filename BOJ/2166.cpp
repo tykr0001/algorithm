@@ -8,55 +8,63 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 21:55:54  *************/
+\*************  2021-01-15 22:56:51  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
 using namespace std;
 #define fi first
 #define se second
-#define LL long long
-#define pb push_back
-#define eb emplace_back
 #define v vector 
 #define s stack
 #define q queue 
 #define l list 
+#define pq priority_queue 
 #define p pair
+#define vi vector<ll> 
+#define vvi vector<vector<ll>>
+#define vb vector<bool> 
+#define vvb vector<vector<bool>> 
+#define si stack<ll>
+#define qi queue<ll>
+#define li list<ll> 
+#define pii pair<ll,ll>
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
+#define INF 2e9
 #define endl '\n'
 #define Deb(x) cout<<#x<<"="<<x<<endl;
+typedef long long ll;
 /*************************************************/
 
-v<int> height(9);
-int sum;
+ll N;
+v<pii> loc;
+double answer;
 
 void Solve(void) {
-	for (int i = 0; i < 8; i++) {
-		for (int j = i + 1; j < 9; j++) {
-			if (sum - height[i] - height[j] == 100) {
-				for (int k = 0; k < 9; k++) {
-					if (k != i && k != j) {
-						cout << height[k] << endl;
-					}
-				}
-				return;
-			}
-		}
-	}
+    for (ll i = 0; i < N; i++) {
+        answer += (loc[i].fi + loc[i + 1 < N ? i + 1 : 0].fi) * (loc[i].se - loc[i + 1 < N ? i + 1 : 0].se);
+    }
+    answer = abs(answer) / 2.0;
+    cout << fixed;
+    cout.precision(1);
+    cout << answer << endl;
+    return;
 }
 
 void Init(void) {
-	for (int i = 0; i < 9; i++) {
-		cin >> height[i];
-		sum += height[i];
-	}
-	sort(height.begin(), height.end());
+    Boost;
+    cin >> N;
+    loc.resize(N);
+    for (ll i = 0; i < N; i++) {
+        ll x, y;
+        cin >> x >> y;
+        loc[i] = { x,y };
+    }
+    return;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

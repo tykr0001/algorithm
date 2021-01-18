@@ -1,68 +1,86 @@
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
+int* parent;
+int N, M, i, a, b, c, sum = 0;
+int MAX = 0;
 
-struct input
+int getParent(int parent[], int x)
 {
-    int is_same_parent;
-    int a;
-    int b;
-};
-
-vector<input> input_var;
-vector<int> parent;
-
-int getParent(int x)
-{
-    if(parent[x] == x) return x;
-    return parent[x] = getParent(parent[x]);
+    if(parent[x] == x) return x; //부모노드가 자기 자신이면
+    return parent[x] = getParent(parent, parent[x]);
 }
 
-void unionParent(int a, int b)
+//두 부모 노드를 합치는 함수
+void unionParent(int parent[], int a, int b)
 {
-    a = getParent(a);
-    b = getParent(b);
+    a = getParent(parent, a);
+    b = getParent(parent, b);
     if (a < b) parent[b] = a;
     else parent[a] = b;
 }
 
-void Parent_Same(int a, int b)
+// 같은 부모를 가지는지 확인 (같은 그래프인지)
+int findParent(int parent[], int a, int b)
 {
-    a = getParent(a);
-    b = getParent(b);
-
-    if(a == b)
-        cout << "YES" << "\n";
-    else
-        cout << "NO" << "\n";
+    a = getParent(parent, a);
+    b = getParent(parent, b);
+    if(a == b) return 1;
+    else return 0;
 }
+
+//간선을 담는 클래스
+class Edge
+{
+    public:
+        int node[2];
+        int distance;
+        Edge(int a, int b, int distance)
+        {
+            this->node[0] = a;
+            this->node[1] = b;
+            this->distance = distance;
+        }
+        bool operator < (Edge &edge)
+        {
+            return this->distance < edge.distance;
+        }
+};
 
 int main(void)
 {
-    int n, m, i, j;
-    cin>> n;
-    cin>> m;
+    cin>> N >> M;
+    vector<Edge> v;
 
-    parent.resize(n+1);
-    input_var.resize(m);
+    for(i = 0; i < M; i++)
+    {
+        cin>> a >> b >> c;
+        v.push_back(Edge(a, b, c));
+    }
 
-    for(i = 0; i <= n; i++)
+    parent = new int[N+1];
+    for(i = 1; i <= N; i++)
     {
         parent[i] = i;
     }
 
-    for(i = 0; i < m; i++)
+    sort(v.begin(), v.end());
+
+    for(i = 0; i <v.size(); i++)
     {
-        cin>> input_var[i].is_same_parent >> input_var[i].a >> input_var[i].b;
+        //사이클이 발생하지 않을때만 
+         if(!findParent(parent, v[i].node[0], v[i].node[1]))
+        {
+            unionParent(parent, v[i].node[0], v[i].node[1]);
+            sum += v[i].distance;
+            MAX = v[i].distance;
+        }
     }
 
-    for(i = 0; i < m; i++)
-    {
-        if(input_var[i].is_same_parent == 0)
-            unionParent(input_var[i].a, input_var[i].b);
-        else if(input_var[i].is_same_parent == 1)
-            Parent_Same(input_var[i].a, input_var[i].b);
-    }
+    cout<< sum - MAX << "\n";
 
+    return 0;
 }

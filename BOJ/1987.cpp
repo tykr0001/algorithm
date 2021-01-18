@@ -15,8 +15,6 @@
 using namespace std;
 #define fi first
 #define se second
-#define pb push_back
-#define eb emplace_back
 #define v vector 
 #define s stack
 #define q queue 
@@ -24,64 +22,54 @@ using namespace std;
 #define pq priority_queue 
 #define p pair
 #define vi vector<int> 
+#define vvi vector<vector<int>>
+#define vb vector<bool> 
+#define vvb vector<vector<bool>> 
 #define si stack<int>
 #define qi queue<int>
 #define li list<int> 
 #define pii pair<int,int>
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
+#define INF 1e9
 #define endl '\n'
 #define Deb(x) cout<<#x<<"="<<x<<endl;
 typedef long long ll;
 /*************************************************/
 
-class Compare {
-public:
-    bool operator()(const pii& a, const pii& b) {
-        return a.se > b.se;
-    }
-};
+int R, C;
+int answer = 0;
+vb visited(25);
+v<string> graph;
+int dx[4] = { -1,1,0,0 };
+int dy[4] = { 0,0,-1,1 };
 
-int N;
-int M;
-v<l<p<int, int>>> graph;
-pq<pii, v<pii>, Compare> prim;
-v<bool> searched;
-int sum;
-int heaviest;
-
-void Solve(void) {
-    for (auto next_edge : graph[1]) {
-        prim.emplace(next_edge);
-    }
-    searched[1] = true;
-    while (!prim.empty()) {
-        auto top = prim.top();
-        prim.pop();
-        if (!searched[top.fi]) {
-            searched[top.fi] = true;
-            sum += top.se;
-            heaviest = max(heaviest, top.se);
-            for (auto next_edge : graph[top.fi]) {
-                if (!searched[next_edge.fi]) {
-                    prim.emplace(next_edge);
-                }
-            }
+void BackTrack(const pii& loc, int depth) {
+    answer = max(answer, depth);
+    for (int i = 0; i < 4; i++) {
+        int x = loc.fi + dx[i];
+        int y = loc.se + dy[i];
+        if (0 <= x && x < R && 0 <= y && y < C && !visited[graph[x][y] - 'A']) {
+            visited[graph[x][y] - 'A'] = true;
+            BackTrack({ x,y }, depth + 1);
+            visited[graph[x][y] - 'A'] = false;
         }
     }
-    cout << sum - heaviest << endl;
+
+}
+
+void Solve(void) {
+    visited[graph[0][0] - 'A'] = true;
+    BackTrack({ 0,0 }, 1);
+    cout << answer << endl;
     return;
 }
 
 void Init(void) {
     Boost;
-    cin >> N >> M;
-    graph.resize(N + 1);
-    searched.resize(N + 1, false);
-    for (int i = 0; i < M; i++) {
-        int src, dst, cost;
-        cin >> src >> dst >> cost;
-        graph[src].eb(dst, cost);
-        graph[dst].eb(src, cost);
+    cin >> R >> C;
+    graph.resize(R);
+    for (int i = 0; i < R; i++) {
+        cin >> graph[i];
     }
     return;
 }

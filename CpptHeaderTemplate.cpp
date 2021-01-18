@@ -8,22 +8,47 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 13:54:36  *************/
+\*************  2021-01-15 22:56:51  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
 using namespace std;
 #define fi first
 #define se second
-#define LL long long
-#define pb push_back
-#define eb emplace_back
 #define v vector 
 #define s stack
 #define q queue 
 #define l list 
+#define pq priority_queue 
 #define p pair
+#define vi vector<int> 
+#define vvi vector<vector<int>>
+#define vb vector<bool> 
+#define vvb vector<vector<bool>> 
+#define si stack<int>
+#define qi queue<int>
+#define li list<int> 
+#define pii pair<int,int>
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
+#define INF 2e9
 #define endl '\n'
-#define Deb(x) cout<<#x<<"="<<x<<end;
+#define Deb(x) cout<<#x<<"="<<x<<endl;
+typedef long long ll;
 /*************************************************/
+
+void Solve(void) {
+
+	return;
+}
+
+void Init(void) {
+	Boost;
+
+	return;
+}
+
+int main(void) {
+	Init();
+	Solve();
+	return 0;
+}

@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 21:55:54  *************/
+\*************  2021-01-15 22:04:52  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -28,35 +28,42 @@ using namespace std;
 #define Deb(x) cout<<#x<<"="<<x<<endl;
 /*************************************************/
 
-v<int> height(9);
-int sum;
+int N, M;
+vector<bool> selected;
+vector<int> cache;
+
+void Permutation(int idx, int depth) {
+    if (depth == M) {
+        for (auto i : cache) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+    for (int i = 1; i <= N; i++) {
+        if (!selected[i]) {
+            cache.push_back(i);
+            selected[i] = true;
+            Permutation(i, depth + 1);
+            cache.pop_back();
+            selected[i] = false;
+        }
+    }
+}
 
 void Solve(void) {
-	for (int i = 0; i < 8; i++) {
-		for (int j = i + 1; j < 9; j++) {
-			if (sum - height[i] - height[j] == 100) {
-				for (int k = 0; k < 9; k++) {
-					if (k != i && k != j) {
-						cout << height[k] << endl;
-					}
-				}
-				return;
-			}
-		}
-	}
+    Permutation(0, 0);
+    return;
 }
 
 void Init(void) {
-	for (int i = 0; i < 9; i++) {
-		cin >> height[i];
-		sum += height[i];
-	}
-	sort(height.begin(), height.end());
+    Boost;
+    cin >> N >> M;
+    selected.resize(N + 1, false);
+    return;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }
