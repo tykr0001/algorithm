@@ -2,7 +2,14 @@
 #define INF 1e9
 using namespace std;
 
-// failure function vector used in KMP 
+// Comment template
+// Title
+// @brief :
+// @param : 
+// @param : 
+// @return :
+
+// @brief : failure function vector used in KMP 
 // @param p : pattern string
 // @return  : longest length up to each index when prefix & suffix are the same
 vector<int> GetPi(const string& p) {
@@ -300,4 +307,27 @@ void TwoPointer(const vector<int>& cache, int target) {
     }
     cout << answer << endl;
     return;
+}
+
+vector<int> parent;
+// Find(파인드)
+// @brief      : Find the root node of parameter
+// @param node : A child node
+// @return     : Index of the root node
+int Find(int node) {
+    if (parent[node] == node) {
+        return node;
+    }
+    else {
+        return parent[node] = Find(parent[node]);
+    }
+}
+
+// Union(유니온)
+// @brief   : Union the disjoint set
+// @param a : child node of the set
+// @param b : child node of another set
+// @return  : void
+void Union(int a, int b) {
+    parent[Find(a)] = Find(b);
 }
