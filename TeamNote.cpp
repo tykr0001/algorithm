@@ -241,7 +241,7 @@ void PostOrder(const vector<vector<pair<int, int>>>& tree, int node){
 // @param a : string a
 // @param b : string b
 // @return   : void
-void LongestCommonSubsequence(const string& a, const string& b) {
+void LCS(const string& a, const string& b) {
     vector<vector<int>> cache(1001,vector<int>(1001,0));
     for (int i = 0; i < a.length(); i++) {
         for (int j = 0; j < b.length(); j++) {
