@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-21 16:21:11  *************/
+\*************  2021-01-28 23:44:16  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,57 +37,43 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int T;
-int N;
-int answer;
-vi stud;
-vb visited;
-vb done;
-
-
-void DFS(int root){
-    visited[root] = true;
-    int next = stud[root];
-    if(!visited[next]){
-        DFS(next);
-    }
-    else if(!done[next]){
-        int i = root;
-        do {
-            answer--;
-            i = stud[i];
-        } while(i != root);
-    }
-    done[root] = true;
-}
+int D;
+int Q;
+vi a;
 
 void Solve(void) {
-    for (int i = 1; i < N + 1; i++) {
-        if (!visited[i]) {
-            DFS(i);
+    for (int i = 0; i < Q; i++) {
+        if (a[i] >= D * 10) {
+            cout << "YES" << endl;
+        }
+        else {
+            int r = a[i] % 10;
+            int tmp = D;
+            while (tmp % 10 != r && a[i] >= tmp) {
+                tmp += D;
+            }
+            if (a[i] >= tmp) {
+                cout << "YES" << endl;
+            }
+            else {
+                cout << "NO" << endl;
+            }
         }
     }
-    cout << answer << endl;
 }
 
 void Init(void) {
-    cin >> N;
-    answer = N;
-    stud.clear();
-    stud.resize(N + 1);
-    visited.clear();
-    visited.resize(N + 1, false);
-    done.clear();
-    done.resize(N + 1, false);
-
-    for (int i = 1; i < N + 1; i++) {
-        cin >> stud[i];
+    cin >> Q >> D;
+    a.clear();
+    a.resize(Q);
+    for (int i = 0; i < Q; i++) {
+        cin >> a[i];
     }
 }
 
 int main(void) {
     Boost;
-    cin >> T;
+    int T; cin >> T;
     while (T--) {
         Init();
         Solve();

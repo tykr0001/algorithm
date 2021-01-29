@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-21 16:21:11  *************/
+\*************  2021-01-25 17:43:03  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,60 +37,43 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int T;
-int N;
-int answer;
-vi stud;
-vb visited;
-vb done;
+ll A, B;
+vector<ll> cache;
 
+ll DP(ll n) {
+    if (cache[n] != -1) {
+        return cache[n];
+    }
+    if (n == 1) {
+        return 1;
+    }
+    if (n == 2) {
+        return 2;
+    }
+    if (n == (n & -n)) {
+        return cache[n] = 2 * DP(n / 2) + n / 2 - 1;
+    }
+    else {
+        if (n % 2)
+            return cache[n] = 2 * DP(n - 1) - DP(n - 2) + 1;
+        else
+            return cache[n] = DP(n - 1) + DP(n / 2) - DP(n / 2 - 1);
 
-void DFS(int root){
-    visited[root] = true;
-    int next = stud[root];
-    if(!visited[next]){
-        DFS(next);
     }
-    else if(!done[next]){
-        int i = root;
-        do {
-            answer--;
-            i = stud[i];
-        } while(i != root);
-    }
-    done[root] = true;
 }
 
 void Solve(void) {
-    for (int i = 1; i < N + 1; i++) {
-        if (!visited[i]) {
-            DFS(i);
-        }
-    }
-    cout << answer << endl;
+    cout << DP(B) - DP(A - 1);
 }
 
 void Init(void) {
-    cin >> N;
-    answer = N;
-    stud.clear();
-    stud.resize(N + 1);
-    visited.clear();
-    visited.resize(N + 1, false);
-    done.clear();
-    done.resize(N + 1, false);
-
-    for (int i = 1; i < N + 1; i++) {
-        cin >> stud[i];
-    }
+    Boost;
+    cin >> A >> B;
+    cache.resize(B + 1, -1);
 }
 
 int main(void) {
-    Boost;
-    cin >> T;
-    while (T--) {
-        Init();
-        Solve();
-    }
+    Init();
+    Solve();
     return 0;
 }

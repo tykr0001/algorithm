@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-21 16:21:11  *************/
+\*************  2021-01-26 01:05:46  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,56 +37,44 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int T;
-int N;
-int answer;
-vi stud;
-vb visited;
-vb done;
-
-
-void DFS(int root){
-    visited[root] = true;
-    int next = stud[root];
-    if(!visited[next]){
-        DFS(next);
-    }
-    else if(!done[next]){
-        int i = root;
-        do {
-            answer--;
-            i = stud[i];
-        } while(i != root);
-    }
-    done[root] = true;
-}
+int a, b, k, answer;
+v<pii> pairs;
+vi boys;
+vi girls;
 
 void Solve(void) {
-    for (int i = 1; i < N + 1; i++) {
-        if (!visited[i]) {
-            DFS(i);
-        }
+    for (int i = 0; i < k; i++) {
+        answer += k - boys[pairs[i].fi] - girls[pairs[i].se] + 1;
     }
-    cout << answer << endl;
+    cout << answer / 2 << endl;
 }
 
 void Init(void) {
-    cin >> N;
-    answer = N;
-    stud.clear();
-    stud.resize(N + 1);
-    visited.clear();
-    visited.resize(N + 1, false);
-    done.clear();
-    done.resize(N + 1, false);
-
-    for (int i = 1; i < N + 1; i++) {
-        cin >> stud[i];
+    cin >> a >> b >> k;
+    answer = 0;
+    pairs.clear();
+    pairs.resize(k);
+    boys.clear();
+    boys.resize(a + 1, 0);
+    girls.clear();
+    girls.resize(b + 1, 0);
+    for (int i = 0; i < k; i++) {
+        int boy;
+        cin >> boy;
+        boys[boy]++;
+        pairs[i].fi = boy;
+    }
+    for (int i = 0; i < k; i++) {
+        int girl;
+        cin >> girl;
+        girls[girl]++;
+        pairs[i].se = girl;
     }
 }
 
 int main(void) {
     Boost;
+    int T;
     cin >> T;
     while (T--) {
         Init();

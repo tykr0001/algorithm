@@ -39,13 +39,11 @@ typedef long long ll;
 
 void Solve(void) {
 
-	return;
 }
 
 void Init(void) {
 	Boost;
 
-	return;
 }
 
 int main(void) {

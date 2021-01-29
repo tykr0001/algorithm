@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-21 16:21:11  *************/
+\*************  2021-01-26 00:17:36  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,56 +37,42 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int T;
-int N;
-int answer;
-vi stud;
-vb visited;
-vb done;
-
-
-void DFS(int root){
-    visited[root] = true;
-    int next = stud[root];
-    if(!visited[next]){
-        DFS(next);
-    }
-    else if(!done[next]){
-        int i = root;
-        do {
-            answer--;
-            i = stud[i];
-        } while(i != root);
-    }
-    done[root] = true;
-}
+ll n;
 
 void Solve(void) {
-    for (int i = 1; i < N + 1; i++) {
-        if (!visited[i]) {
-            DFS(i);
+    ll d = 2;
+    if (n % 2) {
+        cout << "YES" << endl;
+        return;
+    }
+    while (n != 1 && n % 2 == 0) {
+        if (n % d == 0) {
+            if (d % 2) {
+                break;
+            }
+            n /= d;
+        }
+        else {
+            d += 1;
         }
     }
-    cout << answer << endl;
+    if (d % 2 || (n % 2 && n != 1)) {
+        cout << "YES" << endl;
+        return;
+    }
+    else {
+        cout << "NO" << endl;
+        return;
+    }
 }
 
 void Init(void) {
-    cin >> N;
-    answer = N;
-    stud.clear();
-    stud.resize(N + 1);
-    visited.clear();
-    visited.resize(N + 1, false);
-    done.clear();
-    done.resize(N + 1, false);
-
-    for (int i = 1; i < N + 1; i++) {
-        cin >> stud[i];
-    }
+    cin >> n;
 }
 
 int main(void) {
     Boost;
+    int T;
     cin >> T;
     while (T--) {
         Init();
