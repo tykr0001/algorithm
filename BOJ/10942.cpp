@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-02-03 03:01:02  *************/
+\*************  2021-02-01 16:12:03  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -30,54 +30,61 @@ using namespace std;
 #define li list<int> 
 #define pii pair<int,int>
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
-#define INF INT32_MAX
-#define LINF INT64_MAX
+#define INF 2e9
+#define LINF 9e18
 #define endl '\n'
 #define Deb(x) cout<<#x<<"="<<x<<endl;
 typedef long long ll;
 /*************************************************/
 
-vector<int> arr;
-vector<bool> mask;
-int k;
+int N, M;
+int S, E;
+vi arr;
+vvi cache;
 
-void C(int idx, int depth) {
-	if (depth == 6) {
-		for (int i = 0; i < k; ++i) {
-			if (mask[i] == true) {
-				cout << arr[i] << " ";
-			}
-		}
-		cout << endl;
-	}
-	for (int i = idx; i < k; ++i) {
-		mask[i] = true;
-		C(i + 1, depth + 1);
-		mask[i] = false;
-	}
+int DP(int start, int end) {
+    if (cache[start][end] != -1) {
+        return cache[start][end];
+    }
+    if (start == end) {
+        return 1;
+    }
+    if (start > end) {
+        if (arr[start] == arr[end]) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    if (arr[start] != arr[end]) {
+        return cache[start][end] = 0;
+    }
+    else {
+        return cache[start][end] = DP(start + 1, end - 1);
+    }
 }
 
 void Solve(void) {
-	while (1) {
-		cin >> k;
-		if (k == 0) break;
-		arr.resize(k);
-		mask.resize(k, false);
-		for (int i = 0; i < k; ++i) {
-			cin >> arr[i];
-		}
-
-		C(0, 0);
-		cout << endl;
-	}
+    while (M--) {
+        cin >> S >> E;
+        cout << DP(S, E) << endl;
+    }
 }
 
 void Init(void) {
-	Boost;
+    Boost;
+    cin >> N;
+    arr.resize(N + 1);
+    for (int i = 1; i <= N; i++) {
+        cin >> arr[i];
+    }
+    cache.resize(N + 1, vi(N + 1, -1));
+    cin >> M;
 }
 
 int main(void) {
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

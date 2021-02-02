@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-02-03 03:01:02  *************/
+\*************  2021-02-01 16:44:08  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,47 +37,40 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-vector<int> arr;
-vector<bool> mask;
-int k;
+int N;
+v<pii> mat;
+vvi cache;
 
-void C(int idx, int depth) {
-	if (depth == 6) {
-		for (int i = 0; i < k; ++i) {
-			if (mask[i] == true) {
-				cout << arr[i] << " ";
-			}
-		}
-		cout << endl;
-	}
-	for (int i = idx; i < k; ++i) {
-		mask[i] = true;
-		C(i + 1, depth + 1);
-		mask[i] = false;
-	}
+int DP(int beg, int end) {
+    if (cache[beg][end] != -1) {
+        return cache[beg][end];
+    }
+    if (beg == end) {
+        return 0;
+    }
+    cache[beg][end] = INF;
+    for (int i = beg; i < end; i++) {
+        cache[beg][end] = min(cache[beg][end], DP(beg, i) + DP(i + 1, end) + mat[beg].fi * mat[i].se * mat[end].se);
+    }
+    return cache[beg][end];
 }
 
 void Solve(void) {
-	while (1) {
-		cin >> k;
-		if (k == 0) break;
-		arr.resize(k);
-		mask.resize(k, false);
-		for (int i = 0; i < k; ++i) {
-			cin >> arr[i];
-		}
-
-		C(0, 0);
-		cout << endl;
-	}
+    cout << DP(0, N - 1);
 }
 
 void Init(void) {
-	Boost;
+    Boost;
+    cin >> N;
+    mat.resize(N);
+    cache.resize(N, vi(N, -1));
+    for (int i = 0; i < N; i++) {
+        cin >> mat[i].fi >> mat[i].se;
+    }
 }
 
 int main(void) {
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

@@ -30,8 +30,8 @@ using namespace std;
 #define li list<int> 
 #define pii pair<int,int>
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
-#define INF 2e9
-#define LINF 9e18
+#define INF INT32_MAX
+#define LINF INT64_MAX
 #define endl '\n'
 #define Deb(x) cout<<#x<<"="<<x<<endl;
 typedef long long ll;

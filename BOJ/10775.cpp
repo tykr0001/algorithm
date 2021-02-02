@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-25 19:31:16  *************/
+\*************  2021-02-01 12:16:41  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -38,18 +38,45 @@ typedef long long ll;
 /*************************************************/
 
 int G, P;
-vi airport;
 vi airplanes;
+vi parent;
+int answer;
+
+int Find(int node) {
+	if (node == -1 || parent[node] == node) {
+		return node;
+	}
+	else {
+		return parent[node] = Find(parent[node]);
+	}
+}
+
+void Union(int a, int b) {
+	parent[Find(a)] = Find(b);
+}
 
 void Solve(void) {
-
+	for (int i = 0; i < P; i++) {
+		if (Find(airplanes[i]) == 0) {
+			break;
+		}
+		Union(Find(airplanes[i]), Find(airplanes[i]) - 1);
+		answer++;
+	}
+	cout << answer << endl;
 }
 
 void Init(void) {
 	Boost;
-    cin >> G >> P;
-    airport.resize(G+1);
-    airplanes.resize(P+1);
+	cin >> G >> P;
+	parent.resize(G + 1);
+	airplanes.resize(P + 1);
+	for (int i = 1; i <= G; i++) {
+		parent[i] = i;
+	}
+	for (int i = 0; i < P; i++) {
+		cin >> airplanes[i];
+	}
 }
 
 int main(void) {
