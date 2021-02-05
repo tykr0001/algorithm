@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-02-03 04:50:03  *************/
+\*************  2021-02-03 17:44:40  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -39,14 +39,16 @@ typedef long long ll;
 
 int T;
 int N;
-vi cache;
 vb is_prime;
+vi cache;
+int answer_lo;
+int answer_hi;
 
-void Eratos(void) {
-	for (int i = 2; i <= 123456 * 2; i++) {
+void Eratos(int n) {
+	for (int i = 2; i <= n; i++) {
 		if (is_prime[i]) {
 			cache.emplace_back(i);
-			for (int j = i * 2; j <= 123456 * 2; j += i) {
+			for (int j = i * 2; j <= n; j += i) {
 				is_prime[j] = false;
 			}
 		}
@@ -54,26 +56,38 @@ void Eratos(void) {
 }
 
 void Solve(void) {
-	while (1) {
-		cin >> N;
-		if (N == 0) {
-			return;
-		}
-		auto lo = lower_bound(cache.begin(), cache.end(), N + 1);
-		auto hi = upper_bound(cache.begin(), cache.end(), 2 * N);
-		cout << distance(lo, hi) << endl;
-	}
-
+    while(T--){
+        cin >> N;
+        auto lo = cache.begin();
+        auto hi = upper_bound(cache.begin(), cache.end(), N);
+        hi--;
+        while(*lo<=*hi){
+            if(*lo + *hi == N){
+                answer_lo = *lo;
+                answer_hi = *hi;
+                lo++;
+                hi--;
+            }
+            else if(*lo + *hi < N){
+                lo++;
+            }
+            else{
+                hi--;
+            }
+        }
+        cout << answer_lo << " " << answer_hi << endl;
+    }
 }
 
 void Init(void) {
-	is_prime.resize(123456 * 2 + 1, true);
-	is_prime[0] = is_prime[1] = false;
-	Eratos();
+    cin >> T;
+    is_prime.resize(10001, true);
+    is_prime[0] = is_prime[1] = false;
+    Eratos(10000);
 }
 
 int main(void) {
-	Boost;
+    Boost;
 	Init();
 	Solve();
 	return 0;

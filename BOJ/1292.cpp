@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-02-03 04:50:03  *************/
+\*************  2021-02-04 01:59:11  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,44 +37,42 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int T;
-int N;
-vi cache;
-vb is_prime;
-
-void Eratos(void) {
-	for (int i = 2; i <= 123456 * 2; i++) {
-		if (is_prime[i]) {
-			cache.emplace_back(i);
-			for (int j = i * 2; j <= 123456 * 2; j += i) {
-				is_prime[j] = false;
-			}
-		}
-	}
-}
+int A, B;
+int answer;
+int cnt;
+int n;
 
 void Solve(void) {
-	while (1) {
-		cin >> N;
-		if (N == 0) {
-			return;
-		}
-		auto lo = lower_bound(cache.begin(), cache.end(), N + 1);
-		auto hi = upper_bound(cache.begin(), cache.end(), 2 * N);
-		cout << distance(lo, hi) << endl;
-	}
-
+    n = 1;
+    cnt = 0;
+    for (int i = 1; i <= A - 1; i++) {
+        answer -= n;
+        cnt++;
+        if (cnt == n) {
+            n++;
+            cnt = 0;
+        }
+    }
+    n = 1;
+    cnt = 0;
+    for (int i = 1; i <= B; i++) {
+        answer += n;
+        cnt++;
+        if (cnt == n) {
+            n++;
+            cnt = 0;
+        }
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
-	is_prime.resize(123456 * 2 + 1, true);
-	is_prime[0] = is_prime[1] = false;
-	Eratos();
+    Boost;
+    cin >> A >> B;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-02-03 04:50:03  *************/
+\*************  2021-02-03 04:49:53  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -38,43 +38,22 @@ typedef long long ll;
 /*************************************************/
 
 int T;
-int N;
-vi cache;
-vb is_prime;
-
-void Eratos(void) {
-	for (int i = 2; i <= 123456 * 2; i++) {
-		if (is_prime[i]) {
-			cache.emplace_back(i);
-			for (int j = i * 2; j <= 123456 * 2; j += i) {
-				is_prime[j] = false;
-			}
-		}
-	}
-}
+ll A, B;
 
 void Solve(void) {
-	while (1) {
-		cin >> N;
-		if (N == 0) {
-			return;
-		}
-		auto lo = lower_bound(cache.begin(), cache.end(), N + 1);
-		auto hi = upper_bound(cache.begin(), cache.end(), 2 * N);
-		cout << distance(lo, hi) << endl;
-	}
-
+    cout << A * B / __gcd(A, B) << endl;
 }
 
 void Init(void) {
-	is_prime.resize(123456 * 2 + 1, true);
-	is_prime[0] = is_prime[1] = false;
-	Eratos();
+    cin >> A >> B;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    cin >> T;
+    while (T--) {
+        Init();
+        Solve();
+    }
+    return 0;
 }

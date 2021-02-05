@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-02-03 04:50:03  *************/
+\*************  2021-02-04 01:40:28  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -21,60 +21,58 @@ using namespace std;
 #define l list 
 #define pq priority_queue 
 #define p pair
-#define vi vector<int> 
-#define vvi vector<vector<int>>
+#define vi vector<ll> 
+#define vvi vector<vector<ll>>
 #define vb vector<bool> 
 #define vvb vector<vector<bool>> 
-#define si stack<int>
-#define qi queue<int>
-#define li list<int> 
-#define pii pair<int,int>
+#define si stack<ll>
+#define qi queue<ll>
+#define li list<ll> 
+#define pii pair<ll,ll>
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
-#define INF INT32_MAX
-#define LINF INT64_MAX
+#define INF ll32_MAX
+#define LINF ll64_MAX
 #define endl '\n'
 #define Deb(x) cout<<#x<<"="<<x<<endl;
 typedef long long ll;
 /*************************************************/
 
-int T;
-int N;
-vi cache;
-vb is_prime;
-
-void Eratos(void) {
-	for (int i = 2; i <= 123456 * 2; i++) {
-		if (is_prime[i]) {
-			cache.emplace_back(i);
-			for (int j = i * 2; j <= 123456 * 2; j += i) {
-				is_prime[j] = false;
-			}
-		}
-	}
-}
+ll n, m;
+ll two;
+ll five;
 
 void Solve(void) {
-	while (1) {
-		cin >> N;
-		if (N == 0) {
-			return;
-		}
-		auto lo = lower_bound(cache.begin(), cache.end(), N + 1);
-		auto hi = upper_bound(cache.begin(), cache.end(), 2 * N);
-		cout << distance(lo, hi) << endl;
-	}
+    for (ll i = 2; i <= n; i *= 2) {
+        two += n / i;
+    }
+    for (ll i = 5; i <= n; i *= 5) {
+        five += n / i;
+    }
 
+    for (ll i = 2; i <= n - m; i *= 2) {
+        two -= (n - m) / i;
+    }
+    for (ll i = 5; i <= n - m; i *= 5) {
+        five -= (n - m) / i;
+    }
+
+    for (ll i = 2; i <= m; i *= 2) {
+        two -= m / i;
+    }
+    for (ll i = 5; i <= m; i *= 5) {
+        five -= m / i;
+    }
+
+    cout << min(two, five) << endl;
 }
 
 void Init(void) {
-	is_prime.resize(123456 * 2 + 1, true);
-	is_prime[0] = is_prime[1] = false;
-	Eratos();
+    Boost;
+    cin >> n >> m;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

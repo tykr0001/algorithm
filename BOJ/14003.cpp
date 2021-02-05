@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-02-03 04:50:03  *************/
+\*************  2021-01-15 22:56:51  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,44 +37,53 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int T;
 int N;
-vi cache;
-vb is_prime;
-
-void Eratos(void) {
-	for (int i = 2; i <= 123456 * 2; i++) {
-		if (is_prime[i]) {
-			cache.emplace_back(i);
-			for (int j = i * 2; j <= 123456 * 2; j += i) {
-				is_prime[j] = false;
-			}
-		}
-	}
-}
+vi arr;
+vi lis;
+vi idx;
+vi answer;
 
 void Solve(void) {
-	while (1) {
-		cin >> N;
-		if (N == 0) {
-			return;
-		}
-		auto lo = lower_bound(cache.begin(), cache.end(), N + 1);
-		auto hi = upper_bound(cache.begin(), cache.end(), 2 * N);
-		cout << distance(lo, hi) << endl;
-	}
+    lis.emplace_back(arr[0]);
+    idx.emplace_back(0);
+    for (int i = 1; i < N; i++) {
+        if (lis.back() < arr[i]) {
+            lis.emplace_back(arr[i]);
+            idx.emplace_back(lis.size() - 1);
+        }
+        else {
+            auto iter = lower_bound(lis.begin(), lis.end(), arr[i]);
+            *iter = arr[i];
+            idx.emplace_back(distance(lis.begin(), iter));
 
+        }
+    }
+
+    for (int i = N - 1, j = lis.size() - 1; i >= 0; i--) {
+        if (idx[i] == j) {
+            answer.emplace_back(arr[i]);
+            j--;
+        }
+    }
+
+    sort(answer.begin(), answer.end());
+    cout << answer.size() << endl;
+    for (int i = 0; i < answer.size(); i++) {
+        cout << answer[i] << ' ';
+    }
 }
 
 void Init(void) {
-	is_prime.resize(123456 * 2 + 1, true);
-	is_prime[0] = is_prime[1] = false;
-	Eratos();
+    Boost;
+    cin >> N;
+    arr.resize(N);
+    for (int i = 0; i < N; i++) {
+        cin >> arr[i];
+    }
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

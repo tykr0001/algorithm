@@ -133,23 +133,23 @@ void Dijkstra(const vector<vector<pair<int, int>>>& graph, int V, int init) {
 // @param V     : the number of vertex
 // @param init  : initial node to search
 // @return      : pair of index and cost about the heaviest node
-pair<int,int> DFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
+pair<int, int> DFS(const vector<vector<pair<int, int>>>& graph, int V, int init) {
     int max_idx = 0;
     int max_len = 0;
-    vector<bool> visited(V+1, false);
-    stack<pair<int,int>> search_stack;
+    vector<bool> visited(V + 1, false);
+    stack<pair<int, int>> search_stack;
     search_stack.emplace(init, 0);
     visited[init] = true;
-    while(!search_stack.empty()){
+    while (!search_stack.empty()) {
         int src, length;
         tie(src, length) = search_stack.top();
-        if(max_len < length){
+        if (max_len < length) {
             max_idx = src;
             max_len = length;
         }
         search_stack.pop();
-        for(auto child : graph[src]){
-            if(!visited[child.first]){
+        for (auto child : graph[src]) {
+            if (!visited[child.first]) {
                 visited[child.first] = true;
                 search_stack.emplace(src, length);
                 search_stack.emplace(child.first, length + child.second);
@@ -157,7 +157,7 @@ pair<int,int> DFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
             }
         }
     }
-    return {max_idx, max_len};
+    return { max_idx, max_len };
 }
 
 // BFS(Breadth-First-Search, 너비우선탐색) 
@@ -166,29 +166,29 @@ pair<int,int> DFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
 // @param V     : the number of vertex
 // @param init  : initial node to search
 // @return      : pair of index and cost about the heaviest node
-pair<int,int> BFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
+pair<int, int> BFS(const vector<vector<pair<int, int>>>& graph, int V, int init) {
     int max_idx = 0;
     int max_len = 0;
-    vector<bool> visited(V+1, false);
-    queue<pair<int,int>> search_queue;
+    vector<bool> visited(V + 1, false);
+    queue<pair<int, int>> search_queue;
     search_queue.emplace(init, 0);
     visited[init] = true;
-    while(!search_queue.empty()){
+    while (!search_queue.empty()) {
         int src, length;
         tie(src, length) = search_queue.front();
-        if(max_len < length){
+        if (max_len < length) {
             max_idx = src;
             max_len = length;
         }
         search_queue.pop();
-        for(auto child : graph[src]){
-            if(!visited[child.first]){
+        for (auto child : graph[src]) {
+            if (!visited[child.first]) {
                 visited[child.first] = true;
                 search_queue.emplace(child.first, length + child.second);
             }
         }
     }
-    return {max_idx, max_len};
+    return { max_idx, max_len };
 }
 
 // Pre-order(전위순회) 
@@ -196,12 +196,12 @@ pair<int,int> BFS(const vector<vector<pair<int,int>>>& graph, int V, int init){
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
 // @return     : void
-void PreOrder(const vector<vector<pair<int, int>>>& tree, int node){
-    cout << char(node+'A');
-    if(tree[node][0].second != INF){
+void PreOrder(const vector<vector<pair<int, int>>>& tree, int node) {
+    cout << char(node + 'A');
+    if (tree[node][0].second != INF) {
         PreOrder(tree, tree[node][0].first);
     }
-    if(tree[node][1].second != INF){
+    if (tree[node][1].second != INF) {
         PreOrder(tree, tree[node][1].first);
     }
 }
@@ -211,12 +211,12 @@ void PreOrder(const vector<vector<pair<int, int>>>& tree, int node){
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
 // @return     : void
-void InOrder(const vector<vector<pair<int, int>>>& tree, int node){
-    if(tree[node][0].second != INF){
+void InOrder(const vector<vector<pair<int, int>>>& tree, int node) {
+    if (tree[node][0].second != INF) {
         InOrder(tree, tree[node][0].first);
     }
-    cout << char(node+'A');
-    if(tree[node][1].second != INF){
+    cout << char(node + 'A');
+    if (tree[node][1].second != INF) {
         InOrder(tree, tree[node][1].first);
     }
 }
@@ -226,14 +226,14 @@ void InOrder(const vector<vector<pair<int, int>>>& tree, int node){
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
 // @return     : void
-void PostOrder(const vector<vector<pair<int, int>>>& tree, int node){
-    if(tree[node][0].second != INF){
+void PostOrder(const vector<vector<pair<int, int>>>& tree, int node) {
+    if (tree[node][0].second != INF) {
         PostOrder(tree, tree[node][0].first);
     }
-    if(tree[node][1].second != INF){
+    if (tree[node][1].second != INF) {
         PostOrder(tree, tree[node][1].first);
     }
-    cout << char(node+'A');
+    cout << char(node + 'A');
 }
 
 // LCS(Longest-Common-Subsequence, 최장공통부분수열) 
@@ -242,7 +242,7 @@ void PostOrder(const vector<vector<pair<int, int>>>& tree, int node){
 // @param b : string b
 // @return   : void
 void LCS(const string& a, const string& b) {
-    vector<vector<int>> cache(1001,vector<int>(1001,0));
+    vector<vector<int>> cache(1001, vector<int>(1001, 0));
     for (int i = 0; i < a.length(); i++) {
         for (int j = 0; j < b.length(); j++) {
             if (a[i] == b[j]) {
@@ -330,4 +330,58 @@ int Find(int node) {
 // @return  : void
 void Union(int a, int b) {
     parent[Find(a)] = Find(b);
+}
+
+vector<bool> is_prime;
+vector<int> cache;
+// Sieve of Eratosthenes(에라토스테네스의 체)
+// @brief  : Find prime numbers under n
+// @return : void
+void Eratos(int n) {
+    for (int i = 2; i <= n; i++) {
+        if (is_prime[i]) {
+            cache.emplace_back(i);
+            for (int j = i * 2; j <= n; j += i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+}
+
+
+// LIS(Longest-Increasing-Subsequence 최장증가부분수열)
+// @brief     : print length and elements of LIS
+// @param arr : target vector
+// @return    : void
+void LIS(vector<int>& arr) {
+    vector<int> lis;
+    vector<int> idx;
+    vector<int> answer;
+    lis.emplace_back(arr[0]);
+    idx.emplace_back(0);
+    for (int i = 1; i < arr.size(); i++) {
+        if (lis.back() < arr[i]) {
+            lis.emplace_back(arr[i]);
+            idx.emplace_back(lis.size() - 1);
+        }
+        else {
+            auto iter = lower_bound(lis.begin(), lis.end(), arr[i]);
+            *iter = arr[i];
+            idx.emplace_back(distance(lis.begin(), iter));
+
+        }
+    }
+
+    for (int i = arr.size() - 1, j = lis.size() - 1; i >= 0; i--) {
+        if (idx[i] == j) {
+            answer.emplace_back(arr[i]);
+            j--;
+        }
+    }
+
+    sort(answer.begin(), answer.end());
+    cout << answer.size() << endl;
+    for (int i = 0; i < answer.size(); i++) {
+        cout << answer[i] << ' ';
+    }
 }

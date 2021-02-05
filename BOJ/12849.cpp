@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-02-03 04:50:03  *************/
+\*************  2021-02-06 04:00:21  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,44 +37,40 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int T;
-int N;
-vi cache;
-vb is_prime;
-
-void Eratos(void) {
-	for (int i = 2; i <= 123456 * 2; i++) {
-		if (is_prime[i]) {
-			cache.emplace_back(i);
-			for (int j = i * 2; j <= 123456 * 2; j += i) {
-				is_prime[j] = false;
-			}
-		}
-	}
-}
+#define MOD 1000000007
+int D;
+v<li> graph(8);
+vvi cache;
 
 void Solve(void) {
-	while (1) {
-		cin >> N;
-		if (N == 0) {
-			return;
-		}
-		auto lo = lower_bound(cache.begin(), cache.end(), N + 1);
-		auto hi = upper_bound(cache.begin(), cache.end(), 2 * N);
-		cout << distance(lo, hi) << endl;
-	}
-
+    for (int i = 1; i <= D; i++) {
+        for (int j = 0; j < 8; j++) {
+            for (auto elem : graph[j]) {
+                cache[i][elem] += cache[i - 1][j];
+                cache[i][elem] %= MOD;
+            }
+        }
+    }
+    cout << cache[D][0] << endl;
 }
 
 void Init(void) {
-	is_prime.resize(123456 * 2 + 1, true);
-	is_prime[0] = is_prime[1] = false;
-	Eratos();
+    Boost;
+    cin >> D;
+    graph[0].emplace_back(1); graph[0].emplace_back(2);
+    graph[1].emplace_back(0); graph[1].emplace_back(2); graph[1].emplace_back(3);
+    graph[2].emplace_back(0); graph[2].emplace_back(1); graph[2].emplace_back(3); graph[2].emplace_back(4);
+    graph[3].emplace_back(1); graph[3].emplace_back(2); graph[3].emplace_back(4); graph[3].emplace_back(5);
+    graph[4].emplace_back(2); graph[4].emplace_back(3); graph[4].emplace_back(5); graph[4].emplace_back(7);
+    graph[5].emplace_back(3); graph[5].emplace_back(4); graph[5].emplace_back(6);
+    graph[6].emplace_back(5); graph[6].emplace_back(7);
+    graph[7].emplace_back(4); graph[7].emplace_back(6);
+    cache.resize(D + 1, vi(8, 0));
+    cache[0][0] = 1;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }
