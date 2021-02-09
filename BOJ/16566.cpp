@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-02-08 10:06:43  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,17 +37,39 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int N, M, K;
+vi card;
+vi op;
+vb selected;
 
+void Solve(void) {
+    for (int i = 0; i < K; i++) {
+        int idx = distance(card.begin(), upper_bound(card.begin(), card.end(), op[i]));
+        while (selected[idx]) {
+            idx++;
+        }
+        selected[idx] = true;
+        cout << card[idx] << endl;
+    }
 }
 
 void Init(void) {
-	Boost;
-
+    Boost;
+    cin >> N >> M >> K;
+    card.resize(N);
+    op.resize(N);
+    selected.resize(N, false);
+    for (int i = 0; i < M; i++) {
+        cin >> card[i];
+    }
+    sort(card.begin(), card.end());
+    for (int i = 0; i < K; i++) {
+        cin >> op[i];
+    }
 }
 
 int main(void) {
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

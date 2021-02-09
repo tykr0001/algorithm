@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-02-09 12:48:22  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,17 +37,52 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int M, N;
+vvi mat;
+int dx[4] = { 0,0,-1,1 };
+int dy[4] = { -1,1,0,0 };
+int answer;
 
+bool CanGo(int i, int j) {
+    return 0 <= i && i < M && 0 <= j && j < N;
+}
+
+void Solve(void) {
+    q<pii> sq;
+    sq.emplace(0, 0);
+    while (!sq.empty()) {
+        auto front = sq.front();
+        sq.pop();
+        for (int i = 0; i < 4; i++) {
+            int x = front.fi + dx[i];
+            int y = front.se + dy[i];
+            if (CanGo(x, y) && mat[front.fi][front.se] > mat[x][y]) {
+                if (x == M - 1 && y == N - 1) {
+                    answer++;
+                }
+                else {
+                    sq.emplace(x, y);
+                }
+            }
+        }
+    }
+
+    cout << answer << endl;
 }
 
 void Init(void) {
-	Boost;
-
+    Boost;
+    cin >> M >> N;
+    mat.resize(M, vi(N));
+    for (int i = 0; i < M; i++) {
+        for (int j = 0; j < N; j++) {
+            cin >> mat[i][j];
+        }
+    }
 }
 
 int main(void) {
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

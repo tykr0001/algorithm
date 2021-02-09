@@ -37,17 +37,25 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
+int L, K;
+vi arr;
+
 void Solve(void) {
 
 }
 
 void Init(void) {
-	Boost;
-
+    Boost;
+    cin >> L >> K;
+    arr.resize(K);
+    for (int i = 0; i < K; i++) {
+        cin >> arr[i];
+    }
+    
 }
 
 int main(void) {
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }

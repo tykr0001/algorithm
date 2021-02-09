@@ -37,17 +37,53 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int n;
+vb is_prime;
+vi cache;
+int answer;
 
+void Eratos(int n) {
+    for (int i = 2; i <= n; i++) {
+        if (is_prime[i]) {
+            cache.emplace_back(i);
+            for (int j = i * 2; j <= n; j += i) {
+                is_prime[j] = false;
+            }
+        }
+    }
+}
+
+void Solve(void) {
+    int lo = 0;
+    int hi = 0;
+    int tmp = cache[lo];
+    while (lo <= hi && hi < cache.size()) {
+        if (tmp > n) {
+            tmp -= cache[lo];
+            lo++;
+        }
+        else {
+            if (tmp == n) {
+                answer++;
+            }
+            hi++;
+            tmp += cache[hi];
+        }
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
-	Boost;
+    Boost;
+    cin >> n;
+    is_prime.resize(n + 1, true);
+    is_prime[0] = is_prime[1] = false;
+    Eratos(n);
 
 }
 
 int main(void) {
-	Init();
-	Solve();
-	return 0;
+    Init();
+    Solve();
+    return 0;
 }
