@@ -37,339 +37,118 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
+struct BallState {
+    int depth;
+    int rx;
+    int ry;
+    int bx;
+    int by;
+};
+
 int N, M;
 v<string> board;
+v<v<v<vb>>> visited;
+int dx[4] = { 0, 0, 1, -1 };
+int dy[4] = { 1, -1, 0, 0 };
 int answer;
+int hx, hy;
+int rx, ry;
+int bx, by;
 
-void DFS(v<string> cur_board, int depth, int op) {
-    if (depth == 10) {
-        return;
+void MoveBall(int& x, int& y, int dir) {
+    while (1) {
+        x += dx[dir];
+        y += dy[dir];
+        if (board[x][y] == '#') {
+            x -= dx[dir];
+            y -= dy[dir];
+            break;
+        }
+        else if (board[x][y] == 'O') {
+            break;
+        }
     }
-    bool is_blue_dropped = false;
-    switch (op) {
-    case 0: //left
-        for (int i = 1; i < N - 1; i++) {
-            int idx = 1;
-            bool hole = false;
-            for (int j = 1; j < M - 1; j++) {
-                if (cur_board[i][j] == 'R') {
-                    if (hole) {
-                        cur_board[i][j] == '.';
-                    }
-                    else if (cur_board[i][idx] == 'R' || cur_board[i][idx] == 'B') {
-                        if (idx != j) {
-                            idx++;
-                            while (cur_board[i][idx] == '#' && idx < M - 1) {
-                                idx++;
-                            }
-                            if (idx != j) {
-                                cur_board[i][idx] == 'R';
-                                cur_board[i][j] == '.';
-                            }
-                        }
-                    }
-                    else if (cur_board[i][idx] = '.') {
-                        cur_board[i][idx] = cur_board[i][j];
-                        cur_board[i][j] = '.';
-                        idx++;
-                        while (cur_board[i][idx] == '#' && idx < M - 1) {
-                            idx++;
-                        }
-                    }
-                }
+}
 
-                if (cur_board[i][j] == 'B') {
-                    if (hole) {
-                        is_blue_dropped = true;
-                        break;
-                    }
-                    else if (cur_board[i][idx] == 'R' || cur_board[i][idx] == 'B') {
-                        if (idx != j) {
-                            idx++;
-                            while (cur_board[i][idx] == '#' && idx < M - 1) {
-                                idx++;
-                            }
-                            if (idx != j) {
-                                cur_board[i][idx] == 'B';
-                                cur_board[i][j] == '.';
-                            }
-                        }
-                    }
-                    else if (cur_board[i][idx] = '.') {
-                        cur_board[i][idx] = cur_board[i][j];
-                        cur_board[i][j] = '.';
-                        idx++;
-                        while (cur_board[i][idx] == '#' && idx < M - 1) {
-                            idx++;
-                        }
-                    }
-                }
+void BFS() {
+    q<BallState> sq;
+    sq.push({ 0, rx, ry, bx, by });
+    visited[rx][ry][bx][by] = true;
+    while (!sq.empty()) {
+        BallState front = sq.front();
+        sq.pop();
 
-                if (cur_board[i][j] == 'O') {
-                    hole = true;
-                }
+        if (front.depth > 10) {
+            break;
+        }
+        if (front.rx == hx && front.ry == hy) {
+            answer = front.depth;
+            break;
+        }
 
-                if(cur_board[i][j] == '#') {
-                    idx = j + 1;
+        for (int dir = 0; dir < 4; dir++) {
+            int rx = front.rx;
+            int ry = front.ry;
+            int bx = front.bx;
+            int by = front.by;
+            MoveBall(rx, ry, dir);
+            MoveBall(bx, by, dir);
+
+            if (bx == hx && by == hy) {
+                continue;
+            }
+
+            if (rx == bx && ry == by) {
+                switch (dir) {
+                case 0:
+                    front.ry > front.by ? by-- : ry--;
+                    break;
+                case 1:
+                    front.ry > front.by ? ry++ : by++;
+                    break;
+                case 2:
+                    front.rx > front.bx ? bx-- : rx--;
+                    break;
+                case 3:
+                    front.rx > front.bx ? rx++ : bx++;
+                    break;
+                default:
+                    break;
                 }
             }
-            if (is_blue_dropped)
-                break;
-        }
-        break;
 
-    case 1: //right
-        for (int i = N - 2; i > 0; i--) {
-            int idx = M - 2;
-            bool hole = false;
-            for (int j = M - 2; j > 0; j--) {
-                if (cur_board[i][j] == 'R') {
-                    if (hole) {
-                        cur_board[i][j] == '.';
-                    }
-                    else if (cur_board[i][idx] == 'R' || cur_board[i][idx] == 'B') {
-                        if (idx != j) {
-                            idx--;
-                            while (cur_board[i][idx] == '#' && idx > 0) {
-                                idx--;
-                            }
-                            if (idx != j) {
-                                cur_board[i][idx] == 'R';
-                                cur_board[i][j] == '.';
-                            }
-                        }
-                    }
-                    else if (cur_board[i][idx] = '.') {
-                        cur_board[i][idx] = cur_board[i][j];
-                        cur_board[i][j] = '.';
-                        idx--;
-                        while (cur_board[i][idx] == '#' && idx > 0) {
-                            idx--;
-                        }
-                    }
-                }
-                if (cur_board[i][j] == 'B') {
-                    if (hole) {
-                        is_blue_dropped = true;
-                        break;
-                    }
-                    else if (cur_board[i][idx] == 'R' || cur_board[i][idx] == 'B') {
-                        if (idx != j) {
-                            idx--;
-                            while (cur_board[i][idx] == '#' && idx > 0) {
-                                idx--;
-                            }
-                            if (idx != j) {
-                                cur_board[i][idx] == 'B';
-                                cur_board[i][j] == '.';
-                            }
-                        }
-                    }
-                    else if (cur_board[i][idx] = '.') {
-                        cur_board[i][idx] = cur_board[i][j];
-                        cur_board[i][j] = '.';
-                        idx--;
-                        while (cur_board[i][idx] == '#' && idx > 0) {
-                            idx--;
-                        }
-                    }
-                }
-                if (cur_board[i][j] == 'O') {
-                    hole = true;
-                }
-                
-                if(cur_board[i][j] == '#') {
-                    idx = j - 1;
-                }
+            if (!visited[rx][ry][bx][by]) {
+                sq.push({ front.depth + 1, rx, ry, bx, by });
+                visited[rx][ry][bx][by] = true;
             }
-            if (is_blue_dropped)
-                break;
-        }
-        break;
-
-    case 2: //up
-        for (int j = 1; j < M - 1; j++) {
-            int idx = 1;
-            bool hole = false;
-            for (int i = 1; i < N - 1; i++) {
-                if (cur_board[i][j] == 'R') {
-                    if (hole) {
-                        cur_board[i][j] == '.';
-                    }
-                    else if (cur_board[idx][j] == 'R' || cur_board[idx][j] == 'B') {
-                        if (idx != i) {
-                            idx++;
-                            while (cur_board[idx][j] == '#' && idx < N - 1) {
-                                idx++;
-                            }
-                            if (idx != i) {
-                                cur_board[idx][j] == 'R';
-                                cur_board[i][j] == '.';
-                            }
-                        }
-                    }
-                    else if (cur_board[idx][j] == '.') {
-                        cur_board[idx][j] = cur_board[i][j];
-                        cur_board[i][j] = '.';
-                        idx++;
-                        while (cur_board[idx][j] == '#' && idx < N - 1) {
-                            idx++;
-                        }
-                    }
-                }
-                if (cur_board[i][j] == 'B') {
-                    if (hole) {
-                        is_blue_dropped = true;
-                        break;
-                    }
-                    else if (cur_board[idx][j] == 'R' || cur_board[idx][j] == 'B') {
-                        if (idx != j) {
-                            idx++;
-                            while (cur_board[idx][j] == '#' && idx < N - 1) {
-                                idx++;
-                            }
-                            if (idx != i) {
-                                cur_board[idx][j] == 'B';
-                                cur_board[i][j] == '.';
-                            }
-                        }
-                    }
-                    else if (cur_board[idx][j] == '.') {
-                        cur_board[idx][j] = cur_board[i][j];
-                        cur_board[i][j] = '.';
-                        idx++;
-                        while (cur_board[idx][j] == '#' && idx < N - 1) {
-                            idx++;
-                        }
-                    }
-                }
-                if (cur_board[i][j] == 'O') {
-                    hole = true;
-                }
-                
-                if(cur_board[i][j] == '#') {
-                    idx = i + 1;
-                }
-            }
-            if (is_blue_dropped)
-                break;
-        }
-        break;
-
-    case 3: //down
-        for (int j = M - 2; j > 0; j--) {
-            int idx = N - 2;
-            bool hole = false;
-            for (int i = N - 2; i > 0; i--) {
-                if (cur_board[i][j] == 'R') {
-                    if (hole) {
-                        cur_board[i][j] == '.';
-                    }
-                    else if (cur_board[idx][j] == 'R' || cur_board[idx][j] == 'B') {
-                        if (idx != i) {
-                            idx--;
-                            while (cur_board[idx][j] == '#' && idx > 0) {
-                                idx--;
-                            }
-                            if (idx != i) {
-                                cur_board[idx][j] == 'R';
-                                cur_board[i][j] == '.';
-                            }
-                        }
-                    }
-                    else if (cur_board[idx][j] == '.') {
-                        cur_board[idx][j] = cur_board[i][j];
-                        cur_board[i][j] = '.';
-                        idx--;
-                        while (cur_board[idx][j] == '#' && idx > 0) {
-                            idx--;
-                        }
-                    }
-                }
-                if (cur_board[i][j] == 'B') {
-                    if (hole) {
-                        is_blue_dropped = true;
-                        break;
-                    }
-                    else if (cur_board[idx][j] == 'R' || cur_board[idx][j] == 'B') {
-                        if (idx != j) {
-                            idx--;
-                            while (cur_board[idx][j] == '#' && idx > 0) {
-                                idx--;
-                            }
-                            if (idx != i) {
-                                cur_board[idx][j] == 'B';
-                                cur_board[i][j] == '.';
-                            }
-                        }
-                    }
-                    else if (cur_board[idx][j] == '.') {
-                        cur_board[idx][j] = cur_board[i][j];
-                        cur_board[i][j] = '.';
-                        idx--;
-                        while (cur_board[idx][j] == '#' && idx > 0) {
-                            idx--;
-                        }
-                    }
-                }
-                if (cur_board[i][j] == 'O') {
-                    hole = true;
-                }
-                
-                if(cur_board[i][j] == '#') {
-                    idx = i - 1;
-                }
-            }
-            if (is_blue_dropped)
-                break;
-        }
-        break;
-
-    default:
-        break;
-    }
-
-    if (!is_blue_dropped) {
-        bool flag = false;
-        
-        // cout << endl;
-        // cout << op << ',' << depth + 1 << endl;
-        
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (cur_board[i][j] == 'R') {
-                    flag = true;
-                }
-                // cout << cur_board[i][j];
-            }
-            // cout << endl;
-        }
-        if (flag) {
-            DFS(cur_board, depth + 1, 0);
-            DFS(cur_board, depth + 1, 1);
-            DFS(cur_board, depth + 1, 2);
-            DFS(cur_board, depth + 1, 3);
-        }
-        else {
-            answer = depth + 1;
         }
     }
 }
 
 void Solve(void) {
-    DFS(board, 0, 0);
-    DFS(board, 0, 1);
-    DFS(board, 0, 2);
-    DFS(board, 0, 3);
+    BFS();
     cout << answer << endl;
 }
 
 void Init(void) {
     Boost;
     cin >> N >> M;
+    answer = -1;
     board.resize(N);
+    visited.resize(N, v<v<vb>>(M, v<vb>(N, vb(M, false))));
     for (int i = 0; i < N; i++) {
         cin >> board[i];
+        for (int j = 0; j < M; j++) {
+            if (board[i][j] == 'O') {
+                hx = i; hy = j;
+            }
+            if (board[i][j] == 'R') {
+                rx = i; ry = j;
+            }
+            if (board[i][j] == 'B') {
+                bx = i; by = j;
+            }
+        }
     }
 }
 

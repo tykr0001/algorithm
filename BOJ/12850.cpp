@@ -38,35 +38,50 @@ typedef long long ll;
 /*************************************************/
 
 #define MOD 1000000007
+#define SIZE 8
 int D;
-v<li> graph(8);
-vvi cache;
+v<v<ll>> graph(SIZE, v<ll>(SIZE, 0));
 
-void Solve(void) {
-    for (int i = 1; i <= D; i++) {
-        for (int j = 0; j < 8; j++) {
-            for (auto elem : graph[j]) {
-                cache[i][elem] += cache[i - 1][j];
-                cache[i][elem] %= MOD;
+v<v<ll>> operator*(v<v<ll>> a, v<v<ll>> b) {
+    v<v<ll>> ret(SIZE, v<ll>(SIZE, 0));
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < SIZE; k++) {
+                ret[i][j] = (ret[i][j] + a[i][k] * b[k][j]) % MOD;
             }
         }
     }
-    cout << cache[D][0] << endl;
+    return ret;
+}
+
+v<v<ll>> ex(int n) {
+    if (n == 1) {
+        return graph;
+    }
+    v<v<ll>> tmp(ex(n / 2));
+    if (n % 2) {
+        return tmp * tmp * graph;
+    }
+    else {
+        return tmp * tmp;
+    }
+}
+
+void Solve(void) {
+    cout << ex(D)[0][0] << endl;
 }
 
 void Init(void) {
     Boost;
     cin >> D;
-    graph[0].emplace_back(1); graph[0].emplace_back(2);
-    graph[1].emplace_back(0); graph[1].emplace_back(2); graph[1].emplace_back(3);
-    graph[2].emplace_back(0); graph[2].emplace_back(1); graph[2].emplace_back(3); graph[2].emplace_back(4);
-    graph[3].emplace_back(1); graph[3].emplace_back(2); graph[3].emplace_back(4); graph[3].emplace_back(5);
-    graph[4].emplace_back(2); graph[4].emplace_back(3); graph[4].emplace_back(5); graph[4].emplace_back(7);
-    graph[5].emplace_back(3); graph[5].emplace_back(4); graph[5].emplace_back(6);
-    graph[6].emplace_back(5); graph[6].emplace_back(7);
-    graph[7].emplace_back(4); graph[7].emplace_back(6);
-    cache.resize(D + 1, vi(8, 0));
-    cache[0][0] = 1;
+    graph[0][1] = graph[0][2] = 1;
+    graph[1][0] = graph[1][2] = graph[1][3] = 1;
+    graph[2][0] = graph[2][1] = graph[2][3] = graph[2][4] = 1;
+    graph[3][1] = graph[3][2] = graph[3][4] = graph[3][5] = 1;
+    graph[4][2] = graph[4][3] = graph[4][5] = graph[4][7] = 1;
+    graph[5][3] = graph[5][4] = graph[5][6] = 1;
+    graph[6][5] = graph[6][7] = 1;
+    graph[7][4] = graph[7][6] = 1;
 }
 
 int main(void) {

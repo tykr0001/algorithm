@@ -39,19 +39,37 @@ typedef long long ll;
 
 int L, K;
 vi arr;
+int answer;
+
+void BinarySearch(int lo, int hi) {
+    if (hi - lo == 2){
+        answer += arr[hi] - arr[lo];
+    } 
+    else if (hi - lo > 2) {
+        answer += arr[hi] - arr[lo];
+        int mid = (arr[hi] + arr[lo]) / 2;
+        auto idx = lower_bound(arr.begin() + lo, arr.begin() + hi + 1, mid);
+        int mid_idx = abs(mid - *(idx - 1)) < abs(mid - *(idx)) ? distance(arr.begin(), idx - 1) : distance(arr.begin(), idx);
+        BinarySearch(lo, mid_idx);
+        BinarySearch(mid_idx, hi);
+    }
+}
 
 void Solve(void) {
-
+    BinarySearch(0, arr.size() - 1);
+    cout << answer << endl;
 }
 
 void Init(void) {
     Boost;
     cin >> L >> K;
-    arr.resize(K);
-    for (int i = 0; i < K; i++) {
+    arr.resize(K + 2);
+    arr[0] = 0;
+    for (int i = 1; i <= K; i++) {
         cin >> arr[i];
     }
-    
+    arr[K + 1] = L;
+    sort(arr.begin(), arr.end());
 }
 
 int main(void) {
