@@ -37,17 +37,56 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int T;
+int N, M, K;
+int lo, hi;
+int sum;
+int answer;
+vi money;
 
+void Solve(void) {
+    lo = 0; hi = M;
+    if (N > M) {
+        do {
+            if (sum < K) {
+                answer++;
+            }
+            sum = sum - money[lo] + money[hi];
+            ++lo;
+            if (++hi == N)
+                hi = 0;
+        } while (lo != N);
+    }
+    else {
+        if (sum < K) {
+            answer++;
+        }
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
+    cin >> N >> M >> K;
+    money.clear();
+    money.resize(N);
+    for (int i = 0; i < N; i++) {
+        cin >> money[i];
+    }
 
+    sum = 0;
+    for (int i = 0; i < M; i++) {
+        sum += money[i];
+    }
+
+    answer = 0;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    cin >> T;
+    while (T--) {
+        Init();
+        Solve();
+    }
+    return 0;
 }

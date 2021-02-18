@@ -37,17 +37,44 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int T;
+int N;
+int answer;
+vi dots;
 
+void Solve(void) {
+    for (int i = 0; i < N - 2; i++) {
+        for (int j = i + 2; j < N; j++) {
+            int a, b, c;
+            a = dots[i];
+            c = dots[j];
+            if ((c + a) % 2) continue;
+            b = *lower_bound(dots.begin() + i + 1, dots.begin() + j, (c + a) / 2);
+            if (b - a == c - b) {
+                answer++;
+            }
+        }
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
-
+    cin >> N;
+    dots.clear();
+    dots.resize(N);
+    answer = 0;
+    for (int i = 0; i < N; i++) {
+        cin >> dots[i];
+    }
+    sort(dots.begin(), dots.end());
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    cin >> T;
+    while (T--) {
+        Init();
+        Solve();
+    }
+    return 0;
 }

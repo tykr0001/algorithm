@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-02-14 14:21:16  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,17 +37,37 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int K, L, cnt;
+map<int, int> sid;
+v<pii> sorted_sid;
 
+bool Compare(const pii a, const pii b) {
+    return a.second < b.second;
+}
+
+void Solve(void) {
+    sorted_sid = v<pii>(sid.begin(), sid.end());
+    sort(sorted_sid.begin(), sorted_sid.end(), Compare);
+    for (int i = 0; i < sorted_sid.size(); i++) {
+        cout << setfill('0') << setw(8) << right << sorted_sid[i].first << endl;
+        if (++cnt == K) {
+            break;
+        }
+    }
 }
 
 void Init(void) {
-
+    cin >> K >> L;
+    for (int i = 0; i < L; i++) {
+        int key;
+        cin >> key;
+        sid[key] = i;
+    }
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    Init();
+    Solve();
+    return 0;
 }

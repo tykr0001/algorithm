@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-02-14 17:20:01  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,17 +37,35 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int T;
+int N;
+vi A, B, C;
+int answer;
 
+void Solve(void) {
+    for (int i = 0; i < N; i++) {
+        answer += max(max(A[i], B[i]), max(C[i], 0));
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
-
+    cin >> N;
+    answer = 0;
+    A.resize(N);
+    B.resize(N);
+    C.resize(N);
+    for (int i = 0; i < N; i++) {
+        cin >> A[i] >> B[i] >> C[i];
+    }
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    cin >> T;
+    while (T--) {
+        Init();
+        Solve();
+    }
+    return 0;
 }

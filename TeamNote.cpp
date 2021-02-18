@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #define INF 1e9
+typedef long long ll;
 using namespace std;
 
 // Comment template
@@ -59,7 +60,7 @@ void FloydWarshall(vector<vector<int>>& graph, int size) {
     for (int k = 1; k <= size; k++) { // 중간
         for (int i = 1; i <= size; i++) { // 시작
             for (int j = 1; j <= size; j++) { // 끝
-                graph[j][i] = graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j]);
+                graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j]);
             }
         }
     }
@@ -384,4 +385,55 @@ void LIS(vector<int>& arr) {
     for (int i = 0; i < answer.size(); i++) {
         cout << answer[i] << ' ';
     }
+}
+
+
+vector<ll> arr;
+vector<ll> tree;
+// Segment-Tree(세그먼트트리)
+// @brief           : Build segment-tree which memorizes partial sum
+// @param node      : node index (root node == 1)
+// @param start,end : array index (init start == 0, init end == array size - 1)
+// @return          : Partial sum from start to end
+ll InitSegmentTree(int node, int start, int end) {
+    if (start == end) {
+        return tree[node] = arr[start];
+    }
+    else {
+        return tree[node] = InitSegmentTree(node * 2, start, (start + end) / 2) + InitSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end);
+    }
+}
+
+// @brief : Update segment tree with index and value
+// @param node       : node index (root node == 1)
+// @param start, end : array index (init start == 0, init end == array size - 1)
+// @param idx        : index of new value
+// @param k          : new value
+// @return           : void
+void UpdateSegmentTree(int node, int start, int end, int idx, ll k) {
+    if (idx < start || idx > end) {
+        return;
+    }
+    if (start == end) {
+        tree[node] = k;
+    }
+    else {
+        UpdateSegmentTree(node * 2, start, (start + end) / 2, idx, k);
+        UpdateSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, idx, k);
+        tree[node] = tree[node * 2] + tree[node * 2 + 1];
+    }
+}
+
+// @brief            : return partial sum of segment-tree
+// @param start,end  : array index (init start == 0, init end == array size - 1)
+// @param left,right : array index to get the partial sum
+// @return           : partial sum
+ll SumSegmentTree(int node, int start, int end, int left, int right) {
+    if (left > end || right < start) {
+        return 0;
+    }
+    if (left <= start && end <= right) {
+        return tree[node];
+    }
+    return SumSegmentTree(node * 2, start, (start + end) / 2, left, right) + SumSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
 }

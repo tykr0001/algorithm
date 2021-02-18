@@ -37,17 +37,29 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
+int T;
+int N;
+int answer;
 void Solve(void) {
-
+    for (int i = 1; i * i <= N; i++) {
+        if (N % i == 0 && __gcd(N / i, i) == 1) {
+            answer++;
+        }
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
-
+    cin >> N;
+    answer = 0;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    cin >> T;
+    while (T--) {
+        Init();
+        Solve();
+    }
+    return 0;
 }

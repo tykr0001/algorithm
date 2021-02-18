@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-02-14 17:25:13  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,17 +37,43 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int T, N;
+deque<char> answer;
+vector<char> cards;
 
+void Solve(void) {
+    answer.push_back(cards[0]);
+    for (int i = 1; i < N; i++) {
+        if (cards[i] <= answer.front()) {
+            answer.push_front(cards[i]);
+        }
+        else {
+            answer.push_back(cards[i]);
+        }
+    }
+
+    for (auto elem : answer) {
+        cout << elem;
+    }
+    cout << endl;
 }
 
 void Init(void) {
-
+    cin >> N;
+    cards.clear();
+    cards.resize(N);
+    answer.clear();
+    for (int i = 0; i < N; i++) {
+        cin >> cards[i];
+    }
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    cin >> T;
+    while (T--) {
+        Init();
+        Solve();
+    }
+    return 0;
 }

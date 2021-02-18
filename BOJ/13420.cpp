@@ -8,14 +8,14 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-02-14 18:55:40  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
 using namespace std;
 #define fi first
 #define se second
-#define v vector 
+#define v vector
 #define s stack
 #define q queue 
 #define l list 
@@ -37,81 +37,55 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int m;
-int cnt;
-string head_move;
-string tail_move;
-vvi arr(51, vi(51, 0));
-
-struct {
-    int i;
-    int j;
-} head, tail;
-
-string operator*(string str, int n) {
-    string ret;
-    while (n--) {
-        ret += str;
-    }
-    return ret;
-}
+int T;
+ll a, b, c;
+char op1, op2;
 
 void Solve(void) {
-    for (int i = 0; i < head_move.length(); i++) {
-        cnt++;
-        arr[tail.i][tail.j] = 0;
-        if (tail_move[i] == 'N') {
-            tail.i--;
-        }
-        else if (tail_move[i] == 'E') {
-            tail.j++;
-        }
-        else if (tail_move[i] == 'W') {
-            tail.j--;
+    if (op1 == '+') {
+        if (a + b == c) {
+            cout << "correct" << endl;
         }
         else {
-            tail.i++;
+            cout << "wrong answer" << endl;
         }
-
-        if (head_move[i] == 'N') {
-            head.i--;
-        }
-        else if (head_move[i] == 'E') {
-            head.j++;
-        }
-        else if (head_move[i] == 'W') {
-            head.j--;
-        }
-        else {
-            head.i++;
-        }
-        if(arr[head.i][head.j] == 1) {
-            cout << cnt << " itself" << endl;
-            break;
-        }
-        else if(head.i < 1 || head.i > 50 || tail.i < 1 || tail.j > 50) {
-            cout << cnt << " out" << endl;
-            break;
-        }
-        arr[head.i][head.j] = 1;
     }
-    cout << cnt << " success" << endl;
+    else if (op1 == '-') {
+        if (a - b == c) {
+            cout << "correct" << endl;
+        }
+        else {
+            cout << "wrong answer" << endl;
+        }
+    }
+    else if (op1 == '*') {
+        if (a * b == c) {
+            cout << "correct" << endl;
+        }
+        else {
+            cout << "wrong answer" << endl;
+        }
+    }
+    else if (op1 == '/') {
+        if (a / b == c) {
+            cout << "correct" << endl;
+        }
+        else {
+            cout << "wrong answer" << endl;
+        }
+    }
 }
 
 void Init(void) {
-    Boost;
-    cin >> m >> head_move;
-    string N = "N";
-    tail_move = N * 19 + head_move;
-    head = { 25, 30 };
-    tail = { 25, 11 };
-    for(int i = 11; i<=30; i++){
-        arr[25][i] = 1;
-    }
+    cin >> a >> op1 >> b >> op2 >> c;
 }
 
 int main(void) {
-    Init();
-    Solve();
+    Boost;
+    cin >> T;
+    while (T--) {
+        Init();
+        Solve();
+    }
     return 0;
 }

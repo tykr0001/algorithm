@@ -15,7 +15,7 @@
 using namespace std;
 #define fi first
 #define se second
-#define v vector 
+#define v vector
 #define s stack
 #define q queue 
 #define l list 
@@ -37,80 +37,32 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int m;
-int cnt;
-string head_move;
-string tail_move;
-vvi arr(51, vi(51, 0));
+int N, K;
+int answer;
 
-struct {
-    int i;
-    int j;
-} head, tail;
-
-string operator*(string str, int n) {
-    string ret;
-    while (n--) {
-        ret += str;
+int reverse(int n) {
+    int ret = 0;
+    while (n) {
+        ret = ret * 10 + n % 10;
+        n /= 10;
     }
     return ret;
 }
 
 void Solve(void) {
-    for (int i = 0; i < head_move.length(); i++) {
-        cnt++;
-        arr[tail.i][tail.j] = 0;
-        if (tail_move[i] == 'N') {
-            tail.i--;
-        }
-        else if (tail_move[i] == 'E') {
-            tail.j++;
-        }
-        else if (tail_move[i] == 'W') {
-            tail.j--;
-        }
-        else {
-            tail.i++;
-        }
-
-        if (head_move[i] == 'N') {
-            head.i--;
-        }
-        else if (head_move[i] == 'E') {
-            head.j++;
-        }
-        else if (head_move[i] == 'W') {
-            head.j--;
-        }
-        else {
-            head.i++;
-        }
-        if(arr[head.i][head.j] == 1) {
-            cout << cnt << " itself" << endl;
-            break;
-        }
-        else if(head.i < 1 || head.i > 50 || tail.i < 1 || tail.j > 50) {
-            cout << cnt << " out" << endl;
-            break;
-        }
-        arr[head.i][head.j] = 1;
+    for (int i = 1; i <= K; i++) {
+        int num = reverse(N * i);
+        answer = max(answer, num);
     }
-    cout << cnt << " success" << endl;
+    cout << answer << endl;
 }
 
 void Init(void) {
-    Boost;
-    cin >> m >> head_move;
-    string N = "N";
-    tail_move = N * 19 + head_move;
-    head = { 25, 30 };
-    tail = { 25, 11 };
-    for(int i = 11; i<=30; i++){
-        arr[25][i] = 1;
-    }
+    cin >> N >> K;
 }
 
 int main(void) {
+    Boost;
     Init();
     Solve();
     return 0;

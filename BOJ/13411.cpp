@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-02-14 21:30:09  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,17 +37,32 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-void Solve(void) {
+int N;
 
+v<p<double, int>> robots;
+
+void Solve(void) {
+    sort(robots.begin(), robots.end());
+    for (int i = 0; i < N; i++) {
+        cout << robots[i].se << endl;
+    }
 }
 
 void Init(void) {
-
+    cin >> N;
+    robots.resize(N);
+    for (int i = 0; i < N; i++) {
+        int x, y;
+        double speed;
+        cin >> x >> y >> speed;
+        robots[i].fi = sqrt(x * x + y * y) / speed;
+        robots[i].se = i + 1;
+    }
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    Init();
+    Solve();
+    return 0;
 }
