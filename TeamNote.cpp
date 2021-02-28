@@ -409,18 +409,16 @@ ll InitSegmentTree(int node, int start, int end) {
 // @param start, end : array index (init start == 0, init end == array size - 1)
 // @param idx        : index of new value
 // @param k          : new value
-// @return           : void
-void UpdateSegmentTree(int node, int start, int end, int idx, ll k) {
+// @return           : updated tree[node]
+ll UpdateSegmentTree(int node, int start, int end, int idx, ll k) {
     if (idx < start || idx > end) {
-        return;
+        return tree[node];
     }
     if (start == end) {
-        tree[node] = k;
+        return tree[node] = k;
     }
     else {
-        UpdateSegmentTree(node * 2, start, (start + end) / 2, idx, k);
-        UpdateSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, idx, k);
-        tree[node] = tree[node * 2] + tree[node * 2 + 1];
+        return tree[node] = UpdateSegmentTree(node * 2, start, (start + end) / 2, idx, k) + tree[node * 2 + 1] + UpdateSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, idx, k);
     }
 }
 
@@ -435,5 +433,7 @@ ll SumSegmentTree(int node, int start, int end, int left, int right) {
     if (left <= start && end <= right) {
         return tree[node];
     }
-    return SumSegmentTree(node * 2, start, (start + end) / 2, left, right) + SumSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+    else {
+        return SumSegmentTree(node * 2, start, (start + end) / 2, left, right) + SumSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+    }
 }
