@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-07 01:22:09  *************/
+\*************  2021-01-15 22:56:51  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,27 +37,20 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int N;
-vi idx;
-si tower;
-si tmp;
+int sum;
 
 void Solve(void) {
-    while(!tower.empty()){
-        while(tmp.empty() || tmp.top() < tower.top()){
-            tmp.emplace(tower.top());
-            tower.pop();
-        }
-    }
+    cout << sum / 5;
 }
 
 void Init(void) {
-    cin >> N;
-    idx.resize(N);
-    while (N--) {
+    for (int i = 0; i < 5; i++) {
         int inp;
         cin >> inp;
-        tower.emplace(inp);
+        if (inp < 40) {
+            inp = 40;
+        }
+        sum += inp;
     }
 }
 

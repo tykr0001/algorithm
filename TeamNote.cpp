@@ -395,12 +395,12 @@ vector<ll> tree;
 // @param node      : node index (root node == 1)
 // @param start,end : array index (init start == 0, init end == array size - 1)
 // @return          : Partial sum from start to end
-ll InitSegmentTree(int node, int start, int end) {
+ll Init(int node, int start, int end) {
     if (start == end) {
         return tree[node] = arr[start];
     }
     else {
-        return tree[node] = InitSegmentTree(node * 2, start, (start + end) / 2) + InitSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end);
+        return tree[node] = Init(node * 2, start, (start + end) / 2) + Init(node * 2 + 1, (start + end) / 2 + 1, end);
     }
 }
 
@@ -410,7 +410,7 @@ ll InitSegmentTree(int node, int start, int end) {
 // @param idx        : index of new value
 // @param k          : new value
 // @return           : updated tree[node]
-ll UpdateSegmentTree(int node, int start, int end, int idx, ll k) {
+ll Update(int node, int start, int end, int idx, ll k) {
     if (idx < start || idx > end) {
         return tree[node];
     }
@@ -418,7 +418,7 @@ ll UpdateSegmentTree(int node, int start, int end, int idx, ll k) {
         return tree[node] = k;
     }
     else {
-        return tree[node] = UpdateSegmentTree(node * 2, start, (start + end) / 2, idx, k) + tree[node * 2 + 1] + UpdateSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, idx, k);
+        return tree[node] = Update(node * 2, start, (start + end) / 2, idx, k) + tree[node * 2 + 1] + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, k);
     }
 }
 
@@ -426,7 +426,7 @@ ll UpdateSegmentTree(int node, int start, int end, int idx, ll k) {
 // @param start,end  : array index (init start == 0, init end == array size - 1)
 // @param left,right : array index to get the partial sum
 // @return           : partial sum
-ll SumSegmentTree(int node, int start, int end, int left, int right) {
+ll Sum(int node, int start, int end, int left, int right) {
     if (left > end || right < start) {
         return 0;
     }
@@ -434,6 +434,6 @@ ll SumSegmentTree(int node, int start, int end, int left, int right) {
         return tree[node];
     }
     else {
-        return SumSegmentTree(node * 2, start, (start + end) / 2, left, right) + SumSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+        return Sum(node * 2, start, (start + end) / 2, left, right) + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
     }
 }

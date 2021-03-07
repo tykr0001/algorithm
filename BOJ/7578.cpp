@@ -37,32 +37,25 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int N, Q;
-v<ll> arr;
+int N;
+ll answer;
+v<ll> a;
+v<ll> b;
 v<ll> tree;
 
-ll InitSegmentTree(int node, int start, int end) {
-    if (start == end) {
-        return tree[node] = arr[start];
-    }
-    else {
-        return tree[node] = InitSegmentTree(node * 2, start, (start + end) / 2) + InitSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end);
-    }
-}
-
-ll UpdateSegmentTree(int node, int start, int end, int idx, ll k) {
+ll Update(int node, int start, int end, int idx, ll diff) {
     if (idx < start || idx > end) {
         return tree[node];
     }
     if (start == end) {
-        return tree[node] = k;
+        return tree[node] += diff;
     }
     else {
-        return tree[node] = UpdateSegmentTree(node * 2, start, (start + end) / 2, idx, k) + UpdateSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, idx, k);
+        return tree[node] = Update(node * 2, start, (start + end) / 2, idx, diff) + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, diff);
     }
 }
 
-ll SumSegmentTree(int node, int start, int end, int left, int right) {
+ll Sum(int node, int start, int end, int left, int right) {
     if (left > end || right < start) {
         return 0;
     }
@@ -70,32 +63,33 @@ ll SumSegmentTree(int node, int start, int end, int left, int right) {
         return tree[node];
     }
     else {
-        return SumSegmentTree(node * 2, start, (start + end) / 2, left, right) + SumSegmentTree(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+        return Sum(node * 2, start, (start + end) / 2, left, right) + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
     }
 }
 
 void Solve(void) {
-    InitSegmentTree(1, 0, N - 1);
-    while (Q--) {
-        ll x, y, a, b;
-        cin >> x >> y >> a >> b;
-        if (x <= y) {
-            cout << SumSegmentTree(1, 0, N - 1, x - 1, y - 1) << endl;
-        }
-        else {
-            cout << SumSegmentTree(1, 0, N - 1, y - 1, x - 1) << endl;
-        }
-        arr[a - 1] = b;
-        UpdateSegmentTree(1, 0, N - 1, a - 1, b);
+    for (int i = 0; i < N; i++) {
+        answer += Sum(1, 0, N - 1, b[i] + 1, N - 1);
+        Update(1, 0, N - 1, b[i], 1);
     }
+    cout << answer << endl;
 }
 
 void Init(void) {
     cin >> N;
-    arr.resize(N);
+    a.resize(1000001);
+    b.resize(N);
     tree.resize(1 << int(ceil(log2(N))) + 1);
+
     for (int i = 0; i < N; i++) {
-        cin >> arr[i];
+        ll inp;
+        cin >> inp;
+        a[inp] = i;
+    }
+    for (int i = 0; i < N; i++) {
+        ll inp;
+        cin >> inp;
+        b[i] = a[inp];
     }
 }
 

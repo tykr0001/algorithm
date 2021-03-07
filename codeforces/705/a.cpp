@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-07 01:22:09  *************/
+\*************  2021-03-06 23:29:58  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,33 +37,35 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int N;
-vi idx;
-si tower;
-si tmp;
+int t;
+int n, k;
+vi arr;
 
 void Solve(void) {
-    while(!tower.empty()){
-        while(tmp.empty() || tmp.top() < tower.top()){
-            tmp.emplace(tower.top());
-            tower.pop();
+    for (int i = 1; i <= n; i++) {
+        if (i != k && (k % 2 ? (i > k / 2) : (i >= k / 2))) {
+            arr.emplace_back(i);
         }
     }
+
+    cout << arr.size() << endl;
+    for (auto elem : arr) {
+        cout << elem << " ";
+    }
+    cout << endl;
 }
 
 void Init(void) {
-    cin >> N;
-    idx.resize(N);
-    while (N--) {
-        int inp;
-        cin >> inp;
-        tower.emplace(inp);
-    }
+    arr.clear();
+    cin >> n >> k;
 }
 
 int main(void) {
     Boost;
-    Init();
-    Solve();
+    cin >> t;
+    while (t--) {
+        Init();
+        Solve();
+    }
     return 0;
 }

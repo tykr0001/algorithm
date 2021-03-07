@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-07 01:22:09  *************/
+\*************  2021-03-08 01:26:18  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -38,27 +38,38 @@ typedef long long ll;
 /*************************************************/
 
 int N;
-vi idx;
-si tower;
-si tmp;
+vi arr;
+vvi cache;
+
+int DP(int idx, int day) {
+    if (cache[idx][day] != -1 || idx == 0) {
+        return cache[idx][day];
+    }
+    if (day == 0) {
+        return cache[idx][day] = max(max(DP(idx - 1, 0), DP(idx - 1, 1)), DP(idx - 1, 2));
+    }
+    if (day == 1) {
+        return cache[idx][day] = DP(idx - 1, 0) + arr[idx];
+    }
+    if (day == 2) {
+        return cache[idx][day] = DP(idx - 1, 1) + arr[idx];
+    }
+}
 
 void Solve(void) {
-    while(!tower.empty()){
-        while(tmp.empty() || tmp.top() < tower.top()){
-            tmp.emplace(tower.top());
-            tower.pop();
-        }
-    }
+    cout << max(max(DP(N - 1, 0), DP(N - 1, 1)), DP(N - 1, 2)) << endl;
 }
 
 void Init(void) {
     cin >> N;
-    idx.resize(N);
-    while (N--) {
-        int inp;
-        cin >> inp;
-        tower.emplace(inp);
+    arr.resize(N);
+    cache.resize(N, vi(3, -1));
+    for (int i = 0; i < N; i++) {
+        cin >> arr[i];
     }
+    cache[0][0] = 0;
+    cache[0][1] = arr[0];
+    cache[0][2] = arr[0];
 }
 
 int main(void) {

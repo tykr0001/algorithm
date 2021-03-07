@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-07 01:22:09  *************/
+\*************  2021-01-15 22:56:51  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,33 +37,41 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-int N;
-vi idx;
-si tower;
-si tmp;
+int n, m;
+v<ll> a, b;
+v<ll> c;
+int answer;
 
 void Solve(void) {
-    while(!tower.empty()){
-        while(tmp.empty() || tmp.top() < tower.top()){
-            tmp.emplace(tower.top());
-            tower.pop();
-        }
-    }
+    int left_b, left_e;
+    int right_b, right_e;
+    left_b = distance(a.begin(), lower_bound(a.begin(),a.end(), 0) - 1);
 }
 
 void Init(void) {
-    cin >> N;
-    idx.resize(N);
-    while (N--) {
-        int inp;
-        cin >> inp;
-        tower.emplace(inp);
+    cin >> n >> m;
+    a.resize(n);
+    b.resize(m);
+    answer = 0;
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+
+    for (int i = 0; i < m; i++) {
+        cin >> b[i];
+        if (b[i] == *lower_bound(a.begin(), a.end(), b[i])) {
+            answer++;
+            c.emplace_back(b[i]);
+        }
     }
 }
 
 int main(void) {
     Boost;
-    Init();
-    Solve();
+    int t; cin >> t;
+    while (t--) {
+        Init();
+        Solve();
+    }
     return 0;
 }
