@@ -8,14 +8,14 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-03-11 05:20:10  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
 using namespace std;
 #define fi first
 #define se second
-#define v vector 
+#define v vector
 #define s stack
 #define q queue 
 #define l list 
@@ -37,35 +37,21 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
-ifstream readFile;
-ofstream writeFile;
-string str;
-
+int N;
 void Solve(void) {
-    while (1);
+    for (int i = 0; i < N; i++) {
+        string inp;
+        cin >> inp;
+        cout << inp[0] + inp[2] - 2 * '0' << endl;
+    }
 }
 
 void Init(void) {
-    getline(cin, str);
-    cout << str << endl;
-    if(str.length()>10){
-        readFile.open("pattern.txt");
-    }
-    else{
-        readFile.open("pattern2.txt");
-    }
-    writeFile.open("angela.txt");
-    if (readFile.is_open()) {
-        while (!readFile.eof()) {
-            getline(readFile, str);
-            writeFile << str << endl;
-        }
-    }
-    readFile.close();
-    writeFile.close();
+    cin >> N;
 }
 
 int main(void) {
+    Boost;
     Init();
     Solve();
     return 0;
