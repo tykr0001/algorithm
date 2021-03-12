@@ -437,3 +437,37 @@ ll Sum(int node, int start, int end, int left, int right) {
         return Sum(node * 2, start, (start + end) / 2, left, right) + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
     }
 }
+
+// Trie(∆Æ∂Û¿Ã)
+struct Trie {
+    Trie* next[26];
+    bool finish;
+
+    Trie() : finish(false) {
+        memset(next, 0, sizeof(next));
+    }
+    ~Trie() {
+        for (int i = 0; i < 26; i++) 
+            if (next[i] != nullptr) 
+                delete next[i];
+    }
+    void Insert(const char* key) {
+        if (*key == '\0') {
+            finish = true;
+        }
+        else {
+            int cur = *key - 'a';
+            if (next[cur] == nullptr)
+                next[cur] = new Trie();
+            next[cur]->Insert(key + 1);
+        }
+    }
+    Trie* Find(const char* key) {
+        if (*key == '\0')
+            return nullptr;
+        if (finish)
+            return this;
+        int cur = *key - 'a';
+        return next[cur]->Find(key + 1);
+    }
+};
