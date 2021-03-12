@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-03-12 03:19:30  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -33,21 +33,32 @@ using namespace std;
 #define INF INT32_MAX
 #define LINF INT64_MAX
 #define endl '\n'
-#define For(i,n) for(int i=0;i<n;i++)
+#define Deb(x) cout<<#x<<"="<<x<<endl;
 typedef long long ll;
 /*************************************************/
 
+int in;
+int out;
+int answer;
+int n;
+
 void Solve(void) {
-    
+    for (int i = 0; i < 4; i++) {
+        cin >> out >> in;
+        n -= out;
+        n += in;
+        answer = max(answer, n);
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
-    
+    ;
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    Init();
+    Solve();
+    return 0;
 }
