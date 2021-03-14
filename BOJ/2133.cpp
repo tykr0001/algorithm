@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-15 01:07:53  *************/
+\*************  2021-03-15 02:19:35  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -36,3 +36,30 @@ using namespace std;
 #define For(i,beg,end) for(int i=beg; i<end; i++)
 typedef long long ll;
 /*************************************************/
+
+int N;
+vi cache;
+
+void Solve(void) {
+    for (int i = 4; i <= N; i++) {
+        cache[i] = cache[i - 2] * 3;
+        for (int j = 4; j <= i; j += 2) {
+            cache[i] += cache[i - j] * 2;
+        }
+    }
+    cout << cache[N];
+}
+
+void Init(void) {
+    cin >> N;
+    cache.resize(31);
+    cache[0] = 1;
+    cache[2] = 3;
+}
+
+int main(void) {
+    Boost;
+    Init();
+    Solve();
+    return 0;
+}

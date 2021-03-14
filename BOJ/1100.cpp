@@ -36,3 +36,28 @@ using namespace std;
 #define For(i,beg,end) for(int i=beg; i<end; i++)
 typedef long long ll;
 /*************************************************/
+
+int answer;
+
+void Solve(void) {
+    cout << answer << endl;
+}
+
+void Init(void) {
+    For(i, 0, 8) {
+        string inp;
+        cin >> inp;
+        For(j, 0, 8) {
+            if ((i + j) % 2 == 0 && inp[j] == 'F') {
+                answer++;
+            }
+        }
+    }
+}
+
+int main(void) {
+    Boost;
+    Init();
+    Solve();
+    return 0;
+}

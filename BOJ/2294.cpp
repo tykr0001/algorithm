@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-15 01:07:53  *************/
+\*************  2021-03-15 03:30:53  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -36,3 +36,38 @@ using namespace std;
 #define For(i,beg,end) for(int i=beg; i<end; i++)
 typedef long long ll;
 /*************************************************/
+
+int n, k;
+vi coins;
+vi cache;
+
+void Solve(void) {
+    For(i, 0, n) {
+        For(j, 0, k + 1) {
+            if (j + coins[i] <= k && cache[j] != INF)
+                cache[j + coins[i]] = min(cache[j] + 1, cache[j + coins[i]]);
+        }
+    }
+    if (cache[k] == INF) {
+        cache[k] = -1;
+    }
+    cout << cache[k] << endl;
+}
+
+void Init(void) {
+    cin >> n >> k;
+    coins.resize(n);
+    cache.resize(k + 1, INF);
+    For(i, 0, n) {
+        cin >> coins[i];
+    }
+    sort(coins.begin(), coins.end());
+    cache[0] = 0;
+}
+
+int main(void) {
+    Boost;
+    Init();
+    Solve();
+    return 0;
+}

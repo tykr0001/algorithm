@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-15 01:07:53  *************/
+\*************  2021-03-15 02:16:08  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -36,3 +36,28 @@ using namespace std;
 #define For(i,beg,end) for(int i=beg; i<end; i++)
 typedef long long ll;
 /*************************************************/
+
+int N;
+int answer;
+
+void Solve(void) {
+    For(i, 0, 5) {
+        int inp;
+        cin >> inp;
+        if (N == inp) {
+            answer++;
+        }
+    }
+    cout << answer << endl;
+}
+
+void Init(void) {
+    cin >> N;
+}
+
+int main(void) {
+    Boost;
+    Init();
+    Solve();
+    return 0;
+}

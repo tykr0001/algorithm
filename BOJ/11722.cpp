@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-15 01:07:53  *************/
+\*************  2021-03-15 01:13:36  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -36,3 +36,38 @@ using namespace std;
 #define For(i,beg,end) for(int i=beg; i<end; i++)
 typedef long long ll;
 /*************************************************/
+
+int N;
+int answer;
+vi cache;
+vi arr;
+
+void Solve(void) {
+    For(i, 0, N) {
+        For(j, 0, i) {
+            if (arr[j] > arr[i]) {
+                cache[i] = max(cache[i], cache[j] + 1);
+            }
+        }
+    }
+    for (auto& elem : cache) {
+        answer = max(answer, elem);
+    }
+    cout << answer << endl;
+}
+
+void Init(void) {
+    cin >> N;
+    cache.resize(N, 1);
+    arr.resize(N);
+    For(i, 0, N) {
+        cin >> arr[i];
+    }
+}
+
+int main(void) {
+    Boost;
+    Init();
+    Solve();
+    return 0;
+}
