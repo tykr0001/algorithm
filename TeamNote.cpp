@@ -400,7 +400,8 @@ ll Init(int node, int start, int end) {
         return tree[node] = arr[start];
     }
     else {
-        return tree[node] = Init(node * 2, start, (start + end) / 2) + Init(node * 2 + 1, (start + end) / 2 + 1, end);
+        return tree[node] = Init(node * 2, start, (start + end) / 2)
+                          + Init(node * 2 + 1, (start + end) / 2 + 1, end);
     }
 }
 
@@ -410,15 +411,17 @@ ll Init(int node, int start, int end) {
 // @param idx        : index of new value
 // @param k          : new value
 // @return           : updated tree[node]
-ll Update(int node, int start, int end, int idx, ll k) {
+
+ll Update(int node, int start, int end, int idx, ll diff) {
     if (idx < start || idx > end) {
         return tree[node];
     }
     if (start == end) {
-        return tree[node] = k;
+        return tree[node] += diff;
     }
     else {
-        return tree[node] = Update(node * 2, start, (start + end) / 2, idx, k) + tree[node * 2 + 1] + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, k);
+        return tree[node] = Update(node * 2, start, (start + end) / 2, idx, diff)
+                          + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, diff);
     }
 }
 
@@ -434,7 +437,8 @@ ll Sum(int node, int start, int end, int left, int right) {
         return tree[node];
     }
     else {
-        return Sum(node * 2, start, (start + end) / 2, left, right) + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+        return Sum(node * 2, start, (start + end) / 2, left, right)
+             + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
     }
 }
 

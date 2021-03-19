@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-17 23:22:24  *************/
+\*************  2021-03-17 22:54:33  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -36,12 +36,49 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
+int n, m;
+int answer;
+vs graph;
+vvi cache;
+int dx[3] = { 0,1,1 };
+int dy[3] = { 1,0,1 };
+
+bool CanGo(int i, int j) {
+    return 0 <= i && i < n && 0 <= j && j < m;
+}
+
+int DP(int i, int j) {
+    if (!CanGo(i, j))
+        return 0;
+    if (cache[i][j] != -1)
+        return cache[i][j];
+    cache[i][j] = 0;
+    int ret = INT32_MAX;
+    rep(k, 0, 3) {
+        int x = i + dx[k];
+        int y = j + dy[k];
+        ret = min(ret, DP(x, y));
+    }
+    if (graph[i][j] == '1') {
+        ret++;
+        answer = max(answer, ret);
+        cache[i][j] = ret;
+    }
+    return cache[i][j];
+}
+
 void Solve(void) {
-    
+    DP(0, 0);
+    cout << answer*answer << endl;
 }
 
 void Init(void) {
-    
+    cin >> n >> m;
+    graph.resize(n);
+    cache.resize(n, vi(m, -1));
+    rep(i, 0, n) {
+        cin >> graph[i];
+    }
 }
 
 int main(void) {

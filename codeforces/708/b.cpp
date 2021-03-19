@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-17 23:22:24  *************/
+\*************  2021-03-17 23:59:48  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -36,17 +36,52 @@ using namespace std;
 typedef long long ll;
 /*************************************************/
 
+int n, m;
+int answer;
+vi a;
+vi r;
+
 void Solve(void) {
-    
+    answer = 1;
+    int lo = 1, hi = m - 1;
+    while (lo < hi) {
+        if (r[lo] != 0 && r[hi] != 0) {
+            int gap = abs(r[lo] - r[hi]);
+            if (gap > 1)
+                answer += gap - 1;
+            answer++;
+        }
+        else {
+            answer += r[lo] + r[hi];
+        }
+        lo++;
+        hi--;
+        if (lo == hi) {
+            answer++;
+        }
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
-    
+    cin >> n >> m;
+    a.clear();
+    a.resize(n);
+    r.clear();
+    r.resize(m);
+    rep(i, 0, n) {
+        cin >> a[i];
+        r[a[i] % m]++;
+    }
 }
 
 int main(void) {
     Boost;
-    Init();
-    Solve();
+    int t;
+    cin >> t;
+    while (t--) {
+        Init();
+        Solve();
+    }
     return 0;
 }

@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-15 04:13:34  *************/
+\*************  2021-03-17 05:44:03  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -33,70 +33,73 @@ using namespace std;
 #define INF INT32_MAX
 #define LINF INT64_MAX
 #define endl '\n'
-#define For(i,beg,end) for(int i=beg; i<end; i++)
+#define rep(i,beg,end) for(int i=beg; i<end; i++)
 typedef long long ll;
 /*************************************************/
 
-int N, M, K;
-int answer;
-vvi arr;
-vvi tree;
-ll Init(int node, int start, int end, vector<int>& arr, vector<int>& tree) {
+int n;
+vector<ll> arr;
+vector<ll> tree;
+
+ll Init(int node, int start, int end) {
     if (start == end) {
         return tree[node] = arr[start];
     }
     else {
-        return tree[node] = Init(node * 2, start, (start + end) / 2, arr, tree) + Init(node * 2 + 1, (start + end) / 2 + 1, end, arr, tree);
+        return tree[node] = Init(node * 2, start, (start + end) / 2)
+                          + Init(node * 2 + 1, (start + end) / 2 + 1, end);
     }
 }
 
-ll Update(int node, int start, int end, int idx, ll k, vector<int>& arr, vector<int>& tree) {
+ll Update(int node, int start, int end, int idx, ll diff) {
     if (idx < start || idx > end) {
         return tree[node];
     }
     if (start == end) {
-        return tree[node] = k;
+        return tree[node] += diff;
     }
     else {
-        return tree[node] = Update(node * 2, start, (start + end) / 2, idx, k, arr, tree) + tree[node * 2 + 1] + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, k, arr, tree);
+        return tree[node] = Update(node * 2, start, (start + end) / 2, idx, diff)
+                          + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, diff);
     }
 }
 
-ll Sum(int node, int start, int end, int left, int right, vector<int>& arr, vector<int>& tree) {
-    if (left > end || right < start) {
-        return 0;
+int Query(int node, int start, int end, int n) {
+    if (start == end) {
+        return start;
     }
-    if (left <= start && end <= right) {
-        return tree[node];
+    if (tree[node * 2] >= n) {
+        return Query(node * 2, start, (start + end) / 2, n);
     }
     else {
-        return Sum(node * 2, start, (start + end) / 2, left, right, arr, tree) + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right, arr, tree);
+        return Query(node * 2 + 1, (start + end) / 2 + 1, end, n - tree[node * 2]);
     }
 }
 
 void Solve(void) {
-    cin >> K;
-    while (K--) {
-        int ii, ij, gi, gj;
-        cin >> ii >> ij >> gi >> gj;
-        answer = 0;
-        For(i, ii - 1, gi) {
-            answer += Sum(1, 0, M - 1, ij - 1, gj - 1, arr[i], tree[i]);
+    while (n--) {
+        int A;
+        cin >> A;
+        if (A == 1) {
+            int B;
+            cin >> B;
+            int ans = Query(1, 1, 1000001, B);
+            cout << ans << endl;
+            Update(1, 1, 1000001, ans, -1);
         }
-        cout << answer << endl;
+        else {
+            int B, C;
+            cin >> B >> C;
+            arr[B] += C;
+            Update(1, 1, 1000001, B, C);
+        }
     }
 }
 
 void Init(void) {
-    cin >> N >> M;
-    arr.resize(N, vi(M));
-    tree.resize(N, vi(1 << (int(ceil(log2(M))) + 1)));
-    For(i, 0, N) {
-        For(j, 0, M) {
-            cin >> arr[i][j];
-        }
-        Init(1, 0, M - 1, arr[i], tree[i]);
-    }
+    cin >> n;
+    arr.resize(1000001);
+    tree.resize(1 << int(ceil(log2(1000001))) + 1);
 }
 
 int main(void) {
