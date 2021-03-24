@@ -10,7 +10,6 @@ int answer;
 vector<int> x;
 
 void BinarySearch(int lo, int hi) {
-    int mid;
     while (lo <= hi) {
         int mid = (lo + hi) / 2;
         auto it = x.begin();
@@ -28,6 +27,7 @@ void BinarySearch(int lo, int hi) {
 }
 
 void Solve() {
+    sort(x.begin(), x.end());
     min_len = 1;
     max_len = x[N - 1] - x[0];
     BinarySearch(min_len, max_len);
@@ -40,7 +40,6 @@ void Init() {
     for (int i = 0; i < N; i++) {
         cin >> x[i];
     }
-    sort(x.begin(), x.end());
 }
 
 int main(void) {
