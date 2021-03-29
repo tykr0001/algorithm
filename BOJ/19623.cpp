@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-28 05:05:02  *************/
+\*************  2021-03-28 20:22:54  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -38,32 +38,32 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 /*************************************************/
 
 int N;
-int answer;
-vpii meetings;
+vvi meetings;
+vi cache;
 
 void Solve(void) {
-	auto cmp = [ ](const pii& lhs, const pii& rhs) { return lhs.se != rhs.se ? lhs.se < rhs.se : lhs.fi < rhs.fi; };
-	sort(meetings.begin(), meetings.end(), cmp);
-	for (int i = 0, cur = 0; i < N; i++) {
-		if (cur <= meetings[i].fi) {
-			answer++;
-			cur = meetings[i].se;
-		}
-	}
-	cout << answer << endl;
+    rep(i, 0, N) {
+        cache[i + 1] = max(cache[i + 1], cache[i]);
+        int j = lower_bound(meetings.begin(), meetings.end(), vi { meetings[i][1],0,0 }) - meetings.begin();
+        cache[j] = max(cache[j], cache[i] + meetings[i][2]);
+        j++;
+    }
+    cout << cache[N];
 }
 
 void Init(void) {
-	cin >> N;
-	meetings.resize(N);
-	for (int i = 0; i < N; i++) {
-		cin >> meetings[i].fi >> meetings[i].se;
-	}
+    cin >> N;
+    meetings.resize(N, vi(3));
+    cache.resize(N + 1);
+    rep(i, 0, N) {
+        cin >> meetings[i][0] >> meetings[i][1] >> meetings[i][2];
+    }
+    sort(meetings.begin(), meetings.end(), [ ](const vi& lhs, const vi& rhs) { return lhs[0] != rhs[0] ? lhs[0] < rhs[0] : lhs[1] < rhs[1]; });
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    Init();
+    Solve();
+    return 0;
 }

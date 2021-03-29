@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-28 05:05:02  *************/
+\*************  2021-03-28 06:29:58  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,33 +37,37 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
 /*************************************************/
 
-int N;
-int answer;
-vpii meetings;
+ll N;
+int idx;
+vl cache(31);
 
 void Solve(void) {
-	auto cmp = [ ](const pii& lhs, const pii& rhs) { return lhs.se != rhs.se ? lhs.se < rhs.se : lhs.fi < rhs.fi; };
-	sort(meetings.begin(), meetings.end(), cmp);
-	for (int i = 0, cur = 0; i < N; i++) {
-		if (cur <= meetings[i].fi) {
-			answer++;
-			cur = meetings[i].se;
-		}
-	}
-	cout << answer << endl;
+    for (int i = 30; i >= 0; i--) {
+        if (N >= cache[i]) {
+            N -= cache[i];
+            if (N >= i + 4) {
+                N -= i + 4;
+            }
+            else {
+                break;
+            }
+        }
+    }
+    if (N == 1) cout << 'm' << ' ';
+    else cout << 'o' << ' ';
 }
 
 void Init(void) {
-	cin >> N;
-	meetings.resize(N);
-	for (int i = 0; i < N; i++) {
-		cin >> meetings[i].fi >> meetings[i].se;
-	}
+    cin >> N;
+    cache[0] = 3;
+    for (int i = 1; i < 31; i++) {
+        cache[i] = 2 * cache[i - 1] + i + 3;
+    }
 }
 
 int main(void) {
-	Boost;
-	Init();
-	Solve();
-	return 0;
+    Boost;
+    Init();
+    Solve();
+    return 0;
 }
