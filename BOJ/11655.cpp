@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-30 11:57:40  *************/
+\*************  2021-03-31 12:20:39  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -35,22 +35,34 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define LINF INT64_MAX
 #define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
+template<class T>
+void sort(T& container) { sort(container.begin(), container.end()); }
+template<class T, class U>
+void sort(T& container, U cmp) { sort(container.begin(), container.end(), cmp); }
 /*************************************************/
 
-int N;
-int answer;
+string inp;
 
 void Solve(void) {
-    answer = 1;
-    while (N--) {
-        int inp; cin >> inp;
-        answer += inp - 1;
+    rep(i, 0, inp.size()) {
+        if ('A' <= inp[i] && inp[i] <= 'M') {
+            inp[i] += 13;
+        }
+        else if ('N' <= inp[i] && inp[i] <= 'Z') {
+            inp[i] -= 13;
+        }
+        else if ('a' <= inp[i] && inp[i] <= 'm') {
+            inp[i] += 13;
+        }
+        else if ('n' <= inp[i] && inp[i] <= 'z') {
+            inp[i] -= 13;
+        }
     }
-    cout << answer;
+    cout << inp;
 }
 
 void Init(void) {
-    cin >> N;
+    getline(cin, inp);
 }
 
 int main(void) {

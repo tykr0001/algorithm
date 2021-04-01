@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-30 11:57:40  *************/
+\*************  2021-04-01 02:00:57  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -35,22 +35,64 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define LINF INT64_MAX
 #define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
+template<class T>
+void sort(T& container) { sort(container.begin(), container.end()); }
+template<class T, class U>
+void sort(T& container, U cmp) { sort(container.begin(), container.end(), cmp); }
 /*************************************************/
 
-int N;
+int N, M;
 int answer;
+vs graph;
+vvb visited;
+
+int di[4] = { 0,0,-1,1 };
+int dj[4] = { -1,1,0,0 };
+
+bool CanGo(int i, int j) {
+    return 0 <= i && i < N && 0 <= j && j < M;
+}
+
+int BFS(pii init) {
+    int ret = 0;
+    queue<pair<pii, int>> sq;
+    sq.emplace(init, 0);
+    visited[init.fi][init.se] = true;
+    while (!sq.empty()) {
+        pii point = sq.front().fi;
+        int len = sq.front().se;
+        ret = max(ret, len);
+        sq.pop();
+        rep(k, 0, 4) {
+            int i = point.fi + di[k];
+            int j = point.se + dj[k];
+            if (CanGo(i, j) && !visited[i][j] && graph[i][j] == 'L') {
+                sq.emplace(pii { i, j }, len + 1);
+                visited[i][j] = true;
+            }
+        }
+    }
+    return ret;
+}
 
 void Solve(void) {
-    answer = 1;
-    while (N--) {
-        int inp; cin >> inp;
-        answer += inp - 1;
+    rep(i, 0, N) {
+        rep(j, 0, M) {
+            if (graph[i][j] == 'L') {
+                visited = vvb(N, vb(M, false));
+                answer = max(answer, BFS({ i,j }));
+            }
+        }
     }
-    cout << answer;
+    cout << answer << endl;
 }
 
 void Init(void) {
-    cin >> N;
+    cin >> N >> M;
+    graph.resize(N);
+    rep(i, 0, N) {
+        cin >> graph[i];
+    }
 }
 
 int main(void) {

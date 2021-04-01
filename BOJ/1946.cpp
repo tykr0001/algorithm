@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-30 11:57:40  *************/
+\*************  2021-04-01 03:21:25  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -35,27 +35,48 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define LINF INT64_MAX
 #define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
+template<class T>
+void sort(T& container) { sort(container.begin(), container.end()); }
+template<class T, class U>
+void sort(T& container, U cmp) { sort(container.begin(), container.end(), cmp); }
+template<class T, class U>
+istream& operator>>(istream& is, pair<T, U>& rhs) { is >> rhs.fi >> rhs.se; return is; }
+template<class T, class U>
+ostream& operator<<(ostream& os, const pair<T, U>& rhs) { os << rhs.fi << ' ' << rhs.se << endl; return os; }
+template<class T>
+istream& operator>>(istream& is, vector<T>& rhs) { for (T& elem : rhs) is >> elem; return is; }
+template<class T>
+ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
 /*************************************************/
 
 int N;
-int answer;
+vpii recruits;
 
 void Solve(void) {
-    answer = 1;
-    while (N--) {
-        int inp; cin >> inp;
-        answer += inp - 1;
+    int answer = 1;
+    int rank = recruits[0].se;
+    rep(i, 1, N) {
+        if (recruits[i].se < rank) {
+            answer++;
+            rank = recruits[i].se;
+        }
     }
-    cout << answer;
+    cout << answer << endl;
 }
 
 void Init(void) {
     cin >> N;
+    recruits = vpii(N);
+    cin >> recruits;
+    sort(recruits);
 }
 
 int main(void) {
     Boost;
-    Init();
-    Solve();
+    int T; cin >> T;
+    while (T--) {
+        Init();
+        Solve();
+    }
     return 0;
 }

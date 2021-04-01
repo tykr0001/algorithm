@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-30 11:57:40  *************/
+\*************  2021-03-31 11:49:15  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -35,22 +35,47 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define LINF INT64_MAX
 #define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
+template<class T>
+void sort(T& container) { sort(container.begin(), container.end()); }
+template<class T, class U>
+void sort(T& container, U cmp) { sort(container.begin(), container.end(), cmp); }
 /*************************************************/
 
-int N;
+int F, S, G, U, D;
 int answer;
+vb visited;
+
+int BFS() {
+    queue<pii> sq;
+    sq.emplace(S, 0);
+    visited[S] = true;
+    while (!sq.empty()) {
+        auto front = sq.front();
+        sq.pop();
+        if (front.fi == G) return front.se;
+        if (front.fi + U <= F && !visited[front.fi + U]) {
+            sq.emplace(front.fi + U, front.se + 1);
+            visited[front.fi + U] = true;
+        }
+        if (front.fi - D >= 1 && !visited[front.fi - D]) {
+            sq.emplace(front.fi - D, front.se + 1);
+            visited[front.fi - D] = true;
+        }
+    }
+    return -1;
+}
 
 void Solve(void) {
-    answer = 1;
-    while (N--) {
-        int inp; cin >> inp;
-        answer += inp - 1;
-    }
-    cout << answer;
+    answer = BFS();
+    if (answer != -1)
+        cout << answer;
+    else
+        cout << "use the stairs";
 }
 
 void Init(void) {
-    cin >> N;
+    cin >> F >> S >> G >> U >> D;
+    visited.resize(F + 1);
 }
 
 int main(void) {

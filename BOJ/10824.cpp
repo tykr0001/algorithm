@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-30 11:57:40  *************/
+\*************  2021-03-30 12:03:51  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -37,20 +37,14 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
 /*************************************************/
 
-int N;
-int answer;
+string A, B, C, D;
 
 void Solve(void) {
-    answer = 1;
-    while (N--) {
-        int inp; cin >> inp;
-        answer += inp - 1;
-    }
-    cout << answer;
+    cout << stoll(A + B) + stoll(C + D);
 }
 
 void Init(void) {
-    cin >> N;
+    cin >> A >> B >> C >> D;
 }
 
 int main(void) {

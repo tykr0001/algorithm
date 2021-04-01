@@ -10,23 +10,22 @@ vector<ll> prefix_sum;
 /**
  *  @brief  returns max score which is the maximum value of (A[i]+ ... +A[j]) * min({A[i], ..., A[j]})
  *          when (start <= i <= j <= end) by divide and conquer
- *  @param  start  left most index of subarray
- *  @param  end  right most index of subarray
+ *  @param  start  left most index of array
+ *  @param  end  right most index of array
  *  @return  max score that can exist within range [start, end]
  */
 ll MaxScore(int start, int end) {
     if (start == end) return A[start] * A[start];
-
+    
     int mid = (start + end) / 2;
     ll left = MaxScore(start, mid);
     ll right = MaxScore(mid + 1, end);
 
-    int lo = mid;       // left most index of subarray
-    int hi = mid + 1;   // right most index of subarray
-    ll min_val = min(A[lo], A[hi]);
+    int lo = mid;      // left most index of subarray
+    int hi = mid + 1;  // right most index of subarray
+    ll min_val = min(A[lo], A[hi]); // minimum value within range [lo, hi]
 
-    // middle is the max score in the range inclusive of mid, mid + 1
-    ll middle = (A[lo] + A[hi]) * min_val;
+    ll middle = (A[lo] + A[hi]) * min_val;  // the max score in the range inclusive of mid, mid + 1
 
     // calculate max middle score with greedy algorithm using 2-pointer
     while (!(lo == start && hi == end)) {
@@ -36,7 +35,8 @@ ll MaxScore(int start, int end) {
             lo--;
             min_val = min(min_val, A[lo]);
         }
-        else { // else search right
+        // else search right
+        else { 
             hi++;
             min_val = min(min_val, A[hi]);
         }

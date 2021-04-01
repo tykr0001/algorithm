@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-03-30 11:57:40  *************/
+\*************  2021-03-30 12:15:53  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -38,19 +38,45 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 /*************************************************/
 
 int N;
+int sum;
 int answer;
+vi budget;
+vi prefix_sum;
 
 void Solve(void) {
-    answer = 1;
-    while (N--) {
-        int inp; cin >> inp;
-        answer += inp - 1;
+    if (prefix_sum[N] <= sum) {
+        cout << budget[N - 1];
+        return;
     }
-    cout << answer;
+    int lo = 0;
+    int hi = budget[N - 1];
+    while (lo <= hi) {
+        int mid = (lo + hi) / 2;
+        int idx = lower_bound(budget.begin(), budget.end(), mid) - budget.begin();
+        int tmp = prefix_sum[idx] + mid * (N - idx);
+        if (tmp > sum) {
+            hi = mid - 1;
+        }
+        else {
+            lo = mid + 1;
+            answer = max(answer, mid);
+        }
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
     cin >> N;
+    budget.resize(N);
+    prefix_sum.resize(N + 1);
+    rep(i, 0, N) {
+        cin >> budget[i];
+    }
+    cin >> sum;
+    sort(budget.begin(), budget.end());
+    rep(i, 1, N + 1) {
+        prefix_sum[i] = prefix_sum[i - 1] + budget[i - 1];
+    }
 }
 
 int main(void) {
