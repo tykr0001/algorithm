@@ -8,101 +8,103 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-01-15 22:56:51  *************/
+\*************  2021-04-01 20:55:50  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
+using vi = vector<int>;
+using vvi = vector<vector<int>>;
+using vb = vector<bool>;
+using vvb = vector<vector<bool>>;
+using vs = vector<string>;
+using vc = vector<char>;
+using vl = vector<ll>;
+using vvl = vector<vector<ll>>;
+using pii = pair<int, int>;
+using pll = pair<ll, ll>;
+using vpii = vector<pair<int, int>>;
+using vvpii = vector<vector<pair<int, int>>>;
+using vpll = vector<pair<ll, ll>>;
+using vvpll = vector<vector<pair<ll, ll>>>;
+#define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define fi first
 #define se second
-#define v vector 
-#define s stack
-#define q queue 
-#define l list 
-#define pq priority_queue 
-#define p pair
-#define vi vector<int> 
-#define vvi vector<vector<int>>
-#define vb vector<bool> 
-#define vvb vector<vector<bool>> 
-#define si stack<int>
-#define qi queue<int>
-#define li list<int> 
-#define pii pair<int,int>
-#define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define INF INT32_MAX
 #define LINF INT64_MAX
 #define endl '\n'
-#define Deb(x) cout<<#x<<"="<<x<<endl;
-typedef long long ll;
+#define rep(i,beg,end) for(int i=beg; i<end; i++)
+template<class T>
+void sort(T& container) { sort(container.begin(), container.end()); }
+template<class T, class U>
+void sort(T& container, U cmp) { sort(container.begin(), container.end(), cmp); }
+template<class T, class U>
+istream& operator>>(istream& is, pair<T, U>& rhs) { is >> rhs.fi >> rhs.se; return is; }
+template<class T, class U>
+ostream& operator<<(ostream& os, const pair<T, U>& rhs) { os << rhs.fi << ' ' << rhs.se; return os; }
+template<class T>
+istream& operator>>(istream& is, vector<T>& rhs) { for (T& elem : rhs) is >> elem; return is; }
+template<class T>
+ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
 /*************************************************/
 
-ll t;
 ll A, B, n;
-v<pair<ll,ll>> m;
+vpll m;
 bool flag;
+
 void Solve(void) {
-    for (int i = 0; i < n; i++) {
-        if (i < n - 1) {
-            ll cnt;
-            if (m[i].se % A) {
-                cnt = m[i].se / A + 1;
-            }
-            else {
-                cnt = m[i].se / A;
-            }
-            B -= cnt * m[i].fi;
-            m[i].se -= cnt * A;
-            if (B < 0) {
-                flag = true;
-                break;
-            }
-        }
-        else {
-            ll hc, mc;
-            if (m[i].se % A) {
-                hc = m[i].se / A + 1;
-            }
-            else {
-                hc = m[i].se / A;
-            }
-            if (B % m[i].fi) {
-                mc = B / m[i].fi + 1;
-            }
-            else {
-                mc = B / m[i].fi;
-            }
-            if (hc > mc) {
-                flag = true;
-            }
+    flag = true;
+    for (int i = 0; i < n - 1; i++) {
+        ll cnt;
+        if (m[i].se % A)
+            cnt = m[i].se / A + 1;
+        else
+            cnt = m[i].se / A;
+
+        B -= cnt * m[i].fi;
+        if (B < 0) {
+            flag = false;
+            break;
         }
     }
 
-    if (flag) {
-        cout << "NO" << endl;
-    }
-    else {
+    ll hc, mc;
+    if (m[n - 1].se % A)
+        hc = m[n - 1].se / A + 1;
+    else
+        hc = m[n - 1].se / A;
+
+    if (B % m[n - 1].fi)
+        mc = B / m[n - 1].fi + 1;
+    else
+        mc = B / m[n - 1].fi;
+
+    if (hc > mc)
+        flag = false;
+
+    if (flag)
         cout << "YES" << endl;
-    }
+    else
+        cout << "NO" << endl;
 }
 
 void Init(void) {
     cin >> A >> B >> n;
     m.clear();
     m.resize(n);
-    for (int i = 0; i < n; i++) {
+    rep(i, 0, n) {
         cin >> m[i].fi;
     }
-    for (int i = 0; i < n; i++) {
+    rep(i, 0, n) {
         cin >> m[i].se;
     }
-    sort(m.begin(), m.end());
-    flag = false;
+    sort(m);
 }
 
 int main(void) {
     Boost;
-    cin >> t;
+    int t; cin >> t;
     while (t--) {
         Init();
         Solve();

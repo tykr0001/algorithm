@@ -49,12 +49,41 @@ template<class T>
 ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
 /*************************************************/
 
+bool IsUpper(char c) {
+    return 'A' <= c && c <= 'Z';
+}
+
+bool IsLower(char c) {
+    return 'a' <= c && c <= 'z';
+}
+
+bool IsDigit(char c) {
+    return '0' <= c && c <= '9';
+}
+
+bool IsBlank(char c) {
+    return c == ' ';
+}
+
 void Solve(void) {
-    
+    string inp;
+    while (getline(cin, inp)) {
+        int upper = 0;
+        int lower = 0;
+        int digit = 0;
+        int blank = 0;
+        rep(i, 0, inp.length()) {
+            if (IsUpper(inp[i])) upper++;
+            if (IsLower(inp[i])) lower++;
+            if (IsDigit(inp[i])) digit++;
+            if (IsBlank(inp[i])) blank++;
+        }
+        cout << lower << ' ' << upper << ' ' << digit << ' ' << blank << endl;
+    }
 }
 
 void Init(void) {
-    
+    ;
 }
 
 int main(void) {

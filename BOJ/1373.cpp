@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-01 21:00:31  *************/
+\*************  2021-04-01 16:37:05  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -33,6 +33,7 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define se second
 #define INF INT32_MAX
 #define LINF INT64_MAX
+#define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
 template<class T>
 void sort(T& container) { sort(container.begin(), container.end()); }
@@ -48,34 +49,28 @@ template<class T>
 ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
 /*************************************************/
 
-int n;
-
-int Query(int idx) {
-    int ret;
-    cout << "? " << idx << endl;
-    cout.flush();
-    cin >> ret;
-    return ret;
-}
+string bin_str;
+string oct_str;
 
 void Solve(void) {
-    int lo = 1;
-    int hi = n;
-    while (lo < hi) {
-        int mid = (lo + hi) / 2;
-        if (Query(mid) < Query(mid + 1))
-            hi = mid;
-        else
-            lo = mid + 1;
+    int idx = 0;
+    while (idx < bin_str.length()) {
+        int tmp = 0;
+        do {
+            tmp = tmp * 2 + bin_str[idx] - '0';
+            idx++;
+        } while ((bin_str.length() - idx) % 3);
+        oct_str += to_string(tmp);
     }
-    cout << "! " << lo << endl;
+    cout << oct_str;
 }
 
 void Init(void) {
-    cin >> n;
+    cin >> bin_str;
 }
 
 int main(void) {
+    Boost;
     Init();
     Solve();
     return 0;

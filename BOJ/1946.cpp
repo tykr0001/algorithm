@@ -39,12 +39,26 @@ template<class T>
 void sort(T& container) { sort(container.begin(), container.end()); }
 template<class T, class U>
 void sort(T& container, U cmp) { sort(container.begin(), container.end(), cmp); }
+
 template<class T, class U>
-istream& operator>>(istream& is, pair<T, U>& rhs) { is >> rhs.fi >> rhs.se; return is; }
+istream& operator>>(istream& is, pair<T, U>& rhs) {
+    is >> rhs.fi >> rhs.se;
+    return is;
+}
+
 template<class T, class U>
-ostream& operator<<(ostream& os, const pair<T, U>& rhs) { os << rhs.fi << ' ' << rhs.se << endl; return os; }
+ostream& operator<<(ostream& os, const pair<T, U>& rhs) {
+    os << rhs.fi << ' ' << rhs.se << endl;
+    return os;
+}
+
 template<class T>
-istream& operator>>(istream& is, vector<T>& rhs) { for (T& elem : rhs) is >> elem; return is; }
+istream& operator>>(istream& is, vector<T>& rhs) {
+    for (T& elem : rhs)
+        is >> elem;
+    return is;
+}
+
 template<class T>
 ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
 /*************************************************/

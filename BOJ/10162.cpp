@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-01 21:00:31  *************/
+\*************  2021-04-01 16:49:57  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -33,6 +33,7 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define se second
 #define INF INT32_MAX
 #define LINF INT64_MAX
+#define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
 template<class T>
 void sort(T& container) { sort(container.begin(), container.end()); }
@@ -48,34 +49,40 @@ template<class T>
 ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
 /*************************************************/
 
-int n;
-
-int Query(int idx) {
-    int ret;
-    cout << "? " << idx << endl;
-    cout.flush();
-    cin >> ret;
-    return ret;
-}
+int T;
+int answer;
+int A;
+int B;
+int C;
 
 void Solve(void) {
-    int lo = 1;
-    int hi = n;
-    while (lo < hi) {
-        int mid = (lo + hi) / 2;
-        if (Query(mid) < Query(mid + 1))
-            hi = mid;
-        else
-            lo = mid + 1;
+    while (T > 0) {
+        if (T >= 300) {
+            T -= 300;
+            A++;
+        }
+        else if (T >= 60) {
+            T -= 60;
+            B++;
+        }
+        else {
+            T -= 10;
+            C++;
+        }
+        answer++;
     }
-    cout << "! " << lo << endl;
+    if (T == 0)
+        cout << A << ' ' << B << ' ' << C;
+    else
+        cout << -1;
 }
 
 void Init(void) {
-    cin >> n;
+    cin >> T;
 }
 
 int main(void) {
+    Boost;
     Init();
     Solve();
     return 0;

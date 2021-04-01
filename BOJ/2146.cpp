@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-01 21:00:31  *************/
+\*************  2021-04-01 17:09:48  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -33,6 +33,7 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define se second
 #define INF INT32_MAX
 #define LINF INT64_MAX
+#define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
 template<class T>
 void sort(T& container) { sort(container.begin(), container.end()); }
@@ -48,34 +49,93 @@ template<class T>
 ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
 /*************************************************/
 
-int n;
+int N;
+int cnt;
+int answer;
+vvi graph;
+vvb visited;
 
-int Query(int idx) {
-    int ret;
-    cout << "? " << idx << endl;
-    cout.flush();
-    cin >> ret;
-    return ret;
+int di[4] = { 0,0,-1,1 };
+int dj[4] = { -1,1,0,0 };
+
+bool CanGo(int i, int j) {
+    return 0 <= i && i < N && 0 <= j && j < N;
+}
+
+
+int BFS(pii init) {
+    cnt++;
+    queue<pair<pii, int>> sq;
+    sq.emplace(init, 0);
+    visited[init.fi][init.se] = true;
+    while (!sq.empty()) {
+        auto front = sq.front().fi;
+        auto len = sq.front().se;
+        sq.pop();
+        rep(k, 0, 4) {
+            int i = front.fi + di[k];
+            int j = front.se + dj[k];
+            if (CanGo(i, j) && !visited[i][j] && graph[i][j] != graph[init.fi][init.se]) {
+                sq.emplace(pii { i, j }, len + 1);
+                visited[i][j] = true;
+                if (graph[i][j] != 0) {
+                    return len;
+                }
+            }
+        }
+    }
+    return INF;
+}
+
+void InitSet(pii init) {
+    cnt++;
+    queue<pii> sq;
+    sq.emplace(init);
+    visited[init.fi][init.se] = true;
+    graph[init.fi][init.se] = cnt;
+    while (!sq.empty()) {
+        auto front = sq.front();
+        sq.pop();
+        rep(k, 0, 4) {
+            int i = front.fi + di[k];
+            int j = front.se + dj[k];
+            if (CanGo(i, j) && !visited[i][j] && graph[i][j]) {
+                sq.emplace(i, j);
+                visited[i][j] = true;
+                graph[i][j] = cnt;
+            }
+        }
+    }
 }
 
 void Solve(void) {
-    int lo = 1;
-    int hi = n;
-    while (lo < hi) {
-        int mid = (lo + hi) / 2;
-        if (Query(mid) < Query(mid + 1))
-            hi = mid;
-        else
-            lo = mid + 1;
+    answer = INF;
+    rep(i, 0, N) {
+        rep(j, 0, N) {
+            if (graph[i][j]) {
+                visited = vvb(N, vb(N));
+                answer = min(answer, BFS({ i,j }));
+            }
+        }
     }
-    cout << "! " << lo << endl;
+    cout << answer;
 }
 
 void Init(void) {
-    cin >> n;
+    cin >> N;
+    graph = vvi(N, vi(N));
+    visited = vvb(N, vb(N));
+    cin >> graph;
+    rep(i, 0, N) {
+        rep(j, 0, N) {
+            if (graph[i][j] && !visited[i][j])
+                InitSet({ i,j });
+        }
+    }
 }
 
 int main(void) {
+    Boost;
     Init();
     Solve();
     return 0;
