@@ -1,56 +1,83 @@
 #include <bits/stdc++.h>
+#define fi first
+#define se second
+#define endl '\n'
 
 using namespace std;
+using pii = pair<int, int>;
+
+template<class T>
+void sort(T& container) { sort(container.begin(), container.end()); }
+template<class T, class U>
+void sort(T& container, U cmp) { sort(container.begin(), container.end(), cmp); }
+template<class T, class U>
+istream& operator>>(istream& is, pair<T, U>& rhs) { is >> rhs.fi >> rhs.se; return is; }
+template<class T, class U>
+ostream& operator<<(ostream& os, const pair<T, U>& rhs) { os << rhs.fi << ' ' << rhs.se; return os; }
+template<class T>
+istream& operator>>(istream& is, vector<T>& rhs) { for (T& elem : rhs) is >> elem; return is; }
+template<class T>
+ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
+template<class T>
+void resize(T& container, int _size) { container.resize(_size); }
+template<class T, typename... sizes>
+void resize(T& container, int _size, sizes... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 
 int N;
-int answer;
-vector<string> v;
-vector<vector<bool>> is_visited;
+vector<string> graph;
+vector<vector<bool>> visited;
 vector<int> house_num;
-queue<pair<int, int>> q;
 
-int x[4] = { -1,1,0,0 };
-int y[4] = { 0,0,-1,1 };
+int di[4] = { -1,1,0,0 };
+int dj[4] = { 0,0,-1,1 };
 
-bool BorderCheck(int i, int j) {
+bool CheckBound(int i, int j) {
     return 0 <= i && i < N && 0 <= j && j < N;
 }
 
-int main(void) {
-    cin >> N;
-    v.resize(N);
-    is_visited.resize(N, vector<bool>(N, false));
-    for (int i = 0; i < N; i++) {
-        cin >> v[i];
-    }
+void BFS(const pii& init) {
+    int num = 1;
+    queue<pii> sq;
+    sq.emplace(init);
+    visited[init.fi][init.se] = true;
+    while (!sq.empty()) {
+        pii node = sq.front();
+        sq.pop();
 
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            if (v[i][j] == '1' && !is_visited[i][j]) {
-                answer++;
-                house_num.push_back(1);
-                q.emplace(i, j);
-                is_visited[i][j] = true;
-                while (!q.empty()) {
-                    pair<int, int> front = q.front();
-                    q.pop();
-
-                    for (int k = 0; k < 4; k++) {
-                        int l = front.first + x[k];
-                        int m = front.second + y[k];
-                        if (BorderCheck(l, m) && v[l][m] == '1' && !is_visited[l][m]) {
-                            house_num[answer - 1]++;
-                            q.emplace(l, m);
-                            is_visited[l][m] = true;
-                        }
-                    }
-                }
+        for (int k = 0; k < 4; k++) {
+            int i = node.fi + di[k];
+            int j = node.se + dj[k];
+            if (CheckBound(i, j) && graph[i][j] == '1' && !visited[i][j]) {
+                num++;
+                sq.emplace(i, j);
+                visited[i][j] = true;
             }
         }
     }
-    sort(house_num.begin(), house_num.end());
-    cout << answer << endl;
-    for (int i = 0; i < house_num.size(); i++) {
-        cout << house_num[i] << endl;
+    house_num.emplace_back(num);
+}
+
+int main(void) {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    cin >> N;
+    resize(graph, N);
+    resize(visited, N, N);
+    // visited.resize(N, vector<bool>(N));
+    // visited = vector<vector<bool>>(N, vector<bool>(N));
+    cin >> graph;
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (graph[i][j] == '1' && !visited[i][j]) {
+                BFS({ i,j });
+            }
+        }
+    }
+    sort(house_num);
+    cout << house_num.size() << endl;
+    for (int& num : house_num) {
+        cout << num << endl;
     }
 }
