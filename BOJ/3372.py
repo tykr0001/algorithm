@@ -8,7 +8,7 @@
 #*$*       ||        ||     ||   |||  ||   |||   *$*#
 #*$*                                             *$*#
 #*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*#
-################ 2021-04-11 14:44:22 ################
+################ 2021-04-12 03:55:15 ################
 
 ################ PyPy3 Header Template  #############
 #-*-coding:utf-8-*-
@@ -16,18 +16,22 @@ import sys
 #####################################################
 
 n = int(input())
-arr = list(map(int, input().split()))
-ans = [0 for _ in range(n)]
+a = [list(map(int, input().split())) for _ in range(n)]
+cache = [[0 for _ in range(n)] for _ in range(n)]
 
-for i in range(0, n, 1):
-    cnt = 0
-    j = 0
-    while arr[i] != cnt:
-        if ans[j] == 0:
-            cnt = cnt + 1
-        j = j + 1
-    while ans[j] != 0:
-        j = j + 1
-    ans[j] = i + 1
 
-print(*ans)
+def CanGo(i, j):
+    global n
+    return 0 <= i < n and 0 <= j < n
+
+
+cache[0][0] = 1
+for i in range(n):
+    for j in range(n):
+        if not (i == n-1 and j == n-1):
+            if CanGo(i+a[i][j], j):
+                cache[i+a[i][j]][j] = cache[i+a[i][j]][j] + cache[i][j]
+            if CanGo(i, j+a[i][j]):
+                cache[i][j+a[i][j]] = cache[i][j+a[i][j]] + cache[i][j]
+
+print(cache[n-1][n-1])

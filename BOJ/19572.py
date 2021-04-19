@@ -8,26 +8,19 @@
 #*$*       ||        ||     ||   |||  ||   |||   *$*#
 #*$*                                             *$*#
 #*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*#
-################ 2021-04-11 14:44:22 ################
+################ 2021-04-12 03:09:57 ################
 
 ################ PyPy3 Header Template  #############
 #-*-coding:utf-8-*-
 import sys
 #####################################################
 
-n = int(input())
-arr = list(map(int, input().split()))
-ans = [0 for _ in range(n)]
-
-for i in range(0, n, 1):
-    cnt = 0
-    j = 0
-    while arr[i] != cnt:
-        if ans[j] == 0:
-            cnt = cnt + 1
-        j = j + 1
-    while ans[j] != 0:
-        j = j + 1
-    ans[j] = i + 1
-
-print(*ans)
+d1,d2,d3 = map(int, sys.stdin.readline().rstrip().split())
+a=(d1+d2+d3)/2 - d3
+b=(d1+d2+d3)/2 - d2
+c=(d1+d2+d3)/2 - d1
+if a>0 and b>0 and c>0:
+    print(1)
+    print(round(a,1),round(b,1),round(c,1))
+else:
+    print(-1)

@@ -8,26 +8,29 @@
 #*$*       ||        ||     ||   |||  ||   |||   *$*#
 #*$*                                             *$*#
 #*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*#
-################ 2021-04-11 14:44:22 ################
+################ 2021-04-12 03:20:33 ################
 
 ################ PyPy3 Header Template  #############
 #-*-coding:utf-8-*-
 import sys
 #####################################################
 
-n = int(input())
-arr = list(map(int, input().split()))
-ans = [0 for _ in range(n)]
 
-for i in range(0, n, 1):
-    cnt = 0
-    j = 0
-    while arr[i] != cnt:
-        if ans[j] == 0:
-            cnt = cnt + 1
-        j = j + 1
-    while ans[j] != 0:
-        j = j + 1
-    ans[j] = i + 1
+def CanGo(i, j):
+    return 0 <= i < 7 and 0 <= j < 7
 
-print(*ans)
+
+a = [list(sys.stdin.readline().rstrip('\n')) for _ in range(7)]
+
+di = [0, 0, -1, 1]
+dj = [-1, 1, 0, 0]
+
+ans = 0
+for i in range(7):
+    for j in range(7):
+        for k in range(4):
+            if CanGo(i+di[k], j+dj[k]) and CanGo(i+2*di[k], j+2*dj[k]):
+                if a[i][j] == 'o' and a[i+di[k]][j+dj[k]] == 'o'\
+                        and a[i+2*di[k]][j+2*dj[k]] == '.':
+                    ans = ans+1
+print(ans)

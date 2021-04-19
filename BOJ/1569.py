@@ -8,7 +8,7 @@
 #*$*       ||        ||     ||   |||  ||   |||   *$*#
 #*$*                                             *$*#
 #*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*#
-################ 2021-04-11 14:44:22 ################
+################ 2021-04-12 05:04:39 ################
 
 ################ PyPy3 Header Template  #############
 #-*-coding:utf-8-*-
@@ -16,18 +16,26 @@ import sys
 #####################################################
 
 n = int(input())
-arr = list(map(int, input().split()))
-ans = [0 for _ in range(n)]
+p = [list(map(int, input().split())) for _ in range(n)]
+min_i, min_j, max_i, max_j, = [1000, 1000, -1000, -1000]
+flag = True
 
-for i in range(0, n, 1):
-    cnt = 0
-    j = 0
-    while arr[i] != cnt:
-        if ans[j] == 0:
-            cnt = cnt + 1
-        j = j + 1
-    while ans[j] != 0:
-        j = j + 1
-    ans[j] = i + 1
+for k in range(n):
+    i, j = p[k]
+    min_i = min(min_i, i)
+    min_j = min(min_j, j)
+    max_i = max(max_i, i)
+    max_j = max(max_j, j)
 
-print(*ans)
+for k in range(n):
+    i, j = p[k]
+    if (i == min_i and j == min_j) or (i == min_i and j == max_j) or \
+            (i == max_i and j == min_j) or (i == max_i and j == max_j):
+        pass
+    else:
+        flag = False
+
+if flag:
+    print(max(max_i-min_i, max_j-min_j))
+else:
+    print(-1)
