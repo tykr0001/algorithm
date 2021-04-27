@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-08 18:20:41  *************/
+\*************  2021-04-22 16:17:54  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -55,21 +55,46 @@ void resize(T& container, int _size, sizes... _sizes) { container.resize(_size);
 /*************************************************/
 
 ll N, w;
+vl three;
+vl five;
+vl sum_three;
+vl sum_five;
 ll answer;
-vl small;
-vl big;
 
 void Solve(void) {
-    
+    int idx = 0;
+    int end = min(ll(five.size()), w / 5);
+    while (idx <= end) {
+        ll num_three = (w - idx * 5) / 3;
+        num_three = min(num_three, ll(three.size()));
+        ll tmp = sum_five[idx] + sum_three[num_three];
+        answer = max(answer, tmp);
+        idx++;
+    }
+    cout << answer << endl;
 }
 
 void Init(void) {
     cin >> N >> w;
-    while(N--) {
-        int t, s;
+    rep(i, 0, N) {
+        ll t, s;
         cin >> t >> s;
-        if(t==3) small.push_back(s);
-        else big.push_back(s);
+        if (t == 3) three.emplace_back(s);
+        else five.emplace_back(s);
+    }
+    sort(three, greater<int>());
+    sort(five, greater<int>());
+    sum_three.resize(three.size() + 1);
+    sum_five.resize(five.size() + 1);
+    if (!three.empty()) {
+        rep(i, 1, sum_three.size()) {
+            sum_three[i] = sum_three[i - 1] + three[i - 1];
+        }
+    }
+    if (!five.empty()) {
+        rep(i, 1, sum_five.size()) {
+            sum_five[i] = sum_five[i - 1] + five[i - 1];
+        }
     }
 }
 

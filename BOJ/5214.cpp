@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-23 15:03:15  *************/
+\*************  2021-04-27 16:47:05  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -21,6 +21,7 @@ using vb = vector<bool>;
 using vvb = vector<vector<bool>>;
 using vs = vector<string>;
 using vc = vector<char>;
+using vvc = vector<vector<char>>;
 using vl = vector<ll>;
 using vvl = vector<vector<ll>>;
 using pii = pair<int, int>;
@@ -47,40 +48,65 @@ ostream& operator<<(ostream& os, const pair<T, U>& rhs) { os << rhs.fi << ' ' <<
 template<class T>
 istream& operator>>(istream& is, vector<T>& rhs) { for (T& elem : rhs) is >> elem; return is; }
 template<class T>
-ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
+ostream& operator<<(ostream& os, const vector<T>& rhs) { for (const T& elem : rhs) os << elem << ' '; os << endl; return os; }
 template<class T>
 void resize(T& container, int _size) { container.resize(_size); }
 template<class T, typename... sizes>
 void resize(T& container, int _size, sizes... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N;
-vi tower;
-vi idx;
-stack<pii> tmp;
+int N, M, K;
+vvi tubes;
+vvi stations;
+vb visited_tube;
+vb visited_station;
 
-void Solve(void) {
-    for (int i = N, j = N; i > 0; i--) {
-        tmp.emplace(tower[i], i);
-        while (!tmp.empty() && tower[i - 1] > tmp.top().fi) {
-            idx[tmp.top().se] = i - 1;
-            tmp.pop();
+int BFS(int init, int goal) {
+    if (init == goal) return 1;
+    int ret = -1;
+    queue<pii> sq; // <node, cost>
+    sq.emplace(init, 1);
+    visited_station[init] = true;
+
+    while (!sq.empty()) {
+        int prev_station = sq.front().fi;
+        int cost = sq.front().se;
+        sq.pop();
+        for (auto tube : stations[prev_station]) {
+            if (!visited_tube[tube]) {
+                visited_tube[tube] = true;
+                for (auto station : tubes[tube]) {
+                    if (station == goal) {
+                        return cost + 1;
+                    }
+                    if (!visited_station[station]) {
+                        visited_station[station] = true;
+                        sq.emplace(station, cost + 1);
+                    }
+                }
+            }
         }
     }
+    return ret;
+}
 
-    for (int i = 1; i < idx.size(); i++) {
-        cout << idx[i] << " ";
-    }
+void Solve(void) {
+    cout << BFS(1, N);
 }
 
 void Init(void) {
-    cin >> N;
-    resize(tower, N + 1);
-    resize(idx, N + 1);
-    rep(i, 1, N + 1) {
-        cin >> tower[i];
+    cin >> N >> K >> M;
+    resize(tubes, M + 1);
+    resize(visited_tube, M + 1);
+    resize(stations, N + 1);
+    resize(visited_station, N + 1);
+    for (int i = 1; i < M + 1; i++) {
+        for (int j = 0; j < K; j++) {
+            int inp; cin >> inp;
+            stations[inp].emplace_back(i);
+            tubes[i].emplace_back(inp);
+        }
     }
-    tower[0] = INF;
 }
 
 int main(void) {

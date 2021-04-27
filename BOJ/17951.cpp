@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-23 15:03:15  *************/
+\*************  2021-04-22 18:17:16  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,33 +54,41 @@ template<class T, typename... sizes>
 void resize(T& container, int _size, sizes... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N;
-vi tower;
-vi idx;
-stack<pii> tmp;
+int K, N;
+vi arr;
+
+int BinarySearch(int lo, int hi) {
+    int mid;
+    int ret;
+    while (lo <= hi) {
+        mid = (lo + hi) / 2;
+        int tmp = 0;
+        int j = 0;
+        for (int i = 0; i < arr.size(); i++) {
+            tmp += arr[i];
+            if (tmp >= mid) {
+                j++;
+                tmp = 0;
+            }
+        }
+        if (j >= K) {
+            lo = mid + 1;
+            ret = mid;
+        }
+        else
+            hi = mid - 1;
+    }
+    return ret;
+}
 
 void Solve(void) {
-    for (int i = N, j = N; i > 0; i--) {
-        tmp.emplace(tower[i], i);
-        while (!tmp.empty() && tower[i - 1] > tmp.top().fi) {
-            idx[tmp.top().se] = i - 1;
-            tmp.pop();
-        }
-    }
-
-    for (int i = 1; i < idx.size(); i++) {
-        cout << idx[i] << " ";
-    }
+    cout << BinarySearch(0, 20 * N);
 }
 
 void Init(void) {
-    cin >> N;
-    resize(tower, N + 1);
-    resize(idx, N + 1);
-    rep(i, 1, N + 1) {
-        cin >> tower[i];
-    }
-    tower[0] = INF;
+    cin >> N >> K;
+    resize(arr, N);
+    cin >> arr;
 }
 
 int main(void) {

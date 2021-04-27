@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-23 15:03:15  *************/
+\*************  2021-04-23 14:00:06  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,33 +54,50 @@ template<class T, typename... sizes>
 void resize(T& container, int _size, sizes... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N;
-vi tower;
-vi idx;
-stack<pii> tmp;
+string str;
+vs tree;
 
 void Solve(void) {
-    for (int i = N, j = N; i > 0; i--) {
-        tmp.emplace(tower[i], i);
-        while (!tmp.empty() && tower[i - 1] > tmp.top().fi) {
-            idx[tmp.top().se] = i - 1;
-            tmp.pop();
+    if (str.back() == 'P')
+        tree.emplace_back(string(1, 'P'));
+    else {
+        cout << "NP";
+        return;
+    }
+    str.pop_back();
+    while (!str.empty()) {
+        char c = str.back();
+        str.pop_back();
+        if (c == 'P') {
+            if (tree.back() == "A" || tree.back() == "AP")
+                tree.back().push_back('P');
+            else {
+                cout << "NP";
+                return;
+            }
+        }
+        else {
+            if (tree.back() == "P" || tree.back() == "AP")
+                tree.emplace_back(string(1, 'A'));
+            else {
+                cout << "NP";
+                return;
+            }
+        }
+
+        while (tree.back() == "APP") {
+            tree.pop_back();
         }
     }
 
-    for (int i = 1; i < idx.size(); i++) {
-        cout << idx[i] << " ";
-    }
+    if (tree.size() == 1 && tree[0] == "P")
+        cout << "PPAP";
+    else
+        cout << "NP";
 }
 
 void Init(void) {
-    cin >> N;
-    resize(tower, N + 1);
-    resize(idx, N + 1);
-    rep(i, 1, N + 1) {
-        cin >> tower[i];
-    }
-    tower[0] = INF;
+    cin >> str;
 }
 
 int main(void) {

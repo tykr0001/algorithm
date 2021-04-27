@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-23 15:03:15  *************/
+\*************  2021-04-22 16:54:26  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -55,32 +55,34 @@ void resize(T& container, int _size, sizes... _sizes) { container.resize(_size);
 /*************************************************/
 
 int N;
-vi tower;
-vi idx;
-stack<pii> tmp;
+vi A;
+vb good;
+int answer;
 
 void Solve(void) {
-    for (int i = N, j = N; i > 0; i--) {
-        tmp.emplace(tower[i], i);
-        while (!tmp.empty() && tower[i - 1] > tmp.top().fi) {
-            idx[tmp.top().se] = i - 1;
-            tmp.pop();
+    rep(i, 0, N - 1) {
+        rep(j, i + 1, N) {
+            int sum = A[i] + A[j];
+            int k = lower_bound(A.begin(), A.end(), sum) - A.begin();
+            while (k != N && sum == A[k] && good[k] != true) {
+                if (k != i && k != j)
+                    good[k] = true;
+                k++;
+            }
         }
     }
-
-    for (int i = 1; i < idx.size(); i++) {
-        cout << idx[i] << " ";
+    for (auto elem : good) {
+        if (elem) answer++;
     }
+    cout << answer;
 }
 
 void Init(void) {
     cin >> N;
-    resize(tower, N + 1);
-    resize(idx, N + 1);
-    rep(i, 1, N + 1) {
-        cin >> tower[i];
-    }
-    tower[0] = INF;
+    resize(A, N);
+    resize(good, N);
+    cin >> A;
+    sort(A);
 }
 
 int main(void) {
