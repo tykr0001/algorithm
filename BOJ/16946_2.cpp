@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-04-27 22:01:15  *************/
+\*************  2021-04-28 22:52:17  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -55,108 +55,56 @@ template<class T, typename... sizes>
 void resize(T& container, int _size, sizes... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N, Q;
-string S;
-int U, R, D, L;
+vs graph;
+vvi answer;
+vvb visited;
+int row, col;
+
+int di[4] = { -1,1,0,0 };
+int dj[4] = { 0,0,-1,1 };
+
+bool CanGo(int i, int j) {
+    return 0 <= i && i < row && 0 <= j && j < col;
+}
+
+int BFS(const pii& init) {
+    int ret = 1;
+    queue<pii> sq;
+    sq.emplace(init);
+    while (!sq.empty()) {
+        auto node = sq.front();
+        sq.pop();
+        rep(k, 0, 4) {
+            int i = node.fi + di[k];
+            int j = node.se + dj[k];
+            if (CanGo(i, j) && graph[i][j] == '0' && !visited[i][j]) {
+                sq.emplace(i, j);
+                visited[i][j] = true;
+                ret++;
+            }
+        }
+    }
+    return ret % 10;
+}
 
 void Solve(void) {
-    while (Q--) {
-        int ans = 0;
-        int u = U;
-        int r = R;
-        int d = D;
-        int l = L;
-        int x_pos = r - l;
-        int y_pos = u - d;
-        int x, y;
-        cin >> x >> y;
-        if ((abs(x) + abs(y)) % 2 != S.length() % 2 || (abs(x) + abs(y)) > S.length()) {
-            cout << -1 << endl;
-            continue;
+    rep(i, 0, row) {
+        rep(j, 0, col) {
+            if (graph[i][j] == '1')
+                answer[i][j] = BFS(pii { i,j });
+            cout << answer[i][j];
         }
-        // x
-        bool x_flag = false;
-        int x_gap = abs(x - x_pos);
-        if (x_gap % 2) x_flag = true;
-        x_gap /= 2;
-        if (x > x_pos) {
-            if (x_gap <= l) {
-                ans += x_gap;
-                l -= x_gap;
-                r += x_gap;
-            }
-            else {
-                ans += l;
-                r += l;
-                l = 0;
-            }
-        }
-        else if (x < x_pos) {
-            if (x_gap <= r) {
-                ans += x_gap;
-                r -= x_gap;
-                l += x_gap;
-            }
-            else {
-                ans += r;
-                l += r;
-                r = 0;
-            }
-        }
-
-        // y
-        int y_gap = abs(y - y_pos);
-        y_gap /= 2;
-        if (y > y_pos) {
-            if (y_gap <= d) {
-                ans += y_gap;
-                d -= y_gap;
-                u += y_gap;
-            }
-            else {
-                ans += d;
-                u += d;
-                d = 0;
-            }
-            if (x_flag) {
-                u++;
-                ans++;
-                x_flag = false;
-            }
-        }
-        else if (x < y_pos) {
-            if (y_gap <= u) {
-                ans += y_gap;
-                u -= y_gap;
-                d += x_gap;
-            }
-            else {
-                ans += u;
-                d += u;
-                u = 0;
-            }
-            if (x_flag) {
-                d++;
-                ans++;
-                x_flag = false;
-            }
-        }
-        x_pos = r - l;
-        y_pos = u - d;
-        ans += abs(x - x_pos);
-        ans += abs(y - y_pos);
-        cout << ans << endl;
+        cout << endl;
     }
+
 }
 
 void Init(void) {
-    cin >> N >> Q >> S;
-    for (char c : S) {
-        if (c == 'U') U++;
-        if (c == 'R') R++;
-        if (c == 'D') D++;
-        if (c == 'L') L++;
-    }
+    cin >> row >> col;
+    resize(graph, row);
+    resize(answer, row, col);
+    resize(visited, row, col);
+    cin >> graph;
 }
 
 int main(void) {

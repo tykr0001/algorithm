@@ -56,26 +56,25 @@ void resize(T& container, int _size, sizes... _sizes) { container.resize(_size);
 /*************************************************/
 
 int N, M, K;
-vvi tubes;
-vvi stations;
-vb visited_tube;
-vb visited_station;
+vector<vector<int>> tubes;      // tubes[idx]    = list of station connected to idx-th tube
+vector<vector<int>> stations;   // stations[idx] = list of tube connected to idx-th station
+vector<bool> visited_tube;
+vector<bool> visited_station;
 
 int BFS(int init, int goal) {
     if (init == goal) return 1;
-    int ret = -1;
-    queue<pii> sq; // <node, cost>
+    queue<pii> sq; // <station, cost>
     sq.emplace(init, 1);
     visited_station[init] = true;
 
     while (!sq.empty()) {
-        int prev_station = sq.front().fi;
-        int cost = sq.front().se;
+        int prev_station, cost;
+        tie(prev_station, cost) = sq.front();
         sq.pop();
-        for (auto tube : stations[prev_station]) {
+        for (int tube : stations[prev_station]) {
             if (!visited_tube[tube]) {
                 visited_tube[tube] = true;
-                for (auto station : tubes[tube]) {
+                for (int station : tubes[tube]) {
                     if (station == goal) {
                         return cost + 1;
                     }
@@ -87,7 +86,7 @@ int BFS(int init, int goal) {
             }
         }
     }
-    return ret;
+    return -1;
 }
 
 void Solve(void) {
@@ -96,10 +95,10 @@ void Solve(void) {
 
 void Init(void) {
     cin >> N >> K >> M;
-    resize(tubes, M + 1);
-    resize(visited_tube, M + 1);
-    resize(stations, N + 1);
-    resize(visited_station, N + 1);
+    tubes = vector<vector<int>>(M + 1); // resize(tubes, M + 1);
+    stations = vector<vector<int>>(N + 1); // resize(stations, N + 1);
+    visited_tube = vector<bool>(M + 1); // resize(visited_tube, M + 1);
+    visited_station = vector<bool>(N + 1); // resize(visited_station, N + 1);
     for (int i = 1; i < M + 1; i++) {
         for (int j = 0; j < K; j++) {
             int inp; cin >> inp;
