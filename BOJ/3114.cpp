@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-05-02 23:26:31  *************/
+\*************  2021-05-05 01:37:33  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -20,6 +20,7 @@ using vvi = vector<vector<int>>;
 using vb = vector<bool>;
 using vvb = vector<vector<bool>>;
 using vs = vector<string>;
+using vvs = vector<vector<string>>;
 using vc = vector<char>;
 using vvc = vector<vector<char>>;
 using vl = vector<ll>;
@@ -55,56 +56,73 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-struct Customer {
-    int id;
-    int casher;
-    int cost;
-};
+vvs arr;
+vvi cache;
+vvi A_sum;
+vvi B_sum;
+int R, C;
 
-class Compare {
-public:
-    bool operator()(Customer lhs, Customer rhs) {
-        if (lhs.cost != rhs.cost)
-            return lhs.cost > rhs.cost;
-        return lhs.casher < rhs.casher;
+int ToInt(const string& str) {
+    int ret = 0;
+    for (int i = 1; i < str.length(); i++)
+        ret = ret * 10 + str[i] - '0';
+    return ret;
+}
+
+int DP(int r, int c) {
+    if (cache[r][c])
+        return cache[r][c];
+    if (r == 0 && c == 0) {
+        return cache[r][c] = A_sum[1][0];
     }
-};
-priority_queue<Customer, vector<Customer>, Compare> pq; // id, casher, cost
-priority_queue<int, vector<int>, greater<int>> casher;
-int N, K;
-int timer;
-ll ans;
-ll cnt;
+    int ret = 0;
+    int tmp = 0;
+    if (r > 0) {
+        tmp = DP(r - 1, c);
+        if (arr[r][c][0] == 'A')
+            tmp -= ToInt(arr[r][c]);
+        ret = max(ret, tmp);
+    }
+    if (c > 0) {
+        tmp = DP(r, c - 1);
+        if (r + 1 < R) tmp += A_sum[r + 1][c];
+        if (r - 1 >= 0) tmp += B_sum[r - 1][c];
+        ret = max(ret, tmp);
+    }
+    if (r > 0 && c > 0) {
+        tmp = DP(r - 1, c - 1);
+        if (r + 1 < R) tmp += A_sum[r + 1][c];
+        if (r - 1 >= 0) tmp += B_sum[r - 1][c];
+        ret = max(ret, tmp);
+    }
+    return cache[r][c] = ret;
+}
 
 void Solve(void) {
-    rep(i, 0, N) {
-        int id, w;
-        cin >> id >> w;
-        if (i < K) {
-            pq.push({ id, i + 1, w });
-            continue;
-        }
-        if (pq.size() == K) {
-            timer = pq.top().cost;
-            while (!pq.empty() && timer == pq.top().cost) {
-                casher.emplace(pq.top().casher);
-                ans += ++cnt * pq.top().id;
-                pq.pop();
-            }
-        }
-        pq.push({ id, casher.top(), w + timer });
-        casher.pop();
-    }
-    while (!pq.empty()) {
-        casher.emplace(pq.top().casher);
-        ans += ++cnt * pq.top().id;
-        pq.pop();
-    }
-    cout << ans << endl;
+    cout << DP(R - 1, C - 1);
 }
 
 void Init(void) {
-    cin >> N >> K;
+    cin >> R >> C;
+    resize(arr, R, C);
+    resize(cache, R, C);
+    resize(A_sum, R, C);
+    resize(B_sum, R, C);
+    cin >> arr;
+    for (int i = 0; i < R; i++) {
+        for (int j = 0; j < C; j++) {
+            B_sum[i][j] = B_sum[i - 1 >= 0 ? i - 1 : 0][j];
+            if (arr[i][j][0] == 'B')
+                B_sum[i][j] += ToInt(arr[i][j]);
+        }
+    }
+    for (int i = R - 1; i >= 0; i--) {
+        for (int j = 0; j < C; j++) {
+            A_sum[i][j] = A_sum[i + 1 < R ? i + 1 : R - 1][j];
+            if (arr[i][j][0] == 'A')
+                A_sum[i][j] += ToInt(arr[i][j]);
+        }
+    }
 }
 
 int main(void) {
