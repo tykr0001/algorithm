@@ -347,22 +347,20 @@ void TwoPointer(const vector<int>& cache, int target) {
 vector<int> parent;
 // Find(파인드)
 // @brief      : Find the root node of parameter
-// @param node : A child node
+// @param n    : A child node
 // @return     : Index of the root node
-int Find(int node) {
-    if (parent[node] == node)
-        return node;
-    else
-        return parent[node] = Find(parent[node]);
+int Find(int n) {
+    if (parent[n] == n) return n;
+    else return parent[n] = Find(parent[n]);
 }
 
 // Union(유니온)
 // @brief   : Union the disjoint set
-// @param a : child node of the set (this will be the root)
-// @param b : child node of another set
+// @param p : child node of the set (this will be the root)
+// @param c : child node of another set
 // @return  : void
-void Union(int a, int b) {
-    parent[Find(b)] = Find(a);
+void Union(int p, int c) {
+    parent[Find(c)] = Find(p);
 }
 
 vector<bool> is_prime;
@@ -421,58 +419,53 @@ void LIS(vector<int>& arr) {
 
 
 vector<ll> arr;
-vector<ll> tree;
+
 // Segment-Tree(세그먼트트리)
-// @brief           : Build segment-tree which memorizes partial sum
-// @param node      : node index (root node == 1)
-// @param start,end : array index (init start == 0, init end == array size - 1)
-// @return          : Partial sum from start to end
-ll Init(int node, int start, int end) {
-    if (start == end) {
-        return tree[node] = arr[start];
+struct Segment {
+    vl arr;
+    vl tree;
+    // @brief           : Build segment-tree which memorizes partial sum
+    // @param node      : node index (root node == 1)
+    // @param start,end : array index (init start == 0, init end == array size - 1)
+    // @return          : Partial sum from start to end
+    ll Init(int node, int start, int end) {
+        if (start == end) 
+            return tree[node] = arr[start];
+        else 
+            return tree[node] = Init(node * 2, start, (start + end) / 2)
+                + Init(node * 2 + 1, (start + end) / 2 + 1, end);
     }
-    else {
-        return tree[node] = Init(node * 2, start, (start + end) / 2)
-            + Init(node * 2 + 1, (start + end) / 2 + 1, end);
-    }
-}
 
-// @brief : Update segment tree with index and value
-// @param node       : node index (root node == 1)
-// @param start, end : array index (init start == 0, init end == array size - 1)
-// @param idx        : index of new value
-// @param k          : new value
-// @return           : updated tree[node]
+    // @brief : Update segment tree with index and value
+    // @param node       : node index (root node == 1)
+    // @param start, end : array index (init start == 0, init end == array size - 1)
+    // @param idx        : index of new value
+    // @param k          : new value
+    // @return           : updated tree[node]
+    ll Update(int node, int start, int end, int idx, ll diff) {
+        if (idx < start || idx > end)
+            return tree[node];
+        if (start == end) 
+            return tree[node] += diff;
+        else 
+            return tree[node] = Update(node * 2, start, (start + end) / 2, idx, diff)
+                + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, diff);
+    }
+    // @brief            : return partial sum of segment-tree
+    // @param start,end  : array index (init start == 0, init end == array size - 1)
+    // @param left,right : array index to get the partial sum
+    // @return           : partial sum
+    ll Sum(int node, int start, int end, int left, int right) {
+        if (left > end || right < start)
+            return 0;
+        if (left <= start && end <= right)
+            return tree[node];
+        else
+            return Sum(node * 2, start, (start + end) / 2, left, right)
+                + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+    }
+} seg;
 
-ll Update(int node, int start, int end, int idx, ll diff) {
-    if (idx < start || idx > end) {
-        return tree[node];
-    }
-    if (start == end) {
-        return tree[node] += diff;
-    }
-    else {
-        return tree[node] = Update(node * 2, start, (start + end) / 2, idx, diff)
-            + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, diff);
-    }
-}
-
-// @brief            : return partial sum of segment-tree
-// @param start,end  : array index (init start == 0, init end == array size - 1)
-// @param left,right : array index to get the partial sum
-// @return           : partial sum
-ll Sum(int node, int start, int end, int left, int right) {
-    if (left > end || right < start) {
-        return 0;
-    }
-    if (left <= start && end <= right) {
-        return tree[node];
-    }
-    else {
-        return Sum(node * 2, start, (start + end) / 2, left, right)
-            + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
-    }
-}
 
 // Trie(트라이)
 struct Trie {
@@ -537,3 +530,184 @@ bool IsIntersect(const line& x, const line& y) {
     }
     return ab <= 0 && cd <= 0;
 }
+
+// Fenwick-Tree(펜윅트리)  
+struct Fenwick {
+    ll n;
+    vl arr;
+    vl tree;
+    vl bit1;
+    vl bit2;
+
+    Fenwick() { }
+    Fenwick(int n) : n(n), arr(n + 1), tree(n + 1), bit1(n + 1), bit2(n + 1) { }
+
+    ll Sum(int idx) {
+        ll ret = 0;
+        while (idx > 0) {
+            ret += tree[idx];
+            idx -= (idx & -idx);
+        }
+        return ret;
+    }
+
+    void Update(int idx, ll diff) {
+        while (idx < tree.size()) {
+            tree[idx] += diff;
+            idx += (idx & -idx);
+        }
+    }
+
+    ll Min(int a, int b) {
+        ll ret = LINF;
+        ll idx = a;
+        while (idx + (idx & -idx) <= b) {
+            ret = min(ret, bit2[idx]);
+            idx += (idx & -idx);
+        }
+        if (idx <= b) ret = min(ret, arr[idx]);
+
+        idx = b;
+        while (idx - (idx & -idx) >= a) {
+            ret = min(ret, bit1[idx]);
+            idx -= (idx & -idx);
+        }
+        if (idx >= a) ret = min(ret, arr[idx]);
+        return ret;
+    };
+
+    void MinUpdate(int idx, ll val) {
+        if (arr[idx] == val) return;
+
+        ll l, r;
+        ll li, ri;
+        ll lmin, rmin;
+
+        #define MIN_INIT {    \
+            li = idx - 1;       \
+            lmin = INT64_MAX;   \
+            ri = idx + 1;       \
+            rmin = INT64_MAX;   \
+        }
+
+        #define MIN_UPDATE {                              \
+            while (li > 0 && li - (li & -li) + 1 >= l) {    \
+                lmin = min(lmin, bit1[li]);                 \
+                li -= (li & -li);                           \
+            }                                               \
+            if (li >= l) lmin = min(lmin, arr[li]);         \
+            while (ri <= n && ri + (ri & - ri) - 1 <= r) {  \
+                rmin = min(rmin, bit2[ri]);                 \
+                ri += (ri & - ri);                          \
+            }                                               \
+            if (ri <= min(n, r)) rmin = min(rmin, arr[ri]); \
+        }
+
+        r = idx;
+        l = r - (r & -r) + 1;
+        MIN_INIT;
+        while (r <= n) {
+            if (val <= bit1[r]) {
+                bit1[r] = val;
+            }
+            else if (bit1[r] == arr[idx]) {
+                MIN_UPDATE;
+                bit1[r] = min(val, min(lmin, rmin));
+            }
+            r = r + (r & -r);
+            l = r - (r & -r) + 1;
+        }
+        l = idx;
+        r = l + (l & -l) - 1;
+        MIN_INIT;
+        while (l > 0) {
+            if (val <= bit2[l]) {
+                bit2[l] = val;
+            }
+            else if (bit2[l] == arr[idx]) {
+                MIN_UPDATE;
+                bit2[l] = min(val, min(lmin, rmin));
+            }
+            l = l - (l & -l);
+            r = l + (l & -l) - 1;
+        }
+        arr[idx] = val;
+    }
+
+    ll Max(int a, int b) {
+        ll ret = 0;
+        ll idx = a;
+        while (idx + (idx & -idx) <= b) {
+            ret = max(ret, bit2[idx]);
+            idx += (idx & -idx);
+        }
+        if (idx <= b) ret = max(ret, arr[idx]);
+
+        idx = b;
+        while (idx - (idx & -idx) >= a) {
+            ret = max(ret, bit1[idx]);
+            idx -= (idx & -idx);
+        }
+        if (idx >= a) ret = max(ret, arr[idx]);
+        return ret;
+    };
+
+    void MaxUpdate(int idx, ll val) {
+        if (arr[idx] == val) return;
+
+        ll l, r;
+        ll li, ri;
+        ll lmax, rmax;
+
+        #define MAX_INIT {      \
+            li = idx - 1;       \
+            lmax = 0;           \
+            ri = idx + 1;       \
+            rmax = 0;           \
+        }
+
+        #define MAX_UPDATE {                                \
+            while (li > 0 && li - (li & -li) + 1 >= l) {    \
+                lmax = max(lmax, bit1[li]);                 \
+                li -= (li & -li);                           \
+            }                                               \
+            if (li >= l) lmax = max(lmax, arr[li]);         \
+            while (ri <= n && ri + (ri & - ri) - 1 <= r) {  \
+                rmax = max(rmax, bit2[ri]);                 \
+                ri += (ri & - ri);                          \
+            }                                               \
+            if (ri <= max(n, r)) rmax = max(rmax, arr[ri]); \
+        }
+
+        r = idx;
+        l = r - (r & -r) + 1;
+        MAX_INIT;
+        while (r <= n) {
+            if (val >= bit1[r]) {
+                bit1[r] = val;
+            }
+            else if (bit1[r] == arr[idx]) {
+                MAX_UPDATE;
+                bit1[r] = max(val, min(lmax, rmax));
+            }
+            r = r + (r & -r);
+            l = r - (r & -r) + 1;
+        }
+        l = idx;
+        r = l + (l & -l) - 1;
+        MAX_INIT;
+        while (l > 0) {
+            if (val >= bit2[l]) {
+                bit2[l] = val;
+            }
+            else if (bit2[l] == arr[idx]) {
+                MAX_UPDATE
+                bit2[l] = max(val, min(lmax, rmax));
+            }
+            l = l - (l & -l);
+            r = l + (l & -l) - 1;
+        }
+        arr[idx] = val;
+    }
+} fen;
+
