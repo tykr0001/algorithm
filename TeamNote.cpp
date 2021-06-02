@@ -399,7 +399,6 @@ void LIS(vector<int>& arr) {
             auto iter = lower_bound(lis.begin(), lis.end(), arr[i]);
             *iter = arr[i];
             idx.emplace_back(distance(lis.begin(), iter));
-
         }
     }
 
@@ -424,45 +423,58 @@ vector<ll> arr;
 struct Segment {
     vl arr;
     vl tree;
-    // @brief           : Build segment-tree which memorizes partial sum
-    // @param node      : node index (root node == 1)
-    // @param start,end : array index (init start == 0, init end == array size - 1)
-    // @return          : Partial sum from start to end
-    ll Init(int node, int start, int end) {
-        if (start == end) 
-            return tree[node] = arr[start];
-        else 
-            return tree[node] = Init(node * 2, start, (start + end) / 2)
-                + Init(node * 2 + 1, (start + end) / 2 + 1, end);
+    ll MOD = INT64_MAX;
+
+    Segment() {}
+    Segment(int n) : arr(n+1), tree(1 << int(ceil(log2(n))) + 1) {}
+    
+    ll SumInit(int node, int start, int end) {
+        if (start == end) return tree[node] = arr[start];
+        int mid = (start + end) / 2;
+        return tree[node] = SumInit(node * 2, start, mid)
+                          + SumInit(node * 2 + 1, mid + 1, end);
     }
 
-    // @brief : Update segment tree with index and value
-    // @param node       : node index (root node == 1)
-    // @param start, end : array index (init start == 0, init end == array size - 1)
-    // @param idx        : index of new value
-    // @param k          : new value
-    // @return           : updated tree[node]
-    ll Update(int node, int start, int end, int idx, ll diff) {
-        if (idx < start || idx > end)
-            return tree[node];
-        if (start == end) 
-            return tree[node] += diff;
-        else 
-            return tree[node] = Update(node * 2, start, (start + end) / 2, idx, diff)
-                + Update(node * 2 + 1, (start + end) / 2 + 1, end, idx, diff);
+    ll SumUpdate(int node, int start, int end, int idx, ll diff) {
+        if (idx < start || idx > end) return tree[node];
+        if (start == end) return tree[node] += diff;
+        int mid = (start + end) / 2;
+        return tree[node] = SumUpdate(node * 2, start, mid, idx, diff)
+                          + SumUpdate(node * 2 + 1, mid + 1, end, idx, diff);
     }
-    // @brief            : return partial sum of segment-tree
-    // @param start,end  : array index (init start == 0, init end == array size - 1)
-    // @param left,right : array index to get the partial sum
-    // @return           : partial sum
+
     ll Sum(int node, int start, int end, int left, int right) {
-        if (left > end || right < start)
-            return 0;
-        if (left <= start && end <= right)
-            return tree[node];
-        else
-            return Sum(node * 2, start, (start + end) / 2, left, right)
-                + Sum(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+        if (left > end || right < start) return tree[node];
+        if (start == end) return tree[node];
+        int mid = (start + end) / 2;
+        return tree[node] = SumUpdate(node * 2, start, mid, left, right)
+                          + SumUpdate(node * 2 + 1, mid + 1, end, left, right);
+    }
+
+    ll MulInit(int node, int start, int end) {
+        if (start == end) return tree[node] = arr[start];
+        int mid = (start + end) / 2;
+        return tree[node] = MulInit(node * 2, start, mid) * 
+                            MulInit(node * 2 + 1, mid + 1, end) %
+                            MOD;
+    }
+
+    ll MulUpdate(int node, int start, int end, int idx, ll num) {
+        if (idx < start || idx > end) return tree[node];
+        if (start == end) return tree[node] = num;
+        int mid = (start + end) / 2;
+        return tree[node] = MulUpdate(node * 2, start, mid, idx, num) * 
+                            MulUpdate(node * 2 + 1, mid + 1, end, idx, num) % 
+                            MOD;
+    }
+
+    ll Mul(int node, int start, int end, int left, int right) {
+        if (left > end || right < start) return 1;
+        if (left <= start && end <= right) return tree[node];
+        int mid = (start + end) / 2;
+        return Mul(node * 2, start, mid, left, right) * 
+               Mul(node * 2 + 1, mid + 1, end, left, right) % 
+               MOD;
     }
 } seg;
 
@@ -710,4 +722,3 @@ struct Fenwick {
         arr[idx] = val;
     }
 } fen;
-
