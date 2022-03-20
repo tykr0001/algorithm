@@ -39,5 +39,6 @@
         "xtr1common": "cpp",
         "xutility": "cpp"
     },
-    "python.pythonPath": "C:\\Users\\안현기\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe"
+    "python.pythonPath": "C:\\Users\\안현기\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe",
+    "git.ignoreLimitWarning": true
 }
