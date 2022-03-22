@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-20 19:07:50  *************/
+\*************  2022-03-21 18:26:20  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,34 +54,35 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N;
-vi arr;
-unordered_map<int, int> freq; // <num, count>
+string S;
 
 void Solve(void) {
-    sort(arr);
-    double sum = 0;
-    for (auto elem : arr) {
-        sum += elem;
-        freq[elem]++;
-    }
-    cout << int(round(sum / N)) << endl;
-    cout << arr[N / 2] << endl;
-    if (freq.size() > 1) {
-        vector<pii> elems(freq.begin(), freq.end());
-        sort(elems, [ ](pii a, pii b) {return a.se != b.se ? a.se > b.se : a.fi < b.fi; });
-        cout << (elems[0].se != elems[1].se ? elems[0].fi : elems[1].fi) << endl;
+    char c = S.front();
+    int zero = 0;
+    int one = 0;
+    int flag = 0;
+    if (c == '0') {
+        zero++;
     }
     else {
-        cout << arr[0] << endl;
+        one++;
+        flag = 1;
     }
-    cout << arr.back() - arr.front() << endl;
+    for (int i = 1; i < S.size(); i++) {
+        if (S[i] == '0' && flag == 1) {
+            zero++;
+            flag = 0;
+        }
+        if (S[i] == '1' && flag == 0) {
+            one++;
+            flag = 1;
+        }
+    }
+    cout << min(zero, one);
 }
 
 void Init(void) {
-    cin >> N;
-    arr.resize(N);
-    cin >> arr;
+    cin >> S;
 }
 
 int main(void) {

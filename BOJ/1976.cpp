@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-20 19:07:50  *************/
+\*************  2022-03-21 18:42:34  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,34 +54,60 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N;
-vi arr;
-unordered_map<int, int> freq; // <num, count>
+int n, m;
+v2i edge;
+vi travel;
 
 void Solve(void) {
-    sort(arr);
-    double sum = 0;
-    for (auto elem : arr) {
-        sum += elem;
-        freq[elem]++;
+    // BFS
+    if (travel.size() <= 1) {
+        cout << "YES";
+        return;
     }
-    cout << int(round(sum / N)) << endl;
-    cout << arr[N / 2] << endl;
-    if (freq.size() > 1) {
-        vector<pii> elems(freq.begin(), freq.end());
-        sort(elems, [ ](pii a, pii b) {return a.se != b.se ? a.se > b.se : a.fi < b.fi; });
-        cout << (elems[0].se != elems[1].se ? elems[0].fi : elems[1].fi) << endl;
+
+    queue<int> q;
+    vb visited;
+    resize(visited, n + 1);
+    q.emplace(travel.front());
+    visited[travel.front()] = true;
+    while (!q.empty()) {
+        auto cur = q.front();
+        q.pop();
+        for (auto next : edge[cur]) {
+            if (!visited[next]) {
+                visited[next] = true;
+                q.emplace(next);
+            }
+        }
     }
-    else {
-        cout << arr[0] << endl;
+
+    bool flag = true;
+    for (auto city : travel) {
+        flag &= visited[city];
     }
-    cout << arr.back() - arr.front() << endl;
+    cout << (flag ? "YES" : "NO") << endl;
 }
 
 void Init(void) {
-    cin >> N;
-    arr.resize(N);
-    cin >> arr;
+    cin >> n >> m;
+    resize(edge, n + 1);
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            int inp;
+            cin >> inp;
+            if (inp == 1) {
+                edge[i].emplace_back(j);
+                edge[j].emplace_back(i);
+            }
+        }
+    }
+
+    while (1) {
+        int inp;
+        cin >> inp;
+        if (!cin.eof()) travel.emplace_back(inp);
+        else break;
+    }
 }
 
 int main(void) {

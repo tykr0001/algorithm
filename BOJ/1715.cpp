@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-20 19:07:50  *************/
+\*************  2022-03-20 20:04:53  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -55,33 +55,33 @@ void resize(T& container, int _size, Size... _sizes) { container.resize(_size); 
 /*************************************************/
 
 int N;
-vi arr;
-unordered_map<int, int> freq; // <num, count>
+priority_queue<int, vi, greater<int>> pq;
 
 void Solve(void) {
-    sort(arr);
-    double sum = 0;
-    for (auto elem : arr) {
-        sum += elem;
-        freq[elem]++;
-    }
-    cout << int(round(sum / N)) << endl;
-    cout << arr[N / 2] << endl;
-    if (freq.size() > 1) {
-        vector<pii> elems(freq.begin(), freq.end());
-        sort(elems, [ ](pii a, pii b) {return a.se != b.se ? a.se > b.se : a.fi < b.fi; });
-        cout << (elems[0].se != elems[1].se ? elems[0].fi : elems[1].fi) << endl;
+    if (N == 1) {
+        cout << 0 << endl;
     }
     else {
-        cout << arr[0] << endl;
+        ll sum = 0;
+        while (pq.size() > 1) {
+            int new_card = 0;
+            new_card += pq.top();
+            pq.pop();
+            new_card += pq.top();
+            pq.pop();
+            sum += new_card;
+            pq.emplace(new_card);
+        }
+        cout << sum << endl;
     }
-    cout << arr.back() - arr.front() << endl;
 }
 
 void Init(void) {
     cin >> N;
-    arr.resize(N);
-    cin >> arr;
+    while (N--) {
+        int inp; cin >> inp;
+        pq.emplace(inp);
+    }
 }
 
 int main(void) {

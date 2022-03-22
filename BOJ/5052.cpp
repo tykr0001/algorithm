@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-20 19:07:50  *************/
+\*************  2022-03-22 15:19:19  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,39 +54,108 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N;
-vi arr;
-unordered_map<int, int> freq; // <num, count>
+int n;
+vector<string> str;
+
+// Trie(∆Æ∂Û¿Ã)
+// struct Trie {
+//     Trie* next[10];
+//     bool finish;
+
+//     Trie() : finish(false) {
+//         memset(next, 0, sizeof(next));
+//     }
+//     ~Trie() {
+//         for (int i = 0; i < 10; i++)
+//             if (next[i] != nullptr)
+//                 delete next[i];
+//     }
+//     void Insert(const char* key) {
+//         if (*key == '\0') {
+//             finish = true;
+//         }
+//         else {
+//             int cur = *key - '0';
+//             if (next[cur] == nullptr)
+//                 next[cur] = new Trie();
+//             next[cur]->Insert(key + 1);
+//         }
+//     }
+//     Trie* Find(const char* key) {
+//         if (*key == '\0')
+//             return nullptr;
+//         if (finish)
+//             return this;
+//         int cur = *key - '0';
+//         return next[cur]->Find(key + 1);
+//     }
+// };
+
+
+class Trie {
+public:
+    unordered_map<char, Trie*> next;
+    bool finish;
+
+    Trie() : finish(false) { }
+    ~Trie() {
+        for (auto e : next) {
+            delete e.second;
+        }
+    }
+    void Insert(const string& str, int pos) {
+        if (pos == str.size()) {
+            finish = true;
+        }
+        else {
+            char cur = str[pos];
+            if (next.find(cur) == next.end())
+                next[str[pos]] = new Trie();
+            next[cur]->Insert(str, pos + 1);
+        }
+    }
+    Trie* Find(const string& str, int pos) {
+        if (pos == str.size()) {
+            return nullptr;
+        }
+        if (finish)
+            return this;
+        char cur = str[pos];
+        return next[cur]->Find(str, pos + 1);
+    }
+};
+
 
 void Solve(void) {
-    sort(arr);
-    double sum = 0;
-    for (auto elem : arr) {
-        sum += elem;
-        freq[elem]++;
+    Trie* tree = new Trie();
+
+    for (int i = 0; i < n; i++) {
+        cin >> str[i];
+        tree->Insert(str[i], 0);
     }
-    cout << int(round(sum / N)) << endl;
-    cout << arr[N / 2] << endl;
-    if (freq.size() > 1) {
-        vector<pii> elems(freq.begin(), freq.end());
-        sort(elems, [ ](pii a, pii b) {return a.se != b.se ? a.se > b.se : a.fi < b.fi; });
-        cout << (elems[0].se != elems[1].se ? elems[0].fi : elems[1].fi) << endl;
+    for (int i = 0; i < n; i++) {
+        if (tree->Find(str[i], 0) != nullptr) {
+            cout << "NO" << endl;
+            delete tree;
+            return;
+        }
     }
-    else {
-        cout << arr[0] << endl;
-    }
-    cout << arr.back() - arr.front() << endl;
+    cout << "YES" << endl;
+    delete tree;
 }
 
 void Init(void) {
-    cin >> N;
-    arr.resize(N);
-    cin >> arr;
+    cin >> n;
+    str.clear();
+    resize(str, n);
 }
 
 int main(void) {
     Boost;
-    Init();
-    Solve();
+    int t; cin >> t;;
+    while (t--) {
+        Init();
+        Solve();
+    }
     return 0;
 }

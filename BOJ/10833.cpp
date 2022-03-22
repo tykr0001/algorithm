@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-20 19:07:50  *************/
+\*************  2022-03-21 21:53:30  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,34 +54,20 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N;
-vi arr;
-unordered_map<int, int> freq; // <num, count>
+int n;
 
 void Solve(void) {
-    sort(arr);
-    double sum = 0;
-    for (auto elem : arr) {
-        sum += elem;
-        freq[elem]++;
+    int ans = 0;
+    while (n--) {
+        int a, b;
+        cin >> a >> b;
+        ans += b % a;
     }
-    cout << int(round(sum / N)) << endl;
-    cout << arr[N / 2] << endl;
-    if (freq.size() > 1) {
-        vector<pii> elems(freq.begin(), freq.end());
-        sort(elems, [ ](pii a, pii b) {return a.se != b.se ? a.se > b.se : a.fi < b.fi; });
-        cout << (elems[0].se != elems[1].se ? elems[0].fi : elems[1].fi) << endl;
-    }
-    else {
-        cout << arr[0] << endl;
-    }
-    cout << arr.back() - arr.front() << endl;
+    cout << ans;
 }
 
 void Init(void) {
-    cin >> N;
-    arr.resize(N);
-    cin >> arr;
+    cin >> n;
 }
 
 int main(void) {

@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-20 19:07:50  *************/
+\*************  2022-03-21 21:58:43  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,34 +54,81 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int N;
-vi arr;
-unordered_map<int, int> freq; // <num, count>
+int k;
+vi ans;
+vc bracket;
+vb used;
+bool flag;
+
+void MaxBacktrack(int num, int idx) {
+    if (flag) return;
+    if (idx == k) flag = true;
+
+    used[num] = true;
+    ans[idx] = num;
+
+    for (int i = 9; i >= 0; i--) {
+
+        if (!used[i]) {
+            if (bracket[idx] == '<' && num < i) {
+                MaxBacktrack(i, idx + 1);
+            }
+            else if (bracket[idx] == '>' && num > i) {
+                MaxBacktrack(i, idx + 1);
+            }
+        }
+    }
+    used[num] = false;
+}
+
+void MinBacktrack(int num, int idx) {
+    if (flag) return;
+    if (idx == k) flag = true;
+
+    used[num] = true;
+    ans[idx] = num;
+
+    for (int i = 0; i <= 9; i++) {
+        if (!used[i]) {
+            if (bracket[idx] == '<' && ans[idx] < i) {
+                MinBacktrack(i, idx + 1);
+            }
+            else if (bracket[idx] == '>' && ans[idx] > i) {
+                MinBacktrack(i, idx + 1);
+            }
+        }
+    }
+    used[num] = false;
+}
 
 void Solve(void) {
-    sort(arr);
-    double sum = 0;
-    for (auto elem : arr) {
-        sum += elem;
-        freq[elem]++;
+    used.clear();
+    resize(used, 10);
+    for (int i = 9; i >= 0; i--) {
+        MaxBacktrack(i, 0);
     }
-    cout << int(round(sum / N)) << endl;
-    cout << arr[N / 2] << endl;
-    if (freq.size() > 1) {
-        vector<pii> elems(freq.begin(), freq.end());
-        sort(elems, [ ](pii a, pii b) {return a.se != b.se ? a.se > b.se : a.fi < b.fi; });
-        cout << (elems[0].se != elems[1].se ? elems[0].fi : elems[1].fi) << endl;
+    for (auto e : ans) {
+        cout << e;
     }
-    else {
-        cout << arr[0] << endl;
+    cout << endl;
+
+    flag = false;
+    used.clear();
+    resize(used, 10);
+    for (int i = 0; i <= 9; i++) {
+        MinBacktrack(i, 0);
     }
-    cout << arr.back() - arr.front() << endl;
+    for (auto e : ans) {
+        cout << e;
+    }
+    cout << endl;
 }
 
 void Init(void) {
-    cin >> N;
-    arr.resize(N);
-    cin >> arr;
+    cin >> k;
+    resize(ans, k + 1);
+    resize(bracket, k);
+    cin >> bracket;
 }
 
 int main(void) {

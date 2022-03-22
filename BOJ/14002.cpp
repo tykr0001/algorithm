@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-20 19:07:50  *************/
+\*************  2022-03-20 20:44:42  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -56,26 +56,36 @@ void resize(T& container, int _size, Size... _sizes) { container.resize(_size); 
 
 int N;
 vi arr;
-unordered_map<int, int> freq; // <num, count>
-
 void Solve(void) {
-    sort(arr);
-    double sum = 0;
-    for (auto elem : arr) {
-        sum += elem;
-        freq[elem]++;
+    vi idx;
+    vi lis;
+    vi ans;
+    lis.reserve(N);
+    idx.reserve(N);
+    ans.reserve(N);
+    lis.emplace_back(arr.front());
+    idx.emplace_back(0);
+    for (int i = 1; i < arr.size(); i++) {
+        if (lis.back() < arr[i]) {
+            lis.emplace_back(arr[i]);
+            idx.emplace_back(lis.size() - 1);
+        }
+        else {
+            auto iter = lower_bound(lis.begin(), lis.end(), arr[i]);
+            *iter = arr[i];
+            idx.emplace_back(distance(lis.begin(), iter));
+        }
     }
-    cout << int(round(sum / N)) << endl;
-    cout << arr[N / 2] << endl;
-    if (freq.size() > 1) {
-        vector<pii> elems(freq.begin(), freq.end());
-        sort(elems, [ ](pii a, pii b) {return a.se != b.se ? a.se > b.se : a.fi < b.fi; });
-        cout << (elems[0].se != elems[1].se ? elems[0].fi : elems[1].fi) << endl;
+
+    for (int i = idx.size() - 1, j = lis.size() - 1; i >= 0; i--) {
+        if (idx[i] == j) {
+            ans.emplace_back(arr[i]);
+            j--;
+        }
     }
-    else {
-        cout << arr[0] << endl;
-    }
-    cout << arr.back() - arr.front() << endl;
+    reverse(ans.begin(), ans.end());
+    cout << lis.size() << endl;
+    cout << ans;
 }
 
 void Init(void) {
