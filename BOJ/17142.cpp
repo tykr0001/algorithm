@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-23 17:27:56  *************/
+\*************  2022-03-23 18:37:56  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,57 +54,87 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vb prime;
+int ans = INF;
+int n, m;
+int empty_room;
+v2i arr;
+vector<pii> virus;
+vector<bool> selected;
 
-void Eratos() {
-	prime[0] = prime[1] = false;
-	for (int i = 2; i <= sqrt(10000); i++) {
-		if (prime[i]) {
-			for (int j = i * 2; j < 10000; j += i)
-				prime[j] = false;
-		}
-	}
+int di[4] = { 0,0,-1,1 };
+int dj[4] = { -1,1,0,0 };
+
+bool CanGo(int i, int j) {
+    return 0 <= i && i < n && 0 <= j && j < n;
+}
+
+void BFS() {
+    queue<pii> q;
+    v2i depth(n, vi(n, -1));
+    int time = 0;
+    int searched_room = 0;
+    for (int i = 0; i < virus.size(); i++) {
+        if (selected[i]) {
+            q.push(virus[i]);
+            depth[virus[i].fi][virus[i].se] = 0;
+        }
+    }
+
+    while (!q.empty()) {
+        pii node = q.front();
+        q.pop();
+        for (int k = 0; k < 4; k++) {
+            int i = node.fi + di[k];
+            int j = node.se + dj[k];
+            if (CanGo(i, j) && arr[i][j] != 1 && depth[i][j] == -1) {
+                q.push(pii { i,j });
+                depth[i][j] = depth[node.fi][node.se] + 1;
+                if (arr[i][j] == 0) {
+                    searched_room++;
+                    time = depth[i][j];
+                }
+            }
+        }
+    }
+    if (searched_room == empty_room)
+        ans = min(ans, time);
+}
+
+void BackTrack(int idx, int depth) {
+    if (depth == m)
+        BFS();
+    else {
+        for (int i = idx; i < virus.size(); i++) {
+            if (!selected[i]) {
+                selected[i] = true;
+                BackTrack(i + 1, depth + 1);
+                selected[i] = false;
+            }
+        }
+    }
+}
+
+void Solve(void) {
+    BackTrack(0, 0);
+    cout << (ans != INF ? ans : -1) << endl;
+}
+
+void Init(void) {
+    cin >> n >> m;
+    resize(arr, n, n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            int inp; cin >> arr[i][j];
+            if (arr[i][j] == 0) empty_room++;
+            if (arr[i][j] == 2) virus.push_back(pii { i, j });
+        }
+    }
+    selected.resize(virus.size());
 }
 
 int main(void) {
-	Boost;
-	queue<int> q;
-	prime = vb(10000, true);
-	int t; cin >> t;
-	Eratos();
-	while (t--) {
-		int init, goal;
-		cin >> init >> goal;
-		queue<int> q;
-		bool visited[10000] = {};
-		int depth[10000] = {};
-		q.push(init);
-		visited[init] = true;
-
-		int ans = 0;
-		bool flag = false;
-		while (!q.empty()) {
-			int n = q.front();
-			q.pop();
-			if (n == goal) {
-				ans = depth[goal];
-				flag = true;
-				break;
-			}
-			for (int i = 0; i < 10; i++) {
-				for (int j = 0; j < 4; j++) {
-					int k = n - n / int(pow(10, 3 - j)) % 10 * int(pow(10, 3 - j))
-						+ int(pow(10, 3 - j)) * i;
-					if (!visited[k] && prime[k] && k >= 1000) {
-						q.push(k);
-						visited[k] = true;
-						depth[k] = depth[n] + 1;
-					}
-				}
-			}
-		}
-		if (flag) cout << ans << endl;
-		else cout << "Impossible" << endl;
-	}
-	return 0;
+    Boost;
+    Init();
+    Solve();
+    return 0;
 }

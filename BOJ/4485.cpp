@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-23 17:27:56  *************/
+\*************  2022-03-23 16:56:47  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,57 +54,57 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vb prime;
+int cnt;
+int n;
+v2i weight;
+v2i shortest;
 
-void Eratos() {
-	prime[0] = prime[1] = false;
-	for (int i = 2; i <= sqrt(10000); i++) {
-		if (prime[i]) {
-			for (int j = i * 2; j < 10000; j += i)
-				prime[j] = false;
-		}
-	}
+struct Path {
+    int i;
+    int j;
+    int cost;
+};
+
+int di[4] = { 0,0,-1,1 };
+int dj[4] = { -1,1,0,0 };
+
+bool CanGo(int i, int j) {
+    return 0 <= i && i < n && 0 <= j && j < n;
+}
+
+void Dijkstra() {
+    auto Comp = [ ](Path a, Path b) {return a.cost > b.cost; };
+    priority_queue<Path, vector<Path>, decltype(Comp)> pq(Comp);
+    pq.push(Path { 0,0,weight[0][0] });
+    while (!pq.empty()) {
+        Path top = pq.top();
+        pq.pop();
+
+        if (top.cost > shortest[top.i][top.j]) continue;
+
+        for (int k = 0; k < 4; k++) {
+            int i = top.i + di[k];
+            int j = top.j + dj[k];
+            if (CanGo(i, j) && top.cost + weight[i][j] < shortest[i][j]) {
+                pq.push(Path { i,j,top.cost + weight[i][j] });
+                shortest[i][j] = top.cost + weight[i][j];
+            }
+        }
+    }
+    cout << "Problem " << cnt << ": " << shortest[n - 1][n - 1] << endl;
 }
 
 int main(void) {
-	Boost;
-	queue<int> q;
-	prime = vb(10000, true);
-	int t; cin >> t;
-	Eratos();
-	while (t--) {
-		int init, goal;
-		cin >> init >> goal;
-		queue<int> q;
-		bool visited[10000] = {};
-		int depth[10000] = {};
-		q.push(init);
-		visited[init] = true;
-
-		int ans = 0;
-		bool flag = false;
-		while (!q.empty()) {
-			int n = q.front();
-			q.pop();
-			if (n == goal) {
-				ans = depth[goal];
-				flag = true;
-				break;
-			}
-			for (int i = 0; i < 10; i++) {
-				for (int j = 0; j < 4; j++) {
-					int k = n - n / int(pow(10, 3 - j)) % 10 * int(pow(10, 3 - j))
-						+ int(pow(10, 3 - j)) * i;
-					if (!visited[k] && prime[k] && k >= 1000) {
-						q.push(k);
-						visited[k] = true;
-						depth[k] = depth[n] + 1;
-					}
-				}
-			}
-		}
-		if (flag) cout << ans << endl;
-		else cout << "Impossible" << endl;
-	}
-	return 0;
+    Boost;
+    while (1) {
+        cnt++;
+        cin >> n;
+        if (!n) break;
+        weight.clear();
+        resize(weight, n, n);
+        shortest = v2i(n, vi(n, INF));
+        cin >> weight;
+        Dijkstra();
+    }
+    return 0;
 }

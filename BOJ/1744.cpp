@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-23 17:27:56  *************/
+\*************  2022-03-23 16:29:14  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,57 +54,40 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vb prime;
+int n;
+vi neg;
+vi pos;
+vi one;
 
-void Eratos() {
-	prime[0] = prime[1] = false;
-	for (int i = 2; i <= sqrt(10000); i++) {
-		if (prime[i]) {
-			for (int j = i * 2; j < 10000; j += i)
-				prime[j] = false;
-		}
-	}
+void Solve(void) {
+    sort(neg.begin(), neg.end());
+    sort(pos.begin(), pos.end(), greater<int>());
+    int ans = 0;
+    for (int i = 0; i < neg.size(); i += 2) {
+        if (i + 1 < neg.size()) ans += neg[i] * neg[i + 1];
+        else ans += neg[i];
+    }
+    for (int i = 0; i < pos.size(); i += 2) {
+        if (i + 1 < pos.size()) ans += pos[i] * pos[i + 1];
+        else ans += pos[i];
+    }
+    ans += one.size();
+    cout << ans;
+}
+
+void Init(void) {
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        int inp; cin >> inp;
+        if (inp <= 0) neg.push_back(inp);
+        else if (inp > 1) pos.push_back(inp);
+        else one.push_back(inp);
+    }
 }
 
 int main(void) {
-	Boost;
-	queue<int> q;
-	prime = vb(10000, true);
-	int t; cin >> t;
-	Eratos();
-	while (t--) {
-		int init, goal;
-		cin >> init >> goal;
-		queue<int> q;
-		bool visited[10000] = {};
-		int depth[10000] = {};
-		q.push(init);
-		visited[init] = true;
-
-		int ans = 0;
-		bool flag = false;
-		while (!q.empty()) {
-			int n = q.front();
-			q.pop();
-			if (n == goal) {
-				ans = depth[goal];
-				flag = true;
-				break;
-			}
-			for (int i = 0; i < 10; i++) {
-				for (int j = 0; j < 4; j++) {
-					int k = n - n / int(pow(10, 3 - j)) % 10 * int(pow(10, 3 - j))
-						+ int(pow(10, 3 - j)) * i;
-					if (!visited[k] && prime[k] && k >= 1000) {
-						q.push(k);
-						visited[k] = true;
-						depth[k] = depth[n] + 1;
-					}
-				}
-			}
-		}
-		if (flag) cout << ans << endl;
-		else cout << "Impossible" << endl;
-	}
-	return 0;
+    Boost;
+    Init();
+    Solve();
+    return 0;
 }

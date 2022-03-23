@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-23 17:27:56  *************/
+\*************  2022-03-23 00:50:50  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,57 +54,66 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vb prime;
+int n, k;
+vb visited(100001);
+vi depth(100001);
+vi prev_idx(100001);
 
-void Eratos() {
-	prime[0] = prime[1] = false;
-	for (int i = 2; i <= sqrt(10000); i++) {
-		if (prime[i]) {
-			for (int j = i * 2; j < 10000; j += i)
-				prime[j] = false;
-		}
-	}
+void Solve(void) {
+    queue<int> q;
+    q.push(n);
+    visited[n] = true;
+    prev_idx[n] = -1;
+    while (!q.empty()) {
+        auto cur = q.front();
+        if (cur == k) {
+            break;
+        }
+        q.pop();
+
+        if (0 <= cur - 1 && !visited[cur - 1]) {
+            q.push(cur - 1);
+            visited[cur - 1] = true;
+            prev_idx[cur - 1] = cur;
+            depth[cur - 1] = depth[cur] + 1;
+        }
+        if (cur + 1 <= 100000 && !visited[cur + 1]) {
+            q.push(cur + 1);
+            visited[cur + 1] = true;
+            prev_idx[cur + 1] = cur;
+            depth[cur + 1] = depth[cur] + 1;
+        }
+        if (cur * 2 <= 100000 && !visited[cur * 2]) {
+            q.push(cur * 2);
+            visited[cur * 2] = true;
+            prev_idx[cur * 2] = cur;
+            depth[cur * 2] = depth[cur] + 1;
+        }
+    }
+
+
+    vi ans;
+    int idx = k;
+    ans.push_back(idx);
+
+    while (idx != n) {
+        ans.push_back(prev_idx[idx]);
+        idx = prev_idx[idx];
+    }
+
+    cout << ans.size() - 1 << endl;
+    for (int i = ans.size() - 1; i >= 0; i--) {
+        cout << ans[i] << ' ';
+    }
+}
+
+void Init(void) {
+    cin >> n >> k;
 }
 
 int main(void) {
-	Boost;
-	queue<int> q;
-	prime = vb(10000, true);
-	int t; cin >> t;
-	Eratos();
-	while (t--) {
-		int init, goal;
-		cin >> init >> goal;
-		queue<int> q;
-		bool visited[10000] = {};
-		int depth[10000] = {};
-		q.push(init);
-		visited[init] = true;
-
-		int ans = 0;
-		bool flag = false;
-		while (!q.empty()) {
-			int n = q.front();
-			q.pop();
-			if (n == goal) {
-				ans = depth[goal];
-				flag = true;
-				break;
-			}
-			for (int i = 0; i < 10; i++) {
-				for (int j = 0; j < 4; j++) {
-					int k = n - n / int(pow(10, 3 - j)) % 10 * int(pow(10, 3 - j))
-						+ int(pow(10, 3 - j)) * i;
-					if (!visited[k] && prime[k] && k >= 1000) {
-						q.push(k);
-						visited[k] = true;
-						depth[k] = depth[n] + 1;
-					}
-				}
-			}
-		}
-		if (flag) cout << ans << endl;
-		else cout << "Impossible" << endl;
-	}
-	return 0;
+    Boost;
+    Init();
+    Solve();
+    return 0;
 }
