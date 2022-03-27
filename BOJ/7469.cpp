@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-26 07:42:58  *************/
+\*************  2022-03-27 16:16:19  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,55 +54,81 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int n;
-vector<pll> dots;
+// Segment-Tree(세그먼트트리)
+struct Segment {
+    vl arr;
+    v2l sub_arr;
 
-/** CCW(counter-clock-wise)
- *  @return  ccw=>1, cw=>-1, pararell=>0
- */
-int CCW(pll& a, pll& b, pll& c) {
-    ll op = (a.fi * b.se + b.fi * c.se + c.fi * a.se) -
-        (a.se * b.fi + b.se * c.fi + c.se * a.fi);
-    if (op > 0) return 1;
-    else if (op < 0) return -1;
-    else return 0;
-}
+    Segment() { }
+    Segment(int n) : arr(n + 1), sub_arr(1 << int(ceil(log2(n))) + 1) { }
 
-bool Cmp(pll a, pll b) {
-    if (a.se * b.fi != b.se * a.fi) return a.se * b.fi < b.se* a.fi;
-    return a.fi * a.fi + a.se * a.se < b.fi* b.fi + b.se * b.se;
-}
-
-void Solve(void) {
-    stack<int> s;
-    int next = 0;
-    while (next < n) {
-        while (s.size() >= 2) {
-            int cur = s.top();
-            s.pop();
-            int prev = s.top();
-            if (CCW(dots[prev], dots[cur], dots[next]) > 0) {
-                s.push(cur);
-                break;
-            }
+    // fix the Args start at 1, end at n
+    // O(n log n)
+    void Init(int node, int start, int end) {
+        if (start == end) {
+            sub_arr[node].push_back(arr[start]);
+            return;
         }
-        s.push(next++);
+        Init(node * 2, start, (start + end) / 2);
+        Init(node * 2 + 1, (start + end) / 2 + 1, end);
+
+        // std:merge reference : https://www.cplusplus.com/reference/algorithm/merge/
+        sub_arr[node].resize(sub_arr[node * 2].size() + sub_arr[node * 2 + 1].size());
+        merge(sub_arr[node * 2].begin(), sub_arr[node * 2].end(), sub_arr[node * 2 + 1].begin(), sub_arr[node * 2 + 1].end(), sub_arr[node].begin());
     }
 
-    cout << s.size();
+    // arr[left...right] 중 mid 이하의 수 갯수 반환
+    // O(log^2 n)
+    ll Query(int node, int start, int end, ll left, ll right, ll mid) {
+        // [left...right] 범위와 전혀 겹치지 않는 노드
+        if (left > end || right < start)
+            return 0;
+
+        // O(log n)
+        // [left...right] 범위에 완전히 포함되는 노드
+        if (left <= start && end <= right)
+            return upper_bound(sub_arr[node].begin(), sub_arr[node].end(), mid) - sub_arr[node].begin();
+
+        // O(log n)
+        // [left...right] 범위와 일부 겹치는 노드
+        return Query(node * 2, start, (start + end) / 2, left, right, mid)
+             + Query(node * 2 + 1, (start + end) / 2 + 1, end, left, right, mid);
+    }
+} seg;
+
+int n, m;
+
+void Solve(void) {
+    while (m--) {
+        // O(m)
+        ll i, j, k;
+        cin >> i >> j >> k;
+        ll lo = -1e9;
+        ll hi = 1e9;
+        // O(log n)
+        while (lo <= hi) {
+            ll mid = (lo + hi) / 2;
+
+            // O(log^2 n)
+            // 정렬된 a[i...j]에서 mid 이하의 수가 k개 미만
+            if (seg.Query(1, 1, n, i, j, mid) < k)
+                lo = mid + 1;
+            // 정렬된 a[i...j]에서 mid 이하의 수가 k개 이상
+            else if (seg.Query(1, 1, n, i, j, mid) >= k)
+                hi = mid - 1;
+        }
+        cout << lo << endl;
+    }
 }
 
 void Init(void) {
-    cin >> n;
-    dots.resize(n);
-    cin >> dots;
-    sort(dots.begin(), dots.end());
-    pll init = dots[0];
-    for (auto& elem : dots) {
-        elem.fi -= init.fi;
-        elem.se -= init.se;
+    cin >> n >> m;
+    seg = Segment(n);
+    for (int i = 1; i <= n; i++) {
+        cin >> seg.arr[i];
     }
-    sort(dots.begin(), dots.end(), Cmp);
+    // O(n log n)
+    seg.Init(1, 1, n);
 }
 
 int main(void) {

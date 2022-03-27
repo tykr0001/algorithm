@@ -428,6 +428,7 @@ struct Segment {
     Segment() {}
     Segment(int n) : arr(n+1), tree(1 << int(ceil(log2(n))) + 1) {}
     
+    // fix the Args start at 1, end at n
     ll SumInit(int node, int start, int end) {
         if (start == end) return tree[node] = arr[start];
         int mid = (start + end) / 2;
@@ -444,13 +445,14 @@ struct Segment {
     }
 
     ll Sum(int node, int start, int end, int left, int right) {
-        if (left > end || right < start) return tree[node];
-        if (start == end) return tree[node];
+        if (left > end || right < start) return 0;
+        if (left <= start && end <= right) return tree[node];
         int mid = (start + end) / 2;
-        return tree[node] = SumUpdate(node * 2, start, mid, left, right)
-                          + SumUpdate(node * 2 + 1, mid + 1, end, left, right);
+        return tree[node] = Sum(node * 2, start, mid, left, right)
+                          + Sum(node * 2 + 1, mid + 1, end, left, right);
     }
 
+    // fix the Args start at 1, end at n
     ll MulInit(int node, int start, int end) {
         if (start == end) return tree[node] = arr[start];
         int mid = (start + end) / 2;

@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-26 07:42:58  *************/
+\*************  2022-03-26 23:43:25  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,60 +54,26 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int n;
-vector<pll> dots;
-
-/** CCW(counter-clock-wise)
- *  @return  ccw=>1, cw=>-1, pararell=>0
- */
-int CCW(pll& a, pll& b, pll& c) {
-    ll op = (a.fi * b.se + b.fi * c.se + c.fi * a.se) -
-        (a.se * b.fi + b.se * c.fi + c.se * a.fi);
-    if (op > 0) return 1;
-    else if (op < 0) return -1;
-    else return 0;
-}
-
-bool Cmp(pll a, pll b) {
-    if (a.se * b.fi != b.se * a.fi) return a.se * b.fi < b.se* a.fi;
-    return a.fi * a.fi + a.se * a.se < b.fi* b.fi + b.se * b.se;
-}
+int n, m;
 
 void Solve(void) {
-    stack<int> s;
-    int next = 0;
-    while (next < n) {
-        while (s.size() >= 2) {
-            int cur = s.top();
-            s.pop();
-            int prev = s.top();
-            if (CCW(dots[prev], dots[cur], dots[next]) > 0) {
-                s.push(cur);
-                break;
-            }
-        }
-        s.push(next++);
-    }
-
-    cout << s.size();
+    cout << n - 1 << endl;
 }
 
 void Init(void) {
-    cin >> n;
-    dots.resize(n);
-    cin >> dots;
-    sort(dots.begin(), dots.end());
-    pll init = dots[0];
-    for (auto& elem : dots) {
-        elem.fi -= init.fi;
-        elem.se -= init.se;
+    cin >> n >> m;
+    while (m--) {
+        int src, dst;
+        cin >> src >> dst;
     }
-    sort(dots.begin(), dots.end(), Cmp);
 }
 
 int main(void) {
     Boost;
-    Init();
-    Solve();
+    int t; cin >> t;
+    while (t--) {
+        Init();
+        Solve();
+    }
     return 0;
 }

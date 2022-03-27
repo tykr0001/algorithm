@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-26 07:42:58  *************/
+\*************  2022-03-26 09:06:18  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,55 +54,64 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-int n;
-vector<pll> dots;
+int n, w;
+vector<pii> arr;
+v2i cache;
+vi ans;
 
-/** CCW(counter-clock-wise)
- *  @return  ccw=>1, cw=>-1, pararell=>0
- */
-int CCW(pll& a, pll& b, pll& c) {
-    ll op = (a.fi * b.se + b.fi * c.se + c.fi * a.se) -
-        (a.se * b.fi + b.se * c.fi + c.se * a.fi);
-    if (op > 0) return 1;
-    else if (op < 0) return -1;
-    else return 0;
+int dist(int a, int b) {
+    return abs(arr[a].fi - arr[b].fi) + abs(arr[a].se - arr[b].se);
 }
 
-bool Cmp(pll a, pll b) {
-    if (a.se * b.fi != b.se * a.fi) return a.se * b.fi < b.se* a.fi;
-    return a.fi * a.fi + a.se * a.se < b.fi* b.fi + b.se * b.se;
+
+// bottom-up
+int dp(int a, int b) {
+    if (a == w + 2 || b == w + 2)
+        return 0;
+    int& ret = cache[a][b];
+    if (ret != -1)
+        return ret;
+
+    int next = max(a, b) + 1;
+    int d1 = dp(next, b) + dist(a, next);
+    int d2 = dp(a, next) + dist(b, next);
+    return ret = min(d1, d2);
+}
+
+void order(int a, int b) {
+    if (a == w + 2 || b == w + 2)
+        return;
+
+    int next = max(a, b) + 1;
+    int d1 = cache[next][b] + dist(a, next);
+    int d2 = cache[a][next] + dist(b, next);
+
+    if (d1 < d2) {
+        ans.push_back(1);
+        order(next, b);
+    }
+    else {
+        ans.push_back(2);
+        order(a, next);
+    }
 }
 
 void Solve(void) {
-    stack<int> s;
-    int next = 0;
-    while (next < n) {
-        while (s.size() >= 2) {
-            int cur = s.top();
-            s.pop();
-            int prev = s.top();
-            if (CCW(dots[prev], dots[cur], dots[next]) > 0) {
-                s.push(cur);
-                break;
-            }
-        }
-        s.push(next++);
-    }
-
-    cout << s.size();
+    cout << dp(1, 2) << endl;
+    order(1, 2);
+    for (auto e : ans)
+        cout << e << endl;
 }
 
 void Init(void) {
-    cin >> n;
-    dots.resize(n);
-    cin >> dots;
-    sort(dots.begin(), dots.end());
-    pll init = dots[0];
-    for (auto& elem : dots) {
-        elem.fi -= init.fi;
-        elem.se -= init.se;
+    cin >> n >> w;
+    arr.resize(w + 3);
+    cache = v2i(w + 3, vi(w + 3, -1));
+    arr[1] = { 1, 1 };
+    arr[2] = { n, n };
+    for (int i = 3; i < w + 3; i++) {
+        cin >> arr[i];
     }
-    sort(dots.begin(), dots.end(), Cmp);
 }
 
 int main(void) {
