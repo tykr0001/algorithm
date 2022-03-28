@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-27 21:56:27  *************/
+\*************  2022-03-29 05:00:50  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,26 +54,41 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vector<pii> arr(8);
-int ans;
+int n;
+v2i pole;
+int height;
+vector<pii> highest;
+pii left_most;
+pii right_most;
+pii up_most;
+pii down_most;
 
 void Solve(void) {
-    sort(arr.begin(), arr.end(), [ ](pii a, pii b) {return a.fi > b.fi; });
-    for (int i = 4; i >= 0; i--) {
-        ans += arr[i].fi;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (pole[i][j] == height)
+                highest.emplace_back(i, j);
+        }
     }
-    vector<pii> temp(arr.begin(), arr.begin() + 5);
-    sort(temp.begin(), temp.end(), [ ](pii a, pii b) {return a.se < b.se; });
-    cout << ans << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << temp[i].se << ' ';
+    left_most = right_most = up_most = down_most = highest.front();
+    for (int i = 1; i < highest.size(); i++) {
+        if (left_most.se > highest[i].se) left_most = highest[i];
+        if (right_most.se < highest[i].se) right_most = highest[i];
+        if (up_most.fi < highest[i].fi) up_most = highest[i];
+        if (down_most.fi > highest[i].fi) down_most = highest[i];
     }
+    int length = max(right_most.se - left_most.se, up_most.fi - down_most.fi);
+    cout << height + (length % 2 ? length / 2 + 1 : length / 2);
 }
 
 void Init(void) {
-    for (int i = 0; i < 8; i++) {
-        cin >> arr[i].fi;
-        arr[i].se = i + 1;
+    cin >> n;
+    resize(pole, n, n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> pole[i][j];
+            if (pole[i][j] > height) height = pole[i][j];
+        }
     }
 }
 

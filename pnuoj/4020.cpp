@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-27 21:56:27  *************/
+\*************  2022-03-29 01:51:42  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,27 +54,42 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vector<pii> arr(8);
-int ans;
+int n, m;
+vi arr;
 
 void Solve(void) {
-    sort(arr.begin(), arr.end(), [ ](pii a, pii b) {return a.fi > b.fi; });
-    for (int i = 4; i >= 0; i--) {
-        ans += arr[i].fi;
+    while (m--) {
+        int op, l, r;
+        cin >> op >> l >> r;
+        if (op == 0) {
+            int tmp = arr[l];
+            for (int i = l; i < r; i++)
+                arr[i] = arr[i + 1];
+            arr[r] = tmp;
+        }
+        else if (op == 1) {
+            int tmp = arr[r];
+            for (int i = r; i > l; i--)
+                arr[i] = arr[i - 1];
+            arr[l] = tmp;
+        }
+        else if (op == 2) {
+            vi tmp(arr.begin() + l, arr.begin() + r + 1);
+            reverse(tmp.begin(), tmp.end());
+            for (int i = 0; i < tmp.size(); i++) {
+                arr[l + i] = tmp[i];
+            }
+        }
     }
-    vector<pii> temp(arr.begin(), arr.begin() + 5);
-    sort(temp.begin(), temp.end(), [ ](pii a, pii b) {return a.se < b.se; });
-    cout << ans << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << temp[i].se << ' ';
-    }
+    for (auto e : arr)
+        cout << e << ' ';
 }
 
 void Init(void) {
-    for (int i = 0; i < 8; i++) {
-        cin >> arr[i].fi;
-        arr[i].se = i + 1;
-    }
+    cin >> n >> m;
+    arr.resize(n);
+    for (int i = 0; i < n; i++)
+        arr[i] = i;
 }
 
 int main(void) {

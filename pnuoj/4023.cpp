@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-27 21:56:27  *************/
+\*************  2022-03-29 03:15:04  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,26 +54,55 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vector<pii> arr(8);
-int ans;
+int n, a, b;
+v2i usable;
+v2i broken;
+vb visited;
 
 void Solve(void) {
-    sort(arr.begin(), arr.end(), [ ](pii a, pii b) {return a.fi > b.fi; });
-    for (int i = 4; i >= 0; i--) {
-        ans += arr[i].fi;
-    }
-    vector<pii> temp(arr.begin(), arr.begin() + 5);
-    sort(temp.begin(), temp.end(), [ ](pii a, pii b) {return a.se < b.se; });
-    cout << ans << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << temp[i].se << ' ';
+    auto Comp = [ ](pii a, pii b) {return a.se != b.se ? a.se > b.se : a.fi > b.fi; };
+    priority_queue<pii, vector<pii>, decltype(Comp)> pq(Comp);
+    pq.emplace(1, 0);
+    visited[1] = true;
+    while (!pq.empty()) {
+        int cur, cnt;
+        tie(cur, cnt) = pq.top();
+        pq.pop();
+        if (cur == n) {
+            cout << cnt;
+            return;
+        }
+        for (auto next : usable[cur]) {
+            if (!visited[next]) {
+                visited[next] = true;
+                pq.emplace(next, cnt);
+            }
+        }
+        for (auto next : broken[cur]) {
+            if (!visited[next]) {
+                visited[next] = true;
+                pq.emplace(next, cnt + 1);
+            }
+        }
     }
 }
 
 void Init(void) {
-    for (int i = 0; i < 8; i++) {
-        cin >> arr[i].fi;
-        arr[i].se = i + 1;
+    cin >> n >> a >> b;
+    resize(usable, n + 1);
+    resize(broken, n + 1);
+    resize(visited, n + 1);
+    for (int i = 0; i < a; i++) {
+        int src, dst;
+        cin >> src >> dst;
+        usable[src].emplace_back(dst);
+        usable[dst].emplace_back(src);
+    }
+    for (int i = 0; i < b; i++) {
+        int src, dst;
+        cin >> src >> dst;
+        broken[src].emplace_back(dst);
+        broken[dst].emplace_back(src);
     }
 }
 

@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-27 21:56:27  *************/
+\*************  2022-03-29 02:00:03  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,27 +54,64 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vector<pii> arr(8);
-int ans;
+v2i puzzle;
+v2b selected;
+vi arr;
+int ans = INT32_MIN;
+
+bool IsAdj() {
+    bool ret = true;
+    if (selected[0][0])
+        ret = ret && (selected[0][1] || selected[1][0]);
+    if (selected[0][2])
+        ret = ret && (selected[0][1] || selected[1][2]);
+    if (selected[2][0])
+        ret = ret && (selected[2][1] || selected[1][0]);
+    if (selected[2][2])
+        ret = ret && (selected[2][1] || selected[1][2]);
+    return ret;
+}
+
+void Calc() {
+    if (!IsAdj()) return;
+    vi tmp;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (selected[i][j]) tmp.emplace_back(puzzle[i][j]);
+        }
+    }
+    sort(tmp);
+    int ret = 0;
+    for (int i = 0; i < 7; i++) {
+        ret += arr[i] * tmp[i];
+    }
+    ans = max(ans, ret);
+}
 
 void Solve(void) {
-    sort(arr.begin(), arr.end(), [ ](pii a, pii b) {return a.fi > b.fi; });
-    for (int i = 4; i >= 0; i--) {
-        ans += arr[i].fi;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            selected[i][j] = true;
+
+    for (int i = 0; i < 8; i++) {
+        selected[i / 3][i % 3] = false;
+        for (int j = i + 1; j < 9; j++) {
+            selected[j / 3][j % 3] = false;
+            Calc();
+            selected[j / 3][j % 3] = true;
+        }
+        selected[i / 3][i % 3] = true;
     }
-    vector<pii> temp(arr.begin(), arr.begin() + 5);
-    sort(temp.begin(), temp.end(), [ ](pii a, pii b) {return a.se < b.se; });
-    cout << ans << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << temp[i].se << ' ';
-    }
+    cout << ans;
 }
 
 void Init(void) {
-    for (int i = 0; i < 8; i++) {
-        cin >> arr[i].fi;
-        arr[i].se = i + 1;
-    }
+    resize(puzzle, 3, 3);
+    resize(selected, 3, 3);
+    resize(arr, 7);
+    cin >> puzzle;
+    cin >> arr;
+    sort(arr);
 }
 
 int main(void) {

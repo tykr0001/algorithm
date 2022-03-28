@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-27 21:56:27  *************/
+\*************  2022-03-29 05:02:34  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,27 +54,78 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vector<pii> arr(8);
-int ans;
+ll MOD = 1e9 + 7;
 
-void Solve(void) {
-    sort(arr.begin(), arr.end(), [ ](pii a, pii b) {return a.fi > b.fi; });
-    for (int i = 4; i >= 0; i--) {
-        ans += arr[i].fi;
-    }
-    vector<pii> temp(arr.begin(), arr.begin() + 5);
-    sort(temp.begin(), temp.end(), [ ](pii a, pii b) {return a.se < b.se; });
-    cout << ans << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << temp[i].se << ' ';
+int n, m;
+vl a;
+vl b;
+vl p;
+vl q;
+
+vector<ull> a_exp(100001);
+vector<ull> b_exp(100001);
+
+vb is_prime;
+vl prime;
+
+ll Exp(ll x, ll e) {
+    if (e == 0) return 1;
+    if (e == 1) return x;
+    ll ret = Exp(x, e / 2);
+    if (e % 2)
+        return ret * ret % MOD * x % MOD;
+    else
+        return ret * ret % MOD;
+}
+
+void Eratos() {
+    is_prime = vb(100001, true);
+    for (int i = 2; i <= sqrt(100000); i++) {
+        if (is_prime[i]) {
+            prime.emplace_back(i);
+            for (int j = i * 2; j <= 100000; j += i) {
+                is_prime[j] = false;
+            }
+        }
     }
 }
 
-void Init(void) {
-    for (int i = 0; i < 8; i++) {
-        cin >> arr[i].fi;
-        arr[i].se = i + 1;
+void Solve(void) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; prime[j] <= a[i]; j++) {
+            while (a[i] % prime[j] == 0) {
+                a[i] /= prime[j];
+                a_exp[prime[j]] += p[i];
+            }
+        }
     }
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; prime[j] <= b[i]; j++) {
+            while (b[i] % prime[j] == 0) {
+                b[i] /= prime[j];
+                b_exp[prime[j]] += q[i];
+            }
+        }
+    }
+
+    ull ans = 1;
+    for (int i = 0; i < prime.size(); i++) {
+        ans = ans * Exp(prime[i], max(b_exp[prime[i]], a_exp[prime[i]])) % MOD;
+    }
+    cout << ans;
+}
+
+void Init(void) {
+    Eratos();
+    cin >> n >> m;
+    resize(a, n);
+    resize(p, n);
+    resize(b, m);
+    resize(q, m);
+    for (int i = 0; i < n; i++)
+        cin >> a[i] >> p[i];
+    for (int i = 0; i < m; i++)
+        cin >> b[i] >> q[i];
 }
 
 int main(void) {

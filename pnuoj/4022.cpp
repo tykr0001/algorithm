@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-03-27 21:56:27  *************/
+\*************  2022-03-29 02:36:55  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -54,26 +54,43 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-vector<pii> arr(8);
+int n, m, k;
+vi frog;
+vi hole;
+v2i arr;
 int ans;
 
 void Solve(void) {
-    sort(arr.begin(), arr.end(), [ ](pii a, pii b) {return a.fi > b.fi; });
-    for (int i = 4; i >= 0; i--) {
-        ans += arr[i].fi;
+    for (auto e : frog) {
+        int q = e / k;
+        int r = e % k;
+        auto iter = lower_bound(arr[r].begin(), arr[r].end(), q);
+        // not found
+        if (iter == arr[r].end()) {
+            ans += (q - arr[r].back()) * k;
+        }
+        else if (iter == arr[r].begin()) {
+            if (q != *iter)
+                ans += (*iter - q) * k;
+        }
+        else {
+            ans += min(q - *(iter - 1), *iter - q) * k;
+        }
+
     }
-    vector<pii> temp(arr.begin(), arr.begin() + 5);
-    sort(temp.begin(), temp.end(), [ ](pii a, pii b) {return a.se < b.se; });
-    cout << ans << endl;
-    for (int i = 0; i < 5; i++) {
-        cout << temp[i].se << ' ';
-    }
+    cout << ans;
 }
 
 void Init(void) {
-    for (int i = 0; i < 8; i++) {
-        cin >> arr[i].fi;
-        arr[i].se = i + 1;
+    cin >> n >> m >> k;
+    resize(frog, n);
+    resize(hole, m);
+    cin >> frog >> hole;
+    sort(frog);
+    sort(hole);
+    resize(arr, k);
+    for (auto e : hole) {
+        arr[e % k].emplace_back(e / k);
     }
 }
 
