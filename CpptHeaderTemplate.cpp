@@ -23,7 +23,7 @@ using v2b = vector<vector<bool>>;
 using v3b = vector<v2b>;
 using vl = vector<ll>;
 using v2l = vector<vl>;
-using v3l = vector<v2l>>;
+using v3l = vector<v2l>;
 using pii = pair<int, int>;
 using pll = pair<ll, ll>;
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
