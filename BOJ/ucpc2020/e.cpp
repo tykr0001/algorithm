@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-04-02 14:34:02  *************/
+\*************  2021-10-08 15:04:13  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -19,11 +19,8 @@ using vi = vector<int>;
 using v2i = vector<vi>;
 using v3i = vector<v2i>;
 using vb = vector<bool>;
-using v2b = vector<vb>;
-using vs = vector<string>;
-using v2s = vector<vs>;
-using vc = vector<char>;
-using v2c = vector<vc>;
+using v2b = vector<vector<bool>>;
+using v3b = vector<v2b>;
 using vl = vector<ll>;
 using v2l = vector<vl>;
 using v3l = vector<v2l>;
@@ -32,8 +29,8 @@ using pll = pair<ll, ll>;
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define fi first
 #define se second
-#define INF 0x3f3f3f3f
-#define LINF 0x3f3f3f3f3f3f3f3f
+#define INF INT32_MAX
+#define LINF INT64_MAX
 #define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
 template<class T>
@@ -53,6 +50,8 @@ void resize(T& container, int _size) { container.resize(_size); }
 template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
+
+
 
 void Solve(void) {
     
