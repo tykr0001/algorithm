@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2021-10-08 15:04:13  *************/
+\*************  2022-04-02 14:34:02  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -19,8 +19,11 @@ using vi = vector<int>;
 using v2i = vector<vi>;
 using v3i = vector<v2i>;
 using vb = vector<bool>;
-using v2b = vector<vector<bool>>;
-using v3b = vector<v2b>;
+using v2b = vector<vb>;
+using vs = vector<string>;
+using v2s = vector<vs>;
+using vc = vector<char>;
+using v2c = vector<vc>;
 using vl = vector<ll>;
 using v2l = vector<vl>;
 using v3l = vector<v2l>;
@@ -29,8 +32,8 @@ using pll = pair<ll, ll>;
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define fi first
 #define se second
-#define INF INT32_MAX
-#define LINF INT64_MAX
+#define INF 0x3f3f3f3f
+#define LINF 0x3f3f3f3f3f3f3f3f
 #define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
 template<class T>
