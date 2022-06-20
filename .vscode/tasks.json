@@ -65,7 +65,7 @@
         {
             "type": "cppbuild",
             "label": "C/C++: g++.exe build active file",
-            "command": "C:\\mingw64\\bin\\g++.exe",
+            "command": "C:/MinGW/bin/g++.exe",
             "args": [
                 "-g",
                 "${file}",
@@ -73,26 +73,7 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "C:\\mingw64\\bin"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build",
-            "detail": "compiler: C:\\mingw64\\bin\\g++.exe"
-        },
-        {
-            "type": "cppbuild",
-            "label": "C/C++: g++.exe build active file",
-            "command": "C:/mingw64/bin/g++.exe",
-            "args": [
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe"
-            ],
-            "options": {
-                "cwd": "C:/mingw64/bin"
+                "cwd": "C:/MinGW/bin"
             },
             "problemMatcher": [
                 "$gcc"
@@ -101,7 +82,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "compiler: C:/mingw64/bin/g++.exe"
+            "detail": "compiler: C:/MinGW/bin/g++.exe"
         }
     ]
 }

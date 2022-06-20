@@ -1,24 +1,21 @@
 {
-    // IntelliSense¸¦ »ç¿ëÇÏ¿© °¡´ÉÇÑ Æ¯¼º¿¡ ´ëÇØ ¾Ë¾Æº¸¼¼¿ä.
-    // ±âÁ¸ Æ¯¼º¿¡ ´ëÇÑ ¼³¸íÀ» º¸·Á¸é °¡¸®Åµ´Ï´Ù.
-    // ÀÚ¼¼ÇÑ ³»¿ëÀ» º¸·Á¸é https://go.microsoft.com/fwlink/?linkid=830387À»(¸¦) ¹æ¹®ÇÏ¼¼¿ä.
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "g++.exe - È°¼º ÆÄÀÏ ºôµå ¹× µğ¹ö±×",
+            "name": "g++.exe - í™œì„± íŒŒì¼ ë¹Œë“œ ë° ë””ë²„ê·¸",
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "C:\\mingw64\\bin",
+            "cwd": "C:\\MinGW\\bin",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "C:\\mingw64\\bin\\gdb.exe",
+            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
             "setupCommands": [
                 {
-                    "description": "gdb¿¡ ÀÚµ¿ ¼­½Ä ÁöÁ¤ »ç¿ë",
+                    "description": "gdbì— ìë™ ì„œì‹ ì§€ì • ì‚¬ìš©",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
