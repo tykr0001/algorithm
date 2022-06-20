@@ -724,3 +724,47 @@ struct Fenwick {
         arr[idx] = val;
     }
 } fen;
+
+
+// FFT
+typedef complex<double> base;
+void FFT(vector<base>& a, bool inv = false) {
+    int size = a.size(), j = 0;
+    vector<base> roots(size / 2);
+    for (int i = 1; i < size; i++) {
+        int bit = (size >> 1);
+        while (j >= bit) {
+            j -= bit;
+            bit >>= 1;
+        }
+        j += bit;
+        if (i < j) swap(a[i], a[j]);
+    }
+    double ang = 2 * acos(-1) / size * (inv ? -1 : 1);
+    for (int i = 0; i < size / 2; i++) {
+        roots[i] = base(cos(ang * i), sin(ang * i));
+    }
+    for (int i = 2; i <= size; i <<= 1) {
+        int step = size / i;
+        for (int j = 0; j < size; j += i) {
+            for (int k = 0; k < i / 2; k++) {
+                base u = a[j + k], v = a[j + k + i / 2] * roots[step * k];
+                a[j + k] = u + v;
+                a[j + k + i / 2] = u - v;
+            }
+        }
+    }
+    if (inv) for (int i = 0; i < size; i++) a[i] /= size;
+}
+
+vl Multiply(vl& v, vl& w) {
+    vector<base> fv(v.begin(), v.end()), fw(w.begin(), w.end());
+    int size = 2; while (size < v.size() + w.size()) size <<= 1;
+    fv.resize(size); fw.resize(size);
+    FFT(fv, 0); FFT(fw, 0);
+    for (int i = 0; i < size; i++) fv[i] *= fw[i];
+    FFT(fv, 1);
+    vl ret(size);
+    for (int i = 0; i < size; i++) ret[i] = (ll)round(fv[i].real());
+    return ret;
+}
