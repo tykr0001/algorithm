@@ -86,21 +86,21 @@ vector<int> KMP(const string& s, const string& p) {
     return ret;
 }
 
-// Floyd-Warshall(ÇÃ·ÎÀÌµå¿Í¼£) 
+// Floyd-Warshall(í”Œë¡œì´ë“œì™€ìƒ¬) 
 // @param graph : graph[src][dst] is a weight of the edge which connects src to dst
 // @param size  : graph size or number of vertex
 // @return      : void
 void FloydWarshall(vector<vector<int>>& graph, int size) {
-    for (int k = 1; k <= size; k++) { // Áß°£
-        for (int i = 1; i <= size; i++) { // ½ÃÀÛ
-            for (int j = 1; j <= size; j++) { // ³¡
+    for (int k = 1; k <= size; k++) { // ì¤‘ê°„
+        for (int i = 1; i <= size; i++) { // ì‹œì‘
+            for (int j = 1; j <= size; j++) { // ë
                 graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j]);
             }
         }
     }
 }
 
-// Bellman-Ford(º§¸¸Æ÷µå) 
+// Bellman-Ford(ë²¨ë§Œí¬ë“œ) 
 // @param graph : graph[src] is a vector of {dst,cost}
 // @param V     : the number of vertex
 // @param init  : initial node to search
@@ -135,7 +135,7 @@ public:
         return dist[a] > dist[b];
     }
 };
-// Dijkstra(´ÙÀÍ½ºÆ®¶ó) 
+// Dijkstra(ë‹¤ìµìŠ¤íŠ¸ë¼) 
 // @brief : this function require 
 // global variable dist (vector<int> type) and 
 // Compare class which is used as functor of priority queue
@@ -162,7 +162,7 @@ void Dijkstra(const vector<vector<pair<int, int>>>& graph, int V, int init) {
     }
 }
 
-// DFS(Depth-First-Search, ±íÀÌ¿ì¼±Å½»ö) 
+// DFS(Depth-First-Search, ê¹Šì´ìš°ì„ íƒìƒ‰) 
 // @brief : find a heaviest node
 // @param gragh : graph[src] is a vector of {dst,cost}
 // @param V     : the number of vertex
@@ -195,7 +195,7 @@ pair<int, int> DFS(const vector<vector<pair<int, int>>>& graph, int V, int init)
     return { max_idx, max_len };
 }
 
-// BFS(Breadth-First-Search, ³Êºñ¿ì¼±Å½»ö) 
+// BFS(Breadth-First-Search, ë„ˆë¹„ìš°ì„ íƒìƒ‰) 
 // @brief : find a heaviest node
 // @param gragh : graph[src] is a vector of {dst,cost}
 // @param V     : the number of vertex
@@ -226,7 +226,7 @@ pair<int, int> BFS(const vector<vector<pair<int, int>>>& graph, int V, int init)
     return { max_idx, max_len };
 }
 
-// Pre-order(ÀüÀ§¼øÈ¸) 
+// Pre-order(ì „ìœ„ìˆœíšŒ) 
 // @brief : print node value in char type
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
@@ -241,7 +241,7 @@ void PreOrder(const vector<vector<pair<int, int>>>& tree, int node) {
     }
 }
 
-// In-order(ÁßÀ§¼øÈ¸) 
+// In-order(ì¤‘ìœ„ìˆœíšŒ) 
 // @brief : print node value in char type
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
@@ -256,7 +256,7 @@ void InOrder(const vector<vector<pair<int, int>>>& tree, int node) {
     }
 }
 
-// Post-order(ÈÄÀ§¼øÈ¸) 
+// Post-order(í›„ìœ„ìˆœíšŒ) 
 // @brief : print node value in char type
 // @param tree : is a binary tree and tree[src] is a vector of {dst,cost}
 // @param node : must be [0:25]
@@ -271,7 +271,7 @@ void PostOrder(const vector<vector<pair<int, int>>>& tree, int node) {
     cout << char(node + 'A');
 }
 
-// LCS(Longest-Common-Subsequence, ÃÖÀå°øÅëºÎºĞ¼ö¿­) 
+// LCS(Longest-Common-Subsequence, ìµœì¥ê³µí†µë¶€ë¶„ìˆ˜ì—´) 
 // @brief : find a longest length of LCS which will be stored int cache[a.length()][b.length()]
 // @param a : string a
 // @param b : string b
@@ -290,7 +290,7 @@ void LCS(const string& a, const string& b) {
     }
 }
 
-// 0-1 Knapsack(0-1 ¹è³¶¹®Á¦) 
+// 0-1 Knapsack(0-1 ë°°ë‚­ë¬¸ì œ) 
 // @brief : input each item's weight and value and 
 // print a maximum value which will be stored in cache[K]
 // @param N : the number of items
@@ -314,7 +314,7 @@ void Knapsack(int N, int K) {
     return;
 }
 
-// 2-pointer (ÅõÆ÷ÀÎÅÍ) 
+// 2-pointer (íˆ¬í¬ì¸í„°) 
 // @brief : print the count when the sum of the cache's subequence is same to the target
 // @param cache  : must be a ascending vector
 // @param target : what you think
@@ -345,7 +345,7 @@ void TwoPointer(const vector<int>& cache, int target) {
 }
 
 vector<int> parent;
-// Find(ÆÄÀÎµå)
+// Find(íŒŒì¸ë“œ)
 // @brief      : Find the root node of parameter
 // @param n    : A child node
 // @return     : Index of the root node
@@ -354,7 +354,7 @@ int Find(int n) {
     else return parent[n] = Find(parent[n]);
 }
 
-// Union(À¯´Ï¿Â)
+// Union(ìœ ë‹ˆì˜¨)
 // @brief   : Union the disjoint set
 // @param p : child node of the set (this will be the root)
 // @param c : child node of another set
@@ -365,7 +365,7 @@ void Union(int p, int c) {
 
 vector<bool> is_prime;
 vector<int> cache;
-// Sieve of Eratosthenes(¿¡¶óÅä½ºÅ×³×½ºÀÇ Ã¼)
+// Sieve of Eratosthenes(ì—ë¼í† ìŠ¤í…Œë„¤ìŠ¤ì˜ ì²´)
 // @brief  : Find prime numbers under n
 // @return : void
 void Eratos(int n) {
@@ -380,7 +380,7 @@ void Eratos(int n) {
 }
 
 
-// LIS(Longest-Increasing-Subsequence ÃÖÀåÁõ°¡ºÎºĞ¼ö¿­)
+// LIS(Longest-Increasing-Subsequence ìµœì¥ì¦ê°€ë¶€ë¶„ìˆ˜ì—´)
 // @brief     : print length and elements of LIS
 // @param arr : target vector
 // @return    : void
@@ -419,7 +419,7 @@ void LIS(vector<int>& arr) {
 
 vector<ll> arr;
 
-// Segment-Tree(¼¼±×¸ÕÆ®Æ®¸®)
+// Segment-Tree(ì„¸ê·¸ë¨¼íŠ¸íŠ¸ë¦¬)
 struct Segment {
     vl arr;
     vl tree;
@@ -481,7 +481,7 @@ struct Segment {
 } seg;
 
 
-// Trie(Æ®¶óÀÌ)
+// Trie(íŠ¸ë¼ì´)
 struct Trie {
     Trie* next[26];
     bool finish;
@@ -527,7 +527,7 @@ int CCW(const pll& a, const pll& b, const pll& c) {
     else return 0;
 }
 
-/** IsIntersect(¼±ºĞ±³Â÷ÆÇÁ¤)
+/** IsIntersect(ì„ ë¶„êµì°¨íŒì •)
  *  @return  what you think
  */
 bool IsIntersect(const line& x, const line& y) {
@@ -545,7 +545,7 @@ bool IsIntersect(const line& x, const line& y) {
     return ab <= 0 && cd <= 0;
 }
 
-// Fenwick-Tree(ÆæÀ¨Æ®¸®)  
+// Fenwick-Tree(íœìœ…íŠ¸ë¦¬)  
 struct Fenwick {
     ll n;
     vl arr;
