@@ -425,15 +425,15 @@ struct Segment {
     vl tree;
     ll MOD = INT64_MAX;
 
-    Segment() {}
-    Segment(int n) : arr(n+1), tree(1 << int(ceil(log2(n))) + 1) {}
-    
+    Segment() { }
+    Segment(int n) : arr(n + 1), tree(1 << int(ceil(log2(n))) + 1) { }
+
     // fix the Args start at 1, end at n
     ll SumInit(int node, int start, int end) {
         if (start == end) return tree[node] = arr[start];
         int mid = (start + end) / 2;
         return tree[node] = SumInit(node * 2, start, mid)
-                          + SumInit(node * 2 + 1, mid + 1, end);
+            + SumInit(node * 2 + 1, mid + 1, end);
     }
 
     ll SumUpdate(int node, int start, int end, int idx, ll diff) {
@@ -441,7 +441,7 @@ struct Segment {
         if (start == end) return tree[node] += diff;
         int mid = (start + end) / 2;
         return tree[node] = SumUpdate(node * 2, start, mid, idx, diff)
-                          + SumUpdate(node * 2 + 1, mid + 1, end, idx, diff);
+            + SumUpdate(node * 2 + 1, mid + 1, end, idx, diff);
     }
 
     ll Sum(int node, int start, int end, int left, int right) {
@@ -449,34 +449,34 @@ struct Segment {
         if (left <= start && end <= right) return tree[node];
         int mid = (start + end) / 2;
         return tree[node] = Sum(node * 2, start, mid, left, right)
-                          + Sum(node * 2 + 1, mid + 1, end, left, right);
+            + Sum(node * 2 + 1, mid + 1, end, left, right);
     }
 
     // fix the Args start at 1, end at n
     ll MulInit(int node, int start, int end) {
         if (start == end) return tree[node] = arr[start];
         int mid = (start + end) / 2;
-        return tree[node] = MulInit(node * 2, start, mid) * 
-                            MulInit(node * 2 + 1, mid + 1, end) %
-                            MOD;
+        return tree[node] = MulInit(node * 2, start, mid) *
+            MulInit(node * 2 + 1, mid + 1, end) %
+            MOD;
     }
 
     ll MulUpdate(int node, int start, int end, int idx, ll num) {
         if (idx < start || idx > end) return tree[node];
         if (start == end) return tree[node] = num;
         int mid = (start + end) / 2;
-        return tree[node] = MulUpdate(node * 2, start, mid, idx, num) * 
-                            MulUpdate(node * 2 + 1, mid + 1, end, idx, num) % 
-                            MOD;
+        return tree[node] = MulUpdate(node * 2, start, mid, idx, num) *
+            MulUpdate(node * 2 + 1, mid + 1, end, idx, num) %
+            MOD;
     }
 
     ll Mul(int node, int start, int end, int left, int right) {
         if (left > end || right < start) return 1;
         if (left <= start && end <= right) return tree[node];
         int mid = (start + end) / 2;
-        return Mul(node * 2, start, mid, left, right) * 
-               Mul(node * 2 + 1, mid + 1, end, left, right) % 
-               MOD;
+        return Mul(node * 2, start, mid, left, right) *
+            Mul(node * 2 + 1, mid + 1, end, left, right) %
+            MOD;
     }
 } seg;
 
@@ -597,14 +597,14 @@ struct Fenwick {
         ll li, ri;
         ll lmin, rmin;
 
-        #define MIN_INIT {    \
+#define MIN_INIT {    \
             li = idx - 1;       \
             lmin = INT64_MAX;   \
             ri = idx + 1;       \
             rmin = INT64_MAX;   \
         }
 
-        #define MIN_UPDATE {                              \
+#define MIN_UPDATE {                              \
             while (li > 0 && li - (li & -li) + 1 >= l) {    \
                 lmin = min(lmin, bit1[li]);                 \
                 li -= (li & -li);                           \
@@ -673,14 +673,14 @@ struct Fenwick {
         ll li, ri;
         ll lmax, rmax;
 
-        #define MAX_INIT {      \
+#define MAX_INIT {      \
             li = idx - 1;       \
             lmax = 0;           \
             ri = idx + 1;       \
             rmax = 0;           \
         }
 
-        #define MAX_UPDATE {                                \
+#define MAX_UPDATE {                                \
             while (li > 0 && li - (li & -li) + 1 >= l) {    \
                 lmax = max(lmax, bit1[li]);                 \
                 li -= (li & -li);                           \
@@ -716,7 +716,7 @@ struct Fenwick {
             }
             else if (bit2[l] == arr[idx]) {
                 MAX_UPDATE
-                bit2[l] = max(val, min(lmax, rmax));
+                    bit2[l] = max(val, min(lmax, rmax));
             }
             l = l - (l & -l);
             r = l + (l & -l) - 1;
@@ -729,9 +729,8 @@ struct Fenwick {
 // FFT
 typedef complex<double> base;
 void FFT(vector<base>& a, bool inv = false) {
-    int size = a.size(), j = 0;
-    vector<base> roots(size / 2);
-    for (int i = 1; i < size; i++) {
+    int size = a.size();
+    for (int i = 1, j = 0; i < size; i++) {
         int bit = (size >> 1);
         while (j >= bit) {
             j -= bit;
@@ -740,17 +739,16 @@ void FFT(vector<base>& a, bool inv = false) {
         j += bit;
         if (i < j) swap(a[i], a[j]);
     }
-    double ang = 2 * acos(-1) / size * (inv ? -1 : 1);
-    for (int i = 0; i < size / 2; i++) {
-        roots[i] = base(cos(ang * i), sin(ang * i));
-    }
     for (int i = 2; i <= size; i <<= 1) {
-        int step = size / i;
+        double ang = 2 * acos(-1) / i * (inv ? -1 : 1);
+        base wlen(cos(ang), sin(ang));
         for (int j = 0; j < size; j += i) {
+            base w(1);
             for (int k = 0; k < i / 2; k++) {
-                base u = a[j + k], v = a[j + k + i / 2] * roots[step * k];
+                base u = a[j + k], v = a[j + k + i / 2] * w;
                 a[j + k] = u + v;
                 a[j + k + i / 2] = u - v;
+                w *= wlen;
             }
         }
     }
@@ -766,5 +764,40 @@ vl Multiply(vl& v, vl& w) {
     FFT(fv, 1);
     vl ret(size);
     for (int i = 0; i < size; i++) ret[i] = (ll)round(fv[i].real());
+    return ret;
+}
+
+vl Multiply(vl& v, vl& w, ll mod) {
+    int size = 2;
+    while (size < v.size() + w.size()) size <<= 1;
+    vector<base> v1(size), v2(size), r1(size), r2(size);
+    for (int i = 0; i < size; i++) {
+        v1[i] = base(v[i] >> 15, v[i] & 32767);
+    }
+    for (int i = 0; i < size; i++) {
+        v2[i] = base(w[i] >> 15, v[i] & 32767);
+    }
+    FFT(v1, 0); FFT(v2, 0);
+    for (int i = 0; i < size; i++) {
+        int j = (i ? size - 1 : i);
+        base ans1 = (v1[i] + conj(v1[j])) * base(0.5, 0);
+        base ans2 = (v1[i] + conj(v1[j])) * base(0, -0.5);
+        base ans3 = (v2[i] + conj(v2[j])) * base(0.5, 0);
+        base ans4 = (v2[i] + conj(v2[j])) * base(0, -0.5);
+        r1[i] = (ans1 * ans3) + (ans1 * ans4) * base(0, 1);
+        r2[i] = (ans2 * ans3) + (ans2 * ans4) * base(0, 1);
+    }
+    FFT(r1, 1); FFT(r2, 1);
+    vl ret(size);
+    for (int i = 0; i < size; i++) {
+        ll av = (ll)round(r1[i].real());
+        ll bv = (ll)round(r1[i].imag()) + (ll)round(r2[i].real());
+        ll cv = (ll)round(r2[i].imag());
+        av %= mod; bv %= mod; cv %= mod;
+        ret[i] = (av << 30) + (bv << 15) + cv;
+        ret[i] %= mod;
+        ret[i] += mod;
+        ret[i] %= mod;
+    }
     return ret;
 }
