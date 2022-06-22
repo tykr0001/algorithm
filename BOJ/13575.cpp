@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-04-02 14:34:02  *************/
+\*************  2022-06-22 16:54:37  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -56,12 +56,78 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
+int n, k;
+vl arr;
+
+// FFT
+typedef complex<double> base;
+void FFT(vector<base>& a, bool inv = false) {
+    int size = a.size();
+    for (int i = 1, j = 0; i < size; i++) {
+        int bit = (size >> 1);
+        while (j >= bit) {
+            j -= bit;
+            bit >>= 1;
+        }
+        j += bit;
+        if (i < j) swap(a[i], a[j]);
+    }
+    for (int i = 2; i <= size; i <<= 1) {
+        double ang = 2 * acos(-1) / i * (inv ? -1 : 1);
+        base wlen(cos(ang), sin(ang));
+        for (int j = 0; j < size; j += i) {
+            base w(1);
+            for (int k = 0; k < i / 2; k++) {
+                base u = a[j + k], v = a[j + k + i / 2] * w;
+                a[j + k] = u + v;
+                a[j + k + i / 2] = u - v;
+                w *= wlen;
+            }
+        }
+    }
+    if (inv) for (int i = 0; i < size; i++) a[i] /= size;
+}
+
+vl Multiply(vl& v, vl& w) {
+    vector<base> fv(v.begin(), v.end()), fw(w.begin(), w.end());
+    int size = 2; while (size < v.size() + w.size()) size <<= 1;
+    fv.resize(size); fw.resize(size);
+    FFT(fv, 0); FFT(fw, 0);
+    for (int i = 0; i < size; i++) fv[i] *= fw[i];
+    FFT(fv, 1);
+    vl ret(size);
+    for (int i = 0; i < size; i++) {
+        ret[i] = (ll)round(fv[i].real());
+        if (ret[i]) ret[i] = 1;
+    }
+    return ret;
+}
+
 void Solve(void) {
-    
+    vl ret = { 1 };
+    vl tmp(arr);
+    ll ans = 0;
+
+    while (k) {
+        if (k & 1) {
+            ret = Multiply(tmp, ret);
+        }
+        tmp = Multiply(tmp, tmp);
+        k >>= 1;
+    }
+
+    for (int i = 0; i < ret.size(); i++) {
+        if (ret[i]) cout << i << ' ';
+    }
 }
 
 void Init(void) {
-    
+    cin >> n >> k;
+    arr.resize(1001);
+    for (int i = 0; i < n; i++) {
+        int a; cin >> a;
+        arr[a] = 1;
+    }
 }
 
 int main(void) {

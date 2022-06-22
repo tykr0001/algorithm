@@ -23,6 +23,8 @@ using vvpll = vector<vector<pair<ll, ll>>>;
 #define LINF INT64_MAX
 #define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
+int dx[4] = { 0,0,-1,1 };
+int dy[4] = { -1,1,0,0 };
 template<class T>
 void sort(T& container) { sort(container.begin(), container.end()); }
 template<class T, class U>
@@ -771,10 +773,10 @@ vl Multiply(vl& v, vl& w, ll mod) {
     int size = 2;
     while (size < v.size() + w.size()) size <<= 1;
     vector<base> v1(size), v2(size), r1(size), r2(size);
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < v.size(); i++) {
         v1[i] = base(v[i] >> 15, v[i] & 32767);
     }
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < w.size(); i++) {
         v2[i] = base(w[i] >> 15, v[i] & 32767);
     }
     FFT(v1, 0); FFT(v2, 0);
@@ -795,9 +797,7 @@ vl Multiply(vl& v, vl& w, ll mod) {
         ll cv = (ll)round(r2[i].imag());
         av %= mod; bv %= mod; cv %= mod;
         ret[i] = (av << 30) + (bv << 15) + cv;
-        ret[i] %= mod;
-        ret[i] += mod;
-        ret[i] %= mod;
+        ret[i] = (ret[i] % mod + mod) % mod;
     }
     return ret;
 }
