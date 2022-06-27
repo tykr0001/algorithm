@@ -801,3 +801,27 @@ vl Multiply(vl& v, vl& w, ll mod) {
     }
     return ret;
 }
+
+ull Base[3] = {2, 7, 61};
+
+ull Pow(ull x, ull y, ull mod) { // ret = (x^y)%mod
+    ull ret = 1;
+    x %= mod;
+    while(y) {
+        if(y&1) ret = (ret*x)%mod;
+        x = (x*x)%mod;
+        y >>= 1;
+    }
+    return ret;
+}
+
+bool IsPrime(ull n, ull a) {
+    if(a%n == 0) return true;
+    ull k = n-1;
+    while(1) {
+        ull temp = Pow(a, k, n);
+        if(temp == n-1) return true;
+        if(k%2 == 1) return (temp == 1 || temp == n-1);
+        k /= 2;
+    }
+}
