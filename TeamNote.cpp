@@ -802,26 +802,79 @@ vl Multiply(vl& v, vl& w, ll mod) {
     return ret;
 }
 
-ull Base[3] = {2, 7, 61};
-
+//Miller-Rabin(밀러라빈)
 ull Pow(ull x, ull y, ull mod) { // ret = (x^y)%mod
     ull ret = 1;
     x %= mod;
-    while(y) {
-        if(y&1) ret = (ret*x)%mod;
-        x = (x*x)%mod;
+    while (y) {
+        if (y & 1) ret = (ret * x) % mod;
+        x = (x * x) % mod;
         y >>= 1;
     }
     return ret;
 }
 
-bool IsPrime(ull n, ull a) {
-    if(a%n == 0) return true;
-    ull k = n-1;
-    while(1) {
-        ull temp = Pow(a, k, n);
-        if(temp == n-1) return true;
-        if(k%2 == 1) return (temp == 1 || temp == n-1);
-        k /= 2;
+ull isPrime_MillerRabin(ull p) {
+    ull a[] = { 2,3,61,LLONG_MAX,2,3,5,7,11,13,17,19,23,29,31,37,LLONG_MAX };	//LLONG_MAX is composite number
+    ull i = p <= UINT_MAX ? 0 : 4;
+    while (a[i] < p) {
+        ull s = p - 1;
+        while (true) {
+            ull r = Pow(a[i], s, p);
+            if (r == p - 1) break;	// p is probably a prime.
+            if (s & 1) {	//if s is odd number
+                if (r == 1) break;	// p is probably a prime.
+                else return 0;	// s is composite
+            }
+            s >>= 1;
+        }
+        i++;
     }
+    return p < 2 ? 0 : p != LLONG_MAX;
+}
+
+// Pollard's-rho(폴라드로)
+// 곱셈연산중 ull 범위를 벗어날 경우 __int128 사용 
+ull FindDiv(ll n) {
+    if (n % 2 == 0) return 2;
+    if (isPrime_MillerRabin(n)) return n;
+
+    ll x = rand() % (n - 2) + 2, y = x, c = rand() % 10 + 1, g = 1;
+    while (g == 1) {
+        x = (x * x % n + c) % n;
+        y = (y * y % n + c) % n;
+        y = (y * y % n + c) % n;
+        g = __gcd(abs(ll(x - y)), n);
+        if (g == n) return FindDiv(n);
+    }
+    if (isPrime_MillerRabin(g)) return g;
+    else return FindDiv(g);
+}
+
+// EEA(Extended-Euclidean-Algorithm, 확장 유클리드 알고리즘)
+// return multiplicative inverse of b (modulo a) if exists, else 0
+ll EEA(ll a, ll b) {
+	ll r1 = a, r2 = b, s1 = 1, s2 = 0, t1 = 0, t2 = 1;
+	ll r, s, t, q;
+	while (r2) {
+		q = r1 / r2;
+		// gcd 계산
+		r = r1 % r2;
+		r1 = r2, r2 = r;
+
+		// s 계산
+		s = s1 - q * s2;
+		s1 = s2, s2 = s;
+
+		// t 계산
+		t = t1 - q * t2;
+		t1 = t2, t2 = t;
+	}
+	r = r1, s = s1, t = t1;
+
+	if (r == 1) {
+		if (t < 0) t += a;
+		return t;
+	}
+	else return 0;
 }
