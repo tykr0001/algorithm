@@ -1,42 +1,49 @@
+/*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;
 using ull = unsigned long long;
 using vi = vector<int>;
-using vvi = vector<vector<int>>;
+using v2i = vector<vi>;
+using v3i = vector<v2i>;
 using vb = vector<bool>;
-using vvb = vector<vector<bool>>;
+using v2b = vector<vb>;
 using vs = vector<string>;
+using v2s = vector<vs>;
 using vc = vector<char>;
+using v2c = vector<vc>;
 using vl = vector<ll>;
-using vvl = vector<vector<ll>>;
+using v2l = vector<vl>;
+using v3l = vector<v2l>;
+using vd = vector<double>;
+using v2d = vector<vd>;
 using pii = pair<int, int>;
 using pll = pair<ll, ll>;
-using vpii = vector<pair<int, int>>;
-using vvpii = vector<vector<pair<int, int>>>;
-using vpll = vector<pair<ll, ll>>;
-using vvpll = vector<vector<pair<ll, ll>>>;
 #define Boost ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL)
 #define fi first
 #define se second
-#define INF INT32_MAX
-#define LINF INT64_MAX
+#define INF 0x3f3f3f3f
+#define LINF 0x3f3f3f3f3f3f3f3f
 #define endl '\n'
 #define rep(i,beg,end) for(int i=beg; i<end; i++)
 int dx[4] = { 0,0,-1,1 };
 int dy[4] = { -1,1,0,0 };
 template<class T>
 void sort(T& container) { sort(container.begin(), container.end()); }
-template<class T, class U>
-void sort(T& container, U cmp) { sort(container.begin(), container.end(), cmp); }
-template<class T, class U>
-istream& operator>>(istream& is, pair<T, U>& rhs) { is >> rhs.fi >> rhs.se; return is; }
-template<class T, class U>
-ostream& operator<<(ostream& os, const pair<T, U>& rhs) { os << rhs.fi << ' ' << rhs.se; return os; }
+template<class T1, typename T2>
+void sort(T1& container, T2 cmp) { sort(container.begin(), container.end(), cmp); }
+template<class T1, class T2>
+istream& operator>>(istream& is, pair<T1, T2>& rhs) { is >> rhs.fi >> rhs.se; return is; }
+template<class T1, class T2>
+ostream& operator<<(ostream& os, const pair<T1, T2>& rhs) { os << rhs.fi << ' ' << rhs.se; return os; }
 template<class T>
 istream& operator>>(istream& is, vector<T>& rhs) { for (T& elem : rhs) is >> elem; return is; }
 template<class T>
-ostream& operator<<(ostream& os, const vector<T>& rhs) { for (T& elem : rhs) os << elem << ' '; os << endl; return os; }
+ostream& operator<<(ostream& os, const vector<T>& rhs) { for (const T& elem : rhs) os << elem << ' '; os << endl; return os; }
+template<class T>
+void resize(T& container, int _size) { container.resize(_size); }
+template<class T, typename... Size>
+void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
 // Comment template
@@ -727,8 +734,43 @@ struct Fenwick {
     }
 } fen;
 
+// 2D Fenwick-Tree(2차원 펜윅트리)
+struct Fenwick2D {
+    ll n;
+    v2l arr;
+    v2l tree;
 
-// FFT
+    Fenwick2D() { }
+    Fenwick2D(int n) : n(n), arr(n + 1, vl(n + 1)), tree(n + 1, vl(n + 1)) { }
+
+    void Update(int x, int y, ll diff) {
+        while (x < n + 1) {
+            int tmp_y = y;
+            while (tmp_y < n + 1) {
+                tree[x][tmp_y] = tree[x][tmp_y] + diff;
+                tmp_y = tmp_y + (tmp_y & -tmp_y);
+            }
+            x = x + (x & -x);
+        }
+    }
+
+    // default Query is Sum
+    ll Query(int x, int y) {
+        ll ret = 0;
+        while (x > 0) {
+            int tmp_y = y;
+            while (tmp_y < n + 1) {
+                ret = ret + tree[x][tmp_y];
+                tmp_y = tmp_y - (tmp_y & -tmp_y);
+            }
+            x = x - (x & -x);
+        }
+        return ret;
+    }
+
+} fen;
+
+// FFT(Fast-Fourier-Transform, 고속 푸리에 변환)
 typedef complex<double> base;
 void FFT(vector<base>& a, bool inv = false) {
     int size = a.size();
@@ -802,8 +844,9 @@ vl Multiply(vl& v, vl& w, ll mod) {
     return ret;
 }
 
-//Miller-Rabin(밀러라빈)
-ull Pow(ull x, ull y, ull mod) { // ret = (x^y)%mod
+// Miller-Rabin(밀러 라빈 소수 판별법)
+// int범위와 long long범위에 따라 base prime 다르게 사용
+ull Pow(ull x, ull y, ull mod = 1) { // return (x ^ y) % mod
     ull ret = 1;
     x %= mod;
     while (y) {
@@ -814,7 +857,7 @@ ull Pow(ull x, ull y, ull mod) { // ret = (x^y)%mod
     return ret;
 }
 
-ull isPrime_MillerRabin(ull p) {
+bool isPrime_MillerRabin(ull p) {
     ull a[] = { 2,3,61,LLONG_MAX,2,3,5,7,11,13,17,19,23,29,31,37,LLONG_MAX };	//LLONG_MAX is composite number
     ull i = p <= UINT_MAX ? 0 : 4;
     while (a[i] < p) {
@@ -835,6 +878,7 @@ ull isPrime_MillerRabin(ull p) {
 
 // Pollard's-rho(폴라드로)
 // 곱셈연산중 ull 범위를 벗어날 경우 __int128 사용 
+// return smallest divisor
 ull FindDiv(ll n) {
     if (n % 2 == 0) return 2;
     if (isPrime_MillerRabin(n)) return n;
@@ -852,7 +896,8 @@ ull FindDiv(ll n) {
 }
 
 // EEA(Extended-Euclidean-Algorithm, 확장 유클리드 알고리즘)
-// return multiplicative inverse of b (modulo a) if exists, else 0
+// a * s + b * t = gcd(a, b)
+// return multiplicative inverse of b (modulo a) if it exists, else 0
 ll EEA(ll a, ll b) {
 	ll r1 = a, r2 = b, s1 = 1, s2 = 0, t1 = 0, t2 = 1;
 	ll r, s, t, q;
@@ -872,9 +917,56 @@ ll EEA(ll a, ll b) {
 	}
 	r = r1, s = s1, t = t1;
 
-	if (r == 1) {
-		if (t < 0) t += a;
-		return t;
-	}
-	else return 0;
+	if (r == 1) 
+		return (t + a) % a;
+	else 
+        return 0;
+}
+
+// CRT(Chinese-Remainder-Theorem, 중국인 나머지 정리)
+// return smallest solution
+ll Inv(ll x, ll mod) {
+    return Pow(x, mod-2);
+}
+
+ll MinCRT(vl& m, vl& a) {
+    int size = a.size();
+    ll M = 1;
+    ll ret = 0;
+    for(int i=0; i<size; i++)
+        M *= m[i];
+    for(int i=0; i<size; i++) {
+        ll M_i = M / m[i];
+        ret += a[i] * M_i * Inv(M_i, m[i]);
+    }
+
+    return ret & M;
+}
+
+// Gauss-Jordan Elimination(가우스 소거법)
+// return inverse matrix
+v2d GaussElimination(v2d mat) {
+    int size = mat.size();
+    v2d ret(size, vd(size));
+    for (int i = 0; i < size; i++)
+        ret[i][i] = 1;
+
+    for (int i = 0; i < size; i++) {
+        double tmp = mat[i][i];
+        for (int j = 0; j < size; j++) {
+            mat[i][j] /= tmp;
+            ret[i][j] /= tmp;
+        }
+
+        for (int j = 1; j < size; j++) {
+            double a = -mat[(i + j) % size][i] / mat[i][i];
+
+            for (int k = 0; k < size; k++) {
+                mat[(i + j) % size][k] += a * mat[i][k];
+                ret[(i + j) % size][k] += a * ret[i][k];
+            }
+        }
+    }
+
+    return ret;
 }
