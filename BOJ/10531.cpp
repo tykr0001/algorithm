@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-04-02 14:34:02  *************/
+\*************  2022-06-22 16:10:12  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -56,12 +56,83 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
+int n, m;
+vl arr;
+vl hole;
+
+// FFT
+typedef complex<double> base;
+void FFT(vector<base>& a, bool inv = false) {
+    int size = a.size();
+    for (int i = 1, j = 0; i < size; i++) {
+        int bit = (size >> 1);
+        while (j >= bit) {
+            j -= bit;
+            bit >>= 1;
+        }
+        j += bit;
+        if (i < j) swap(a[i], a[j]);
+    }
+    for (int i = 2; i <= size; i <<= 1) {
+        double ang = 2 * acos(-1) / i * (inv ? -1 : 1);
+        base wlen(cos(ang), sin(ang));
+        for (int j = 0; j < size; j += i) {
+            base w(1);
+            for (int k = 0; k < i / 2; k++) {
+                base u = a[j + k], v = a[j + k + i / 2] * w;
+                a[j + k] = u + v;
+                a[j + k + i / 2] = u - v;
+                w *= wlen;
+            }
+        }
+    }
+    if (inv) for (int i = 0; i < size; i++) a[i] /= size;
+}
+
+vl Multiply(vl& v, vl& w) {
+    vector<base> fv(v.begin(), v.end()), fw(w.begin(), w.end());
+    int size = 2; while (size < v.size() + w.size()) size <<= 1;
+    fv.resize(size); fw.resize(size);
+    FFT(fv, 0); FFT(fw, 0);
+    for (int i = 0; i < size; i++) fv[i] *= fw[i];
+    FFT(fv, 1);
+    vl ret(size);
+    for (int i = 0; i < size; i++) ret[i] = (ll)round(fv[i].real());
+    return ret;
+}
+
 void Solve(void) {
-    
+    vl ans = Multiply(arr, arr);
+    ll cnt = 0;
+    for (int i = 0; i <= 200000; i++) {
+        ans[i] += arr[i];
+    }
+    int lo = 0;
+    for (int i = 0; i <= 200000; i++) {
+        if (ans[i]) {
+            while (lo < m && hole[lo] < i) {
+                lo++;
+            }
+            if (lo == m) break;
+            if (hole[lo] == i) cnt++;
+        }
+    }
+    cout << cnt;
 }
 
 void Init(void) {
-    
+    cin >> n;
+    resize(arr, 200001);
+    for (int i = 0; i < n; i++) {
+        ll k; cin >> k;
+        arr[k] = 1;
+    }
+    cin >> m;
+    resize(hole, m);
+    for (int i = 0; i < m; i++) {
+        cin >> hole[i];
+    }
+    sort(hole);
 }
 
 int main(void) {

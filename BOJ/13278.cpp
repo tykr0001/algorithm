@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-04-02 14:34:02  *************/
+\*************  2022-06-23 12:00:54  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -56,12 +56,99 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
+int n, k;
+vl arr;
+v2l poly;
+
+// FFT
+typedef complex<double> base;
+void FFT(vector<base>& a, bool inv = false) {
+    int size = a.size();
+    vector<base> roots(size / 2);
+    for (int i = 1, j = 0; i < size; i++) {
+        int bit = (size >> 1);
+        while (j >= bit) {
+            j -= bit;
+            bit >>= 1;
+        }
+        j += bit;
+        if (i < j) swap(a[i], a[j]);
+    }
+    double ang = 2 * acos(-1) / size * (inv ? -1 : 1);
+    for (int i = 0; i < size / 2; i++) {
+        roots[i] = base(cos(ang * i), sin(ang * i));
+    }
+    for (int i = 2; i <= size; i <<= 1) {
+        int step = size / i;
+        for (int j = 0; j < size; j += i) {
+            base w(1);
+            for (int k = 0; k < i / 2; k++) {
+                base u = a[j + k], v = a[j + k + i / 2] * roots[step * k];
+                a[j + k] = u + v;
+                a[j + k + i / 2] = u - v;
+            }
+        }
+    }
+    if (inv) for (int i = 0; i < size; i++) a[i] /= size;
+}
+
+vl Multiply(vl& v, vl& w) {
+    vector<base> fv(v.begin(), v.end()), fw(w.begin(), w.end());
+    int size = 2; while (size < v.size() + w.size()) size <<= 1;
+    fv.resize(size); fw.resize(size);
+    FFT(fv, 0); FFT(fw, 0);
+    for (int i = 0; i < size; i++) fv[i] *= fw[i];
+    FFT(fv, 1);
+    vl ret(size);
+    for (int i = 0; i < size; i++) ret[i] = (ll)round(fv[i].real()) % 99991;
+    while (ret.size() && ret.back() == 0) ret.pop_back();
+    return ret;
+}
+
+// calc (a1+x)(a2+x)(a3+x)...(an+x)
+vl Mul(v2l& v, int lo, int hi) {
+    if (lo == hi) return v[lo];
+    int mid = (lo + hi) / 2;
+    vl ret1 = Mul(v, lo, mid);
+    vl ret2 = Mul(v, mid + 1, hi);
+    return Multiply(ret1, ret2);
+}
+
+ll Pow(ll x, ll e) {
+    ll ret = 1;
+    while (e) {
+        if (e & 1) ret = ret * x % 99991;
+        x = x * x % 99991;
+        e >>= 1;
+    }
+    return ret;
+}
+
 void Solve(void) {
-    
+    resize(poly, n, 2);
+    vl ret;
+    ll a, b;
+    for (int i = 0; i < n; i++) {
+        poly[i][0] = Pow(55048, arr[i]);
+        poly[i][1] = 1;
+    }
+    ret = Mul(poly, 0, n - 1);
+    a = ret[n - k];
+    for (int i = 0; i < n; i++) {
+        poly[i][0] = Pow(44944, arr[i]);
+        poly[i][1] = 1;
+    }
+    ret = Mul(poly, 0, n - 1);
+    b = ret[n - k];
+    cout << 22019LL * (a - b + 99991) % 99991;
 }
 
 void Init(void) {
-    
+    cin >> n >> k;
+    resize(arr, n);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
 }
 
 int main(void) {

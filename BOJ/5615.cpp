@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-04-02 14:34:02  *************/
+\*************  2022-06-28 10:31:29  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -56,12 +56,53 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
+int n;
+
+//miller-rabin(밀러라빈)
+ull Pow(ull x, ull y, ull mod) { // ret = (x^y)%mod
+    ull ret = 1;
+    x %= mod;
+    while (y) {
+        if (y & 1) ret = (ret * x) % mod;
+        x = (x * x) % mod;
+        y >>= 1;
+    }
+    return ret;
+}
+
+ull isPrime_MillerRabin(ull p) {
+    ull a[] = { 2,3,61,LLONG_MAX,2,3,5,7,11,13,17,19,23,29,31,37,LLONG_MAX };	//LLONG_MAX is composite number
+    ull i = p <= UINT_MAX ? 0 : 4;
+    while (a[i] < p) {
+        ull s = p - 1;
+        while (true) {
+            ull r = Pow(a[i], s, p);
+            if (r == p - 1) break;	// p is probably a prime.
+            if (s & 1) {	//if s is odd number
+                if (r == 1) break;	// p is probably a prime.
+                else return false;	// s is composite
+            }
+            s >>= 1;
+        }
+        i++;
+    }
+    return p < 2 ? false : p != LLONG_MAX;
+}
+
 void Solve(void) {
-    
+    int ans = 0;
+    while (n--) {
+        ll inp; cin >> inp;
+        inp = inp * 2 + 1;
+        if (isPrime_MillerRabin(inp)) {
+            ans++;
+        }
+    }
+    cout << ans << endl;
 }
 
 void Init(void) {
-    
+    cin >> n;
 }
 
 int main(void) {

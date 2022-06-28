@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-04-02 14:34:02  *************/
+\*************  2022-06-28 11:17:31  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -56,12 +56,41 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
+ll n, a;
+
+ll EEA(ll a, ll b) {
+    ll r1 = a, r2 = b, s1 = 1, s2 = 0, t1 = 0, t2 = 1;
+    ll r, s, t, q;
+    while (r2) {
+        q = r1 / r2;
+        // gcd 계산
+        r = r1 % r2;
+        r1 = r2, r2 = r;
+
+        // s 계산
+        s = s1 - q * s2;
+        s1 = s2, s2 = s;
+
+        // t 계산
+        t = t1 - q * t2;
+        t1 = t2, t2 = t;
+    }
+    r = r1, s = s1, t = t1;
+
+    if (r == 1) {
+        if (t < 0) t += a;
+        return t;
+    }
+    else return 0;
+}
+
 void Solve(void) {
-    
+    ll eea = EEA(n, a);
+    cout << n - a << ' ' << (eea ? eea : -1);
 }
 
 void Init(void) {
-    
+    cin >> n >> a;
 }
 
 int main(void) {

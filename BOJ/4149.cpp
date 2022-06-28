@@ -8,7 +8,7 @@
 *$*       ||        ||     ||   |||  ||   |||   *$*
 *$*                                             *$*
 *$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*$*
-\*************  2022-04-02 14:34:02  *************/
+\*************  2022-06-28 10:54:24  *************/
 
 /*************  C++ Header Template  *************/
 #include <bits/stdc++.h>
@@ -56,12 +56,82 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
+ull n;
+vector<ull> ans;
+
+//miller-rabin(밀러라빈)
+ull Pow(__int128  x, __int128  y, __int128  mod) { // ret = (x^y)%mod
+    __int128  ret = 1;
+    x %= mod;
+    while (y) {
+        if (y & 1) ret = (ret * x) % mod;
+        x = (x * x) % mod;
+        y >>= 1;
+    }
+    return ret;
+}
+
+ull isPrime_MillerRabin(ull p) {
+    ull a[] = { 2,3,61,LLONG_MAX,2,3,5,7,11,13,17,19,23,29,31,37,LLONG_MAX };	//LLONG_MAX is composite number
+    ull i = p <= UINT_MAX ? 0 : 4;
+    while (a[i] < p) {
+        ull s = p - 1;
+        while (true) {
+            ull r = Pow(a[i], s, p);
+            if (r == p - 1) break;	// p is probably a prime.
+            if (s & 1) {	//if s is odd number
+                if (r == 1) break;	// p is probably a prime.
+                else return 0;	// s is composite
+            }
+            s >>= 1;
+        }
+        i++;
+    }
+    return p < 2 ? 0 : p != LLONG_MAX;
+}
+
+
+ull GCD(ull a, ull b) {
+    if (a < b) swap(a, b);
+    while (b != 0) {
+        ull r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+
+// Pollard's-rho(폴라드로)
+ull FindDiv(__int128  n) {
+    if (n % 2 == 0) return 2;
+    if (isPrime_MillerRabin(n)) return n;
+
+    __int128  x = rand() % (n - 2) + 2, y = x, c = rand() % 10 + 1, g = 1;
+    while (g == 1) {
+        x = (x * x % n + c) % n;
+        y = (y * y % n + c) % n;
+        y = (y * y % n + c) % n;
+        g = __gcd(abs(__int128(x - y)), n);
+        if (g == n) return FindDiv(n);
+    }
+    if (isPrime_MillerRabin(g)) return g;
+    else return FindDiv(g);
+}
+
 void Solve(void) {
-    
+    while (n > 1) {
+        ull div = FindDiv(n);
+        ans.emplace_back(div);
+        n /= div;
+    }
+    sort(ans);
+    for (auto e : ans) {
+        cout << e << ' ';
+    }
 }
 
 void Init(void) {
-    
+    cin >> n;
 }
 
 int main(void) {
