@@ -46,26 +46,12 @@ void resize(T& container, int _size, Size... _sizes) { container.resize(_size); 
 
 ll n, m;
 
-vector<bool> is_prime;
-vector<ll> prime;
-void Eratos(int m) {
-    is_prime = vector<bool>((ll)sqrt(m) + 2, true);
-    for (int i = 2; i < is_prime.size(); i++) {
-        if (is_prime[i]) {
-            prime.emplace_back(i);
-            for (int j = i * 2; j < is_prime.size(); j += i) {
-                is_prime[j] = false;
-            }
-        }
-    }
-}
-
 ll Phi(ll a) {
     ull ret = a;
-    ull i = 0;
-    while (i < prime.size() && prime[i] * prime[i] <= a) {
-        if (!(a % prime[i])) ret = ret / prime[i] * (prime[i] - 1);
-        while (!(a % prime[i])) a /= prime[i];
+    ull i = 2;
+    while (i * i <= a) {
+        if (!(a % i)) ret = ret / i * (i - 1);
+        while (!(a % i)) a /= i;
         i++;
     }
     if (a > 1) ret = ret / a * (a - 1);
@@ -100,7 +86,6 @@ ll f(ll n, ll m) {
 }
 
 void Solve(void) {
-    Eratos(m);
     cout << f(n, m) << endl;
 }
 

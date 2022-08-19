@@ -44,6 +44,8 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
+ifstream ifs;
+ofstream ofs;
 ll n, m;
 
 vector<bool> is_prime;
@@ -100,17 +102,24 @@ ll f(ll n, ll m) {
 }
 
 void Solve(void) {
-    Eratos(m);
-    cout << f(n, m) << endl;
+    ofs << f(n, m) << endl;
 }
 
 void Init(void) {
-    cin >> n >> m;
+    ifs >> n >> m;
 }
 
 int main(void) {
-    Boost;
-    Init();
-    Solve();
+    Eratos(1000000000);
+    for (int i = 1; i <= 100; i++) {
+        string str_idx = to_string(i / 10) + to_string(i % 10);
+        if(i==100) str_idx = "100";
+        ifs.open("./data/" + str_idx + ".in");
+        ofs.open("./data/" + str_idx + ".out");
+        Init();
+        Solve();
+        ifs.close();
+        ofs.close();
+    }
     return 0;
 }
