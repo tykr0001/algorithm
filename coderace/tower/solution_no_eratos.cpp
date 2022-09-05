@@ -44,11 +44,29 @@ template<class T, typename... Size>
 void resize(T& container, int _size, Size... _sizes) { container.resize(_size); for (auto& elem : container) resize(elem, _sizes...); }
 /*************************************************/
 
-ll n, m;
+vector<ll> arr;
+ll n, m, len;
+string seed;
+
+ll g(ll k) {
+    ll ret = 0;
+    for (int i = 1; i <= 10; i++) {
+        ll idx = i * k;
+        ll val = seed[idx % 10];
+        if ('1' <= val && val <= '9')
+            ret += val - '0';
+        if ('A' <= val && val <= 'Z')
+            ret += val - 'A' + 10;
+        if ('a' <= val && val <= 'z')
+            ret += val - 'a' + 36;
+    }
+
+    return ret * k;
+}
 
 ll Phi(ll a) {
-    ull ret = a;
-    ull i = 2;
+    ll ret = a;
+    ll i = 2;
     while (i * i <= a) {
         if (!(a % i)) ret = ret / i * (i - 1);
         while (!(a % i)) a /= i;
@@ -71,26 +89,37 @@ ll Pow(ll x, ll y, ll mod) { // return (x ^ y) % mod
     return ret;
 }
 
-ll f(ll n, ll m) {
+ll Strength(ll idx, ll m) {
     if (m == 1) return 0;
-    if (n == 1) return 1;
-    if (n == 2) return 2 % m;
-    if (n == 3) return 9 % m;
-    if (n == 4) return (1 << 18) % m;
+    if (idx == len - 2) return Pow(arr[idx], arr[idx + 1], m);
+    if (idx == len - 1) return arr[idx] % m;
 
-    ll div = __gcd(n, m);
-    ll tmp = f(n - 1, Phi(m));
+    ll div = __gcd(arr[idx], m);
+    ll phi = Phi(m);
+    ll tmp = Strength(idx + 1, phi);
 
-    if (div == 1) return Pow(n, tmp, m);
-    return Pow(div, Phi(m), m) * Pow(n, tmp, m) % m;
+    if (div == 1) return Pow(arr[idx], tmp, m);
+    return Pow(arr[idx], tmp % phi + phi, m);
 }
 
 void Solve(void) {
-    cout << f(n, m) << endl;
+    if (len == 0) {
+        if (m == 1) cout << 0 << endl;
+        else cout << 1 << endl;
+    }
+    else {
+        cout << Strength(0, m) << endl;
+    }
 }
 
 void Init(void) {
     cin >> n >> m;
+    cin >> seed;
+    for (int i = n, cnt = 0; i > 1 && cnt < 100; i--, cnt++) {
+        ll val = g(i);
+        arr.emplace_back(val);
+    }
+    len = arr.size();
 }
 
 int main(void) {
