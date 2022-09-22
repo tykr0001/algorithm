@@ -970,3 +970,54 @@ v2d GaussElimination(v2d mat) {
 
     return ret;
 }
+
+// Matrix Multiply(행렬 곱)
+v2l Mul(v2l& a, v2l& b) {
+    int size = a.size();
+    v2l ret(size, vl(size));
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            for (int k = 0; k < size; k++) {
+                ret[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+    return ret;
+}
+
+// Matrix Power(행렬 거듭제곱)
+v2l Pow(v2l& a, int x) {
+    if (x == 1) return a;
+    v2l ret = Pow(a, x / 2);
+    ret = Mul(ret, ret);
+    if (x & 1) ret = Mul(ret, a);
+    return ret;
+}
+
+// 금광 세그(Mine Segment tree)
+struct Data {
+    ll lmax;
+    ll rmax;
+    ll mmax;
+    ll sum;
+};
+
+vector<pair<pll, ll>> arr;
+vector<Data> tree;
+
+void Update(int idx, ll val, int node, int start, int end) {
+    if (idx < start || end < idx) return;
+    if (start == end) {
+        tree[node].sum += val;
+        tree[node].lmax = tree[node].rmax = tree[node].mmax = tree[node].sum;
+        return;
+    }
+    int mid = (start + end) / 2;
+    Update(idx, val, node * 2, start, mid);
+    Update(idx, val, node * 2 + 1, mid + 1, end);
+
+    tree[node].lmax = max(tree[node * 2].lmax, tree[node * 2].sum + tree[node * 2 + 1].lmax);
+    tree[node].rmax = max(tree[node * 2 + 1].rmax, tree[node * 2].rmax + tree[node * 2 + 1].sum);
+    tree[node].mmax = max({ tree[node * 2].mmax,tree[node * 2 + 1].mmax, tree[node * 2].rmax + tree[node * 2 + 1].lmax });
+    tree[node].sum = tree[node * 2].sum + tree[node * 2 + 1].sum;
+}
